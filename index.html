@@ -1119,6 +1119,9 @@ try {
 let currentUser = null;
 let currentCompany = 1;
 let editingId = null;
+let pendingReceipt = null;
+let pendingReceiptMime = null;
+let pendingReceiptName = null;
 let allClients = [], allCustomers = [], allEmployees = [], allTasks = [], allInvoices = [], allQuotations = [], allTransactions = [], allUsers = [];
 
 const COMPANIES = {
@@ -1533,6 +1536,7 @@ function closeModal(id) {
     document.getElementById('tr-receipt-input').value = '';
     pendingReceipt = null;
     pendingReceiptMime = null;
+    pendingReceiptName = null;
   }
 }
 
@@ -1960,12 +1964,20 @@ function saveInvoice() {
     company_id: currentCompany,
     created_at: new Date().toISOString()
   };
-  if (editingId) allInvoices = allInvoices.map(i => i.id === editingId ? record : i);
-  else allInvoices.push(record);
+  // Preserve original created_at when editing
+  if (editingId) {
+    const orig = allInvoices.find(i => i.id === editingId);
+    if (orig) record.created_at = orig.created_at;
+    allInvoices = allInvoices.map(i => i.id === editingId ? record : i);
+    showToast('✅ Invoice updated!', 'success');
+  } else {
+    allInvoices.push(record);
+    showToast('✅ Invoice created!', 'success');
+  }
   saveData('invoices', allInvoices);
   closeModal('invoice-modal');
+  editingId = null;
   renderInvoicesTable(allInvoices);
-  showToast(editingId ? 'Invoice updated' : 'Invoice created', 'success');
 }
 
 // ========== PDF GENERATION ==========
@@ -2177,12 +2189,19 @@ function saveQuotation() {
     company_id: currentCompany,
     created_at: new Date().toISOString()
   };
-  if (editingId) allQuotations = allQuotations.map(q => q.id === editingId ? record : q);
-  else allQuotations.push(record);
+  if (editingId) {
+    const orig = allQuotations.find(q => q.id === editingId);
+    if (orig) { record.created_at = orig.created_at; record.status = orig.status||'Draft'; }
+    allQuotations = allQuotations.map(q => q.id === editingId ? record : q);
+    showToast('✅ Quotation updated!', 'success');
+  } else {
+    allQuotations.push(record);
+    showToast('✅ Quotation created!', 'success');
+  }
   saveData('quotations', allQuotations);
   closeModal('quotation-modal');
+  editingId = null;
   renderQuotationsTable(allQuotations);
-  showToast(editingId ? 'Quotation updated' : 'Quotation created', 'success');
 }
 
 function convertToInvoice(id) {
@@ -2227,12 +2246,15 @@ function renderAccountsTable(txns) {
   tbody.innerHTML = [...txns].reverse().map(t => `<tr>
     <td>${t.date ? new Date(t.date).toLocaleDateString('en-AE') : '—'}</td>
     <td><span class="badge ${t.type==='Income'?'badge-success':'badge-danger'}">${t.type}</span></td>
-    <td>${t.description}</td>
+    <td style="max-width:200px">
+      <div style="font-weight:500;color:var(--text-primary)">${t.description}</div>
+      ${t.receiptName ? `<div style="font-size:10px;color:var(--gold);margin-top:2px">📎 ${t.receiptName}</div>` : ''}
+    </td>
     <td><span class="badge badge-muted" style="font-size:11px">${t.category||'—'}</span></td>
     <td><strong style="color:${t.type==='Income'?'var(--success)':'var(--danger)'}">${t.type==='Income'?'+':'-'} AED ${parseFloat(t.amount||0).toFixed(2)}</strong></td>
     <td>
       <div style="display:flex;gap:4px;align-items:center">
-        <button class="btn btn-sm btn-icon" style="background:${t.receipt?'var(--gold)':'var(--border)'};color:${t.receipt?'var(--navy)':'var(--text-muted)'};border:none;cursor:${t.receipt?'pointer':'default'};opacity:${t.receipt?'1':'0.4'}" onclick="${t.receipt?`viewReceipt('`+t.id+`')`:'void(0)'}" title="${t.receipt?'View Receipt':'No Receipt'}">📎</button>
+        <button class="btn btn-sm btn-icon" style="background:${t.receipt?'var(--gold)':'rgba(107,99,88,0.2)'};color:${t.receipt?'var(--navy)':'var(--text-muted)'};border:none;cursor:${t.receipt?'pointer':'not-allowed'};border-radius:6px;padding:5px 7px" onclick="${t.receipt?`viewReceipt('`+t.id+`')`:'void(0)'}" title="${t.receipt?'View Receipt: '+(t.receiptName||''):'No Receipt'}">📎</button>
         <button class="btn btn-outline btn-sm btn-icon" onclick="editTransaction('${t.id}')" title="Edit">✎</button>
         <button class="btn btn-outline btn-sm btn-icon" style="color:var(--danger)" onclick="confirmDelete('transaction','${t.id}')" title="Delete">🗑</button>
       </div>
@@ -2279,7 +2301,8 @@ function attachReceipt(input) {
   reader.onload = (e) => {
     pendingReceipt = e.target.result;
     pendingReceiptMime = file.type;
-    document.getElementById('tr-receipt-label').innerHTML = '✅ <strong style="color:var(--gold)">' + file.name + '</strong> attached';
+    pendingReceiptName = file.name;
+    document.getElementById('tr-receipt-label').innerHTML = '✅ <strong style="color:var(--gold)">' + file.name + '</strong> — ready to save';
     document.getElementById('tr-receipt-drop').style.borderColor = 'var(--gold)';
   };
   reader.readAsDataURL(file);
@@ -2294,7 +2317,8 @@ function handleReceiptDrop(event) {
   reader.onload = (e) => {
     pendingReceipt = e.target.result;
     pendingReceiptMime = file.type;
-    document.getElementById('tr-receipt-label').innerHTML = '✅ <strong style="color:var(--gold)">' + file.name + '</strong> attached';
+    pendingReceiptName = file.name;
+    document.getElementById('tr-receipt-label').innerHTML = '✅ <strong style="color:var(--gold)">' + file.name + '</strong> — ready to save';
     document.getElementById('tr-receipt-drop').style.borderColor = 'var(--gold)';
   };
   reader.readAsDataURL(file);
@@ -2313,56 +2337,40 @@ function viewReceipt(id) {
 
 function saveTransaction() {
   try {
-    const descEl = document.getElementById('tr-desc');
-    const dateEl = document.getElementById('tr-date');
-    const typeEl = document.getElementById('tr-type');
-    const amountEl = document.getElementById('tr-amount');
-    const catEl = document.getElementById('tr-category');
-
-    if (!descEl || !descEl.value.trim()) { 
-      showToast('Please enter a description', 'error'); 
-      return; 
-    }
-
-    const desc = descEl.value.trim();
-    const existing = editingId ? allTransactions.find(x => x.id === editingId) : null;
-
+    const desc = (document.getElementById('tr-desc').value || '').trim();
+    if (!desc) { showToast('Please enter a description', 'error'); return; }
+    const isEditing = !!editingId;
+    const existing = isEditing ? allTransactions.find(x => x.id === editingId) : null;
     const record = {
-      id: editingId || genId(),
-      date: dateEl ? dateEl.value : new Date().toISOString().split('T')[0],
-      type: typeEl ? typeEl.value : 'Income',
+      id: isEditing ? editingId : genId(),
+      date: document.getElementById('tr-date').value || new Date().toISOString().split('T')[0],
+      type: document.getElementById('tr-type').value || 'Income',
       description: desc,
-      amount: parseFloat(amountEl ? amountEl.value : 0) || 0,
-      category: catEl ? catEl.value : '',
-      receipt: pendingReceipt || (existing ? existing.receipt : null),
-      receiptMime: pendingReceiptMime || (existing ? existing.receiptMime : null),
+      amount: parseFloat(document.getElementById('tr-amount').value) || 0,
+      category: document.getElementById('tr-category').value || '',
+      receipt: pendingReceipt !== null ? pendingReceipt : (existing ? existing.receipt : null),
+      receiptMime: pendingReceiptMime !== null ? pendingReceiptMime : (existing ? existing.receiptMime : null),
+      receiptName: pendingReceiptName || (existing ? existing.receiptName : null),
       company_id: currentCompany,
       created_at: existing ? existing.created_at : new Date().toISOString()
     };
-
-    if (editingId) {
+    if (isEditing) {
       allTransactions = allTransactions.map(t => t.id === editingId ? record : t);
     } else {
       allTransactions.push(record);
     }
-
     saveData('transactions', allTransactions);
-    
-    // Close modal and reset
     document.getElementById('transaction-modal').classList.remove('open');
     editingId = null;
     pendingReceipt = null;
     pendingReceiptMime = null;
-
-    // Re-render
+    pendingReceiptName = null;
     renderAccountsTable(allTransactions);
     updateAccountTotals(allTransactions);
-    
-    showToast(existing ? 'Transaction updated!' : 'Transaction saved!', 'success');
-
+    showToast(isEditing ? '✅ Transaction updated!' : '✅ Transaction saved!', 'success');
   } catch(err) {
     console.error('saveTransaction error:', err);
-    showToast('Error saving transaction: ' + err.message, 'error');
+    showToast('❌ Error: ' + err.message, 'error');
   }
 }
 
@@ -2370,48 +2378,104 @@ function generateFinancialReport() {
   const { jsPDF } = window.jspdf;
   const doc = new jsPDF({ unit: 'mm', format: 'a4' });
   const co = COMPANIES[currentCompany];
-  const W = 210, M = 20;
+  const W = 210, M = 15;
+  const now = new Date();
+  const monthName = now.toLocaleString('en-AE', {month:'long', year:'numeric'});
 
-  doc.setFillColor(13,27,42); doc.rect(0, 0, W, 50, 'F');
-  doc.setTextColor(201,168,76); doc.setFontSize(16); doc.setFont('helvetica','bold');
-  doc.text('FINANCIAL REPORT', M, 22);
+  // Header
+  doc.setFillColor(13,27,42); doc.rect(0, 0, W, 55, 'F');
+  doc.setTextColor(201,168,76); doc.setFontSize(18); doc.setFont('helvetica','bold');
+  doc.text('MONTHLY CASHBOOK REPORT', M, 22);
   doc.setTextColor(168,158,136); doc.setFontSize(9); doc.setFont('helvetica','normal');
-  doc.text(co.name, M, 30); doc.text('Generated: ' + new Date().toLocaleDateString('en-AE'), M, 37);
+  doc.text(co.name, M, 30);
+  doc.text('Period: ' + monthName, M, 37);
+  doc.text('Generated: ' + now.toLocaleDateString('en-AE'), M, 44);
 
   let y = 65;
   const inc = allTransactions.filter(t=>t.type==='Income').reduce((s,t)=>s+parseFloat(t.amount||0),0);
   const exp = allTransactions.filter(t=>t.type==='Expense').reduce((s,t)=>s+parseFloat(t.amount||0),0);
+  const bal = inc - exp;
 
-  doc.setTextColor(30,30,30); doc.setFontSize(11); doc.setFont('helvetica','bold');
-  doc.text('Summary', M, y); y+=8;
-  doc.setFont('helvetica','normal'); doc.setFontSize(10);
-  doc.setTextColor(76,175,125); doc.text('Total Income: AED ' + inc.toFixed(2), M, y); y+=7;
-  doc.setTextColor(224,82,82); doc.text('Total Expenses: AED ' + exp.toFixed(2), M, y); y+=7;
-  doc.setTextColor(201,168,76); doc.setFont('helvetica','bold');
-  doc.text('Net Balance: AED ' + (inc-exp).toFixed(2), M, y); y+=14;
+  // Summary boxes
+  doc.setFillColor(240,248,240); doc.roundedRect(M, y, 55, 22, 2, 2, 'F');
+  doc.setTextColor(76,175,125); doc.setFontSize(8); doc.setFont('helvetica','bold');
+  doc.text('TOTAL INCOME', M+4, y+7);
+  doc.setFontSize(12); doc.text('AED ' + inc.toLocaleString('en-AE',{minimumFractionDigits:2}), M+4, y+16);
 
-  doc.setTextColor(30,30,30); doc.setFont('helvetica','bold'); doc.setFontSize(10);
-  doc.text('Transaction Log', M, y); y+=8;
-  doc.setFillColor(245,240,232); doc.rect(M, y-5, W-2*M, 8, 'F');
-  doc.setFontSize(8);
-  doc.text('DATE', M+2, y); doc.text('TYPE', M+30, y); doc.text('DESCRIPTION', M+55, y); doc.text('AMOUNT', W-M-3, y, {align:'right'}); y+=6;
-  doc.setFont('helvetica','normal');
-  allTransactions.slice(-30).forEach(t => {
-    if (y > 270) { doc.addPage(); y = 20; }
-    const clr = t.type==='Income' ? [76,175,125] : [224,82,82];
-    doc.setTextColor(100,90,80); doc.text(t.date||'', M+2, y);
-    doc.setTextColor(...clr); doc.text(t.type, M+30, y);
-    doc.setTextColor(60,50,40); doc.text((t.description||'').substring(0,30), M+55, y);
-    doc.setTextColor(...clr); doc.text('AED '+(parseFloat(t.amount||0)).toFixed(2), W-M-3, y, {align:'right'});
-    y+=6;
+  doc.setFillColor(255,240,240); doc.roundedRect(M+60, y, 55, 22, 2, 2, 'F');
+  doc.setTextColor(224,82,82); doc.setFontSize(8); doc.setFont('helvetica','bold');
+  doc.text('TOTAL EXPENSES', M+64, y+7);
+  doc.setFontSize(12); doc.text('AED ' + exp.toLocaleString('en-AE',{minimumFractionDigits:2}), M+64, y+16);
+
+  doc.setFillColor(240,245,255); doc.roundedRect(M+120, y, 65, 22, 2, 2, 'F');
+  doc.setTextColor(bal>=0?76:224, bal>=0?175:82, bal>=0?125:82); doc.setFontSize(8); doc.setFont('helvetica','bold');
+  doc.text('NET BALANCE', M+124, y+7);
+  doc.setFontSize(12); doc.text('AED ' + bal.toLocaleString('en-AE',{minimumFractionDigits:2}), M+124, y+16);
+
+  y += 32;
+
+  // Transactions table
+  doc.setFillColor(13,27,42); doc.rect(M, y, W-2*M, 9, 'F');
+  doc.setTextColor(201,168,76); doc.setFontSize(8); doc.setFont('helvetica','bold');
+  doc.text('DATE', M+2, y+6);
+  doc.text('TYPE', M+28, y+6);
+  doc.text('DESCRIPTION', M+50, y+6);
+  doc.text('CATEGORY', M+115, y+6);
+  doc.text('AMOUNT', W-M-2, y+6, {align:'right'});
+  y += 12;
+
+  const sortedTxns = [...allTransactions].sort((a,b) => new Date(a.date||0) - new Date(b.date||0));
+  sortedTxns.forEach((t, idx) => {
+    if (y > 260) {
+      doc.addPage();
+      y = 20;
+    }
+    if (idx % 2 === 0) { doc.setFillColor(250,248,244); doc.rect(M, y-4, W-2*M, 8, 'F'); }
+    doc.setTextColor(50,50,50); doc.setFont('helvetica','normal'); doc.setFontSize(8);
+    doc.text(t.date ? new Date(t.date).toLocaleDateString('en-AE') : '—', M+2, y+1);
+    const tColor = t.type==='Income' ? [76,175,125] : [224,82,82];
+    doc.setTextColor(...tColor); doc.setFont('helvetica','bold');
+    doc.text(t.type, M+28, y+1);
+    doc.setTextColor(50,50,50); doc.setFont('helvetica','normal');
+    const descShort = (t.description||'').substring(0,35);
+    doc.text(descShort, M+50, y+1);
+    doc.text((t.category||'—').substring(0,20), M+115, y+1);
+    doc.setTextColor(...tColor); doc.setFont('helvetica','bold');
+    doc.text((t.type==='Income'?'+':'-') + ' AED ' + parseFloat(t.amount||0).toFixed(2), W-M-2, y+1, {align:'right'});
+    if (t.receiptName) {
+      doc.setTextColor(150,130,80); doc.setFont('helvetica','italic'); doc.setFontSize(7);
+      doc.text('📎 ' + t.receiptName.substring(0,40), M+50, y+5);
+      y += 4;
+    }
+    y += 8;
   });
 
-  doc.setFillColor(13,27,42); doc.rect(0, 277, W, 20, 'F');
-  doc.setTextColor(107,99,88); doc.setFontSize(8);
-  doc.text(co.name + ' · Financial Report · Confidential', W/2, 288, {align:'center'});
+  // Category breakdown
+  y += 8;
+  if (y > 230) { doc.addPage(); y = 20; }
+  doc.setFillColor(13,27,42); doc.rect(M, y, 85, 8, 'F');
+  doc.setTextColor(201,168,76); doc.setFontSize(9); doc.setFont('helvetica','bold');
+  doc.text('INCOME BY CATEGORY', M+3, y+5.5);
+  y += 12;
+  const incByCat = {};
+  allTransactions.filter(t=>t.type==='Income' && t.category).forEach(t => {
+    incByCat[t.category] = (incByCat[t.category]||0) + parseFloat(t.amount||0);
+  });
+  Object.entries(incByCat).forEach(([cat, amt]) => {
+    doc.setTextColor(50,50,50); doc.setFont('helvetica','normal'); doc.setFontSize(9);
+    doc.text(cat, M+3, y);
+    doc.setTextColor(76,175,125); doc.setFont('helvetica','bold');
+    doc.text('AED ' + amt.toFixed(2), M+80, y, {align:'right'});
+    y += 7;
+  });
 
-  doc.save(`Financial_Report_${new Date().toISOString().split('T')[0]}.pdf`);
-  showToast('Financial report downloaded', 'success');
+  // Footer
+  doc.setFillColor(13,27,42); doc.rect(0, 285, W, 12, 'F');
+  doc.setTextColor(107,99,88); doc.setFontSize(7);
+  doc.text(co.name + ' · ' + co.email + ' · ' + co.phone, W/2, 292, {align:'center'});
+
+  doc.save('Cashbook_Report_' + now.toISOString().split('T')[0] + '.pdf');
+  showToast('📊 Monthly report downloaded!', 'success');
 }
 
 // ========== USERS ==========
@@ -2641,21 +2705,14 @@ const TABLE_MAP = {
   'suppliers': 'suppliers', 'vat': 'vat'
 };
 
-const originalSd = sd;
-window.sd = function(key, data) {
-  originalSd(key, data);
-  const sbTable = TABLE_MAP[key];
-  if (sbTable && Array.isArray(data)) {
-    // Sync latest record to Supabase (most recent operation)
-  }
-};
+// Supabase sync handled by saveToSB()
 
 // Load from Supabase on section open
 async function syncFromSupabase(localKey, sbTable, companyId) {
   const data = await sbLoad(sbTable, companyId);
   if (data && data.length > 0) {
     // Merge with localStorage - Supabase wins
-    const localData = ld(localKey);
+    const localData = loadData(localKey);
     const sbIds = new Set(data.map(r => r.id));
     const localOnly = localData.filter(r => !sbIds.has(r.id));
     const merged = [...data, ...localOnly];
@@ -2733,8 +2790,6 @@ console.log('Supabase integration loaded. Project: iifdfejbcrmwukbudywc');
 
 // ======================== DOCUMENT STORAGE ========================
 let allDocuments = [];
-let pendingReceipt = null;
-let pendingReceiptMime = null;
 let currentDocFilter = 'all';
 
 function loadDocuments() {
