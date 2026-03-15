@@ -2312,35 +2312,58 @@ function viewReceipt(id) {
 }
 
 function saveTransaction() {
-  const desc = document.getElementById('tr-desc').value.trim();
-  if (!desc) { showToast('Description is required', 'error'); return; }
-  const existing = editingId ? allTransactions.find(x=>x.id===editingId) : null;
-  const record = {
-    id: editingId || genId(),
-    date: document.getElementById('tr-date').value,
-    type: document.getElementById('tr-type').value,
-    description: desc,
-    amount: parseFloat(document.getElementById('tr-amount').value||0),
-    category: document.getElementById('tr-category').value,
-    receipt: pendingReceipt || (existing ? existing.receipt : null),
-    receiptMime: pendingReceiptMime || (existing ? existing.receiptMime : null),
-    company_id: currentCompany,
-    created_at: existing ? existing.created_at : new Date().toISOString()
-  };
-  if (editingId) {
-    allTransactions = allTransactions.map(t => t.id === editingId ? record : t);
-    showToast('Transaction updated', 'success');
-  } else {
-    allTransactions.push(record);
-    showToast('Transaction added', 'success');
+  try {
+    const descEl = document.getElementById('tr-desc');
+    const dateEl = document.getElementById('tr-date');
+    const typeEl = document.getElementById('tr-type');
+    const amountEl = document.getElementById('tr-amount');
+    const catEl = document.getElementById('tr-category');
+
+    if (!descEl || !descEl.value.trim()) { 
+      showToast('Please enter a description', 'error'); 
+      return; 
+    }
+
+    const desc = descEl.value.trim();
+    const existing = editingId ? allTransactions.find(x => x.id === editingId) : null;
+
+    const record = {
+      id: editingId || genId(),
+      date: dateEl ? dateEl.value : new Date().toISOString().split('T')[0],
+      type: typeEl ? typeEl.value : 'Income',
+      description: desc,
+      amount: parseFloat(amountEl ? amountEl.value : 0) || 0,
+      category: catEl ? catEl.value : '',
+      receipt: pendingReceipt || (existing ? existing.receipt : null),
+      receiptMime: pendingReceiptMime || (existing ? existing.receiptMime : null),
+      company_id: currentCompany,
+      created_at: existing ? existing.created_at : new Date().toISOString()
+    };
+
+    if (editingId) {
+      allTransactions = allTransactions.map(t => t.id === editingId ? record : t);
+    } else {
+      allTransactions.push(record);
+    }
+
+    saveData('transactions', allTransactions);
+    
+    // Close modal and reset
+    document.getElementById('transaction-modal').classList.remove('open');
+    editingId = null;
+    pendingReceipt = null;
+    pendingReceiptMime = null;
+
+    // Re-render
+    renderAccountsTable(allTransactions);
+    updateAccountTotals(allTransactions);
+    
+    showToast(existing ? 'Transaction updated!' : 'Transaction saved!', 'success');
+
+  } catch(err) {
+    console.error('saveTransaction error:', err);
+    showToast('Error saving transaction: ' + err.message, 'error');
   }
-  saveData('transactions', allTransactions);
-  closeModal('transaction-modal');
-  editingId = null;
-  pendingReceipt = null;
-  pendingReceiptMime = null;
-  renderAccountsTable(allTransactions);
-  updateAccountTotals(allTransactions);
 }
 
 function generateFinancialReport() {
