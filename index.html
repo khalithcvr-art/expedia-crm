@@ -715,17 +715,58 @@
       <!-- USERS -->
       <div class="section" id="section-users">
         <div class="page-header">
-          <div><div class="page-title">User Management</div><div class="page-subtitle">Manage system users & permissions</div></div>
-          <button class="btn btn-gold" onclick="openModal('user-modal')">+ Add User</button>
+          <div>
+            <div class="page-title">User Management</div>
+            <div class="page-subtitle">Manage staff logins & access permissions</div>
+          </div>
+          <button class="btn btn-gold" onclick="openAddUserModal()">+ Add User</button>
+        </div>
+        <!-- Info Banner -->
+        <div class="alert alert-warning" style="margin-bottom:20px">
+          <span>🔐</span>
+          <span>Staff login credentials are stored securely. Share the CRM link and login details with your team. Only SuperAdmin can manage users.</span>
+        </div>
+        <!-- Stats -->
+        <div class="stats-grid" style="margin-bottom:20px">
+          <div class="stat-card"><div class="stat-icon">👥</div><div class="stat-value" id="u-stat-total">0</div><div class="stat-label">Total Users</div></div>
+          <div class="stat-card"><div class="stat-icon">👑</div><div class="stat-value" id="u-stat-admin">0</div><div class="stat-label">Admins</div></div>
+          <div class="stat-card"><div class="stat-icon">🧑‍💼</div><div class="stat-value" id="u-stat-staff">0</div><div class="stat-label">Staff</div></div>
+          <div class="stat-card"><div class="stat-icon">🏢</div><div class="stat-value" id="u-stat-both">0</div><div class="stat-label">Both Company Access</div></div>
         </div>
         <div class="card">
+          <div class="card-header">
+            <span class="card-title">👥 System Users</span>
+            <span class="badge badge-gold" id="u-count-badge">0 users</span>
+          </div>
           <div class="card-body">
             <div class="table-wrap">
               <table>
-                <thead><tr><th>Name</th><th>Email</th><th>Role</th><th>Company Access</th><th>Created</th><th>Actions</th></tr></thead>
-                <tbody id="users-table-body"><tr><td colspan="6"><div class="loading"><div class="spinner"></div> Loading...</div></td></tr></tbody>
+                <thead>
+                  <tr>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Role</th>
+                    <th>Company Access</th>
+                    <th>Created</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="users-table-body">
+                  <tr><td colspan="6"><div class="loading"><div class="spinner"></div> Loading...</div></td></tr>
+                </tbody>
               </table>
             </div>
+          </div>
+        </div>
+        <!-- CRM Access Info -->
+        <div class="card" style="margin-top:20px">
+          <div class="card-header"><span class="card-title">🌐 CRM Access Link</span></div>
+          <div class="card-body">
+            <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap">
+              <div style="flex:1;background:var(--navy);border:1px solid var(--border);border-radius:8px;padding:12px 16px;font-size:13px;color:var(--gold);font-family:monospace" id="crm-link-display">https://khalithcvr-art.github.io/expedia-crm</div>
+              <button class="btn btn-outline" onclick="copyCRMLink()">📋 Copy Link</button>
+            </div>
+            <div style="font-size:12px;color:var(--text-muted);margin-top:8px">Share this link with your staff. They can log in using their email and password you set.</div>
           </div>
         </div>
       </div>
@@ -1061,25 +1102,55 @@
 <div class="modal-overlay" id="user-modal">
   <div class="modal">
     <div class="modal-header">
-      <span class="modal-title">Add User</span>
+      <span class="modal-title" id="user-modal-title">Add New User</span>
       <button class="modal-close" onclick="closeModal('user-modal')">✕</button>
     </div>
     <div class="modal-body">
       <div class="form-grid">
-        <div class="form-group form-full"><label class="form-label">Full Name</label><input class="form-control" id="u-name" placeholder="Staff Name"></div>
-        <div class="form-group form-full"><label class="form-label">Email</label><input class="form-control" id="u-email" type="email" placeholder="user@expedia.ae"></div>
-        <div class="form-group"><label class="form-label">Role</label>
-          <select class="form-control" id="u-role"><option>SuperAdmin</option><option>Admin</option><option>Staff</option></select>
+        <div class="form-group form-full">
+          <label class="form-label">Full Name *</label>
+          <input class="form-control" id="u-name" placeholder="e.g. Ahmed Al-Mansoori">
         </div>
-        <div class="form-group"><label class="form-label">Company Access</label>
-          <select class="form-control" id="u-company"><option value="both">Both Companies</option><option value="1">Expedia Business</option><option value="2">Expedia Maintenance</option></select>
+        <div class="form-group form-full">
+          <label class="form-label">Email Address *</label>
+          <input class="form-control" id="u-email" type="email" placeholder="staff@expediaservices.ae">
         </div>
-        <div class="form-group form-full"><label class="form-label">Temporary Password</label><input class="form-control" id="u-password" type="password" placeholder="Min 8 characters"></div>
+        <div class="form-group">
+          <label class="form-label">Role</label>
+          <select class="form-control" id="u-role">
+            <option value="Admin">Admin</option>
+            <option value="Staff">Staff</option>
+            <option value="SuperAdmin">SuperAdmin</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Company Access</label>
+          <select class="form-control" id="u-company">
+            <option value="both">Both Companies</option>
+            <option value="1">Expedia Business Only</option>
+            <option value="2">Expedia Maintenance Only</option>
+          </select>
+        </div>
+        <div class="form-group form-full">
+          <label class="form-label">Password *</label>
+          <div style="position:relative">
+            <input class="form-control" id="u-password" type="password" placeholder="Min 6 characters" style="padding-right:44px">
+            <button type="button" onclick="toggleUserPassword()" style="position:absolute;right:10px;top:50%;transform:translateY(-50%);background:none;border:none;color:var(--text-muted);cursor:pointer;font-size:16px" id="u-pwd-eye">👁</button>
+          </div>
+        </div>
+        <div class="form-group form-full">
+          <div style="background:var(--navy);border:1px solid var(--border-light);border-radius:8px;padding:12px 14px;font-size:12px;color:var(--text-muted)">
+            <div style="font-weight:600;color:var(--text-secondary);margin-bottom:6px">📋 Role Permissions:</div>
+            <div><span style="color:var(--gold)">SuperAdmin</span> — Full access, user management, all companies</div>
+            <div><span style="color:var(--info)">Admin</span> — Full access to data, cannot manage users</div>
+            <div><span style="color:var(--text-secondary)">Staff</span> — View & add records, cannot delete or export</div>
+          </div>
+        </div>
       </div>
     </div>
     <div class="modal-footer">
       <button class="btn btn-outline" onclick="closeModal('user-modal')">Cancel</button>
-      <button class="btn btn-gold" onclick="saveUser()">Create User</button>
+      <button class="btn btn-gold" onclick="saveUser()" id="user-save-btn">Create User</button>
     </div>
   </div>
 </div>
@@ -1131,8 +1202,11 @@ const COMPANIES = {
 
 // ========== LOCAL STORAGE ==========
 function saveData(key, data) { 
-  try { localStorage.setItem(`crm_${currentCompany}_${key}`, JSON.stringify(data)); } catch(e) {} 
-  // Also sync latest record to Supabase
+  try { 
+    // Always save to localStorage first - this is the source of truth
+    localStorage.setItem(`crm_${currentCompany}_${key}`, JSON.stringify(data));
+  } catch(e) { console.log('localStorage save error:', e); } 
+  // Also sync latest record to Supabase (background, non-blocking)
   if (Array.isArray(data) && data.length > 0) {
     saveToSB(key, data[data.length-1]);
   }
@@ -1154,24 +1228,40 @@ async function syncFromDB(key) {
   const tbl = SB_TABLES[key];
   if (!tbl) return;
   try {
-    const { data, error } = await db.from(tbl).select('*').eq('company_id', currentCompany);
-    if (!error && data && data.length > 0) {
-      // Normalize field names back to CRM format
-      const normalized = data.map(r => {
-        const n = {...r};
-        if (key==='invoices') { n.desc=n.description; n.due=n.due_date; }
-        if (key==='work-orders') { n.desc=n.description; n.tech=n.technician; }
-        if (key==='leave') { n.from=n.from_date; n.to=n.to_date; }
-        if (key==='amc') { n.start=n.start_date; n.end=n.end_date; n.payment=n.payment_terms; n.value=parseFloat(n.value||0); }
-        if (key==='inventory') { n.cat=n.category; n.min=n.min_stock; n.cost=n.unit_cost; }
-        if (key==='vat') { n.output=n.output_vat; n.input=n.input_vat; n.due=n.due_date; n.ref=n.payment_ref; }
-        if (key==='cheques') { n.date=n.cheque_date; n.due=n.due_date; }
-        return n;
-      });
-      localStorage.setItem(`crm_${currentCompany}_${key}`, JSON.stringify(normalized));
-      return normalized;
+    const { data, error } = await db
+      .from(tbl)
+      .select('*')
+      .eq('company_id', currentCompany);
+    if (error) {
+      console.log('Sync error for', key, error.message);
+      return;
     }
-  } catch(e) { console.log('Sync error for', key, e); }
+    if (!data || data.length === 0) return;
+    const normalized = data.map(r => {
+      const n = { ...r };
+      if (key === 'invoices') { n.desc = n.description; n.due = n.due_date; }
+      if (key === 'work-orders') { n.desc = n.description; n.tech = n.technician; }
+      if (key === 'leave') { n.from = n.from_date; n.to = n.to_date; }
+      if (key === 'amc') { n.start = n.start_date; n.end = n.end_date; n.payment = n.payment_terms; n.value = parseFloat(n.value || 0); }
+      if (key === 'inventory') { n.cat = n.category; n.min = n.min_stock; n.cost = n.unit_cost; }
+      if (key === 'vat') { n.output = n.output_vat; n.input = n.input_vat; n.due = n.due_date; n.ref = n.payment_ref; }
+      if (key === 'cheques') { n.date = n.cheque_date; n.due = n.due_date; }
+      return n;
+    });
+    const local = loadData(key);
+    const merged = [...local];
+    normalized.forEach(dbRow => {
+      const idx = merged.findIndex(x => x.id === dbRow.id);
+      if (idx === -1) {
+        merged.push(dbRow); // new from DB — add it
+      }
+      // LOCAL wins: if id exists locally, keep local version as-is
+    });
+    localStorage.setItem(`crm_${currentCompany}_${key}`, JSON.stringify(merged));
+    return merged;
+  } catch (e) {
+    console.log('Sync error for', key, e);
+  }
 }
 
 async function syncAllAndRefresh() {
@@ -1228,11 +1318,17 @@ async function signIn() {
     return;
   }
 
-  // Check local users
+  // Check local users (case-insensitive email match)
   const users = loadGlobal('users');
-  const user = users.find(u => u.email === email && u.password === pass);
+  const user = users.find(u => u.email.toLowerCase().trim() === email.toLowerCase() && u.password === pass);
   if (user) {
-    currentUser = user;
+    currentUser = {
+      id: user.id,
+      email: user.email,
+      name: user.name,
+      role: user.role,
+      company_access: user.company_access
+    };
     localStorage.setItem('crm_session', JSON.stringify(currentUser));
     initApp();
     return;
@@ -1251,7 +1347,14 @@ async function signIn() {
     } catch(e) {}
   }
 
-  errEl.textContent = 'Invalid email or password. Please try again.';
+  // Debug hint (remove in production)
+  const allU = loadGlobal('users');
+  const emailMatch = allU.find(u => u.email.toLowerCase().trim() === email.toLowerCase());
+  if (emailMatch) {
+    errEl.textContent = 'Wrong password. Please check and try again.';
+  } else {
+    errEl.textContent = 'Email not found. Please check the email address.';
+  }
 }
 
 function checkSession() {
@@ -1275,8 +1378,8 @@ function initApp() {
   updateCompanyDisplay();
   loadSection('dashboard');
   loadReminders();
-  // Auto-sync from Supabase on login
-  setTimeout(syncAllAndRefresh, 800);
+  // Auto-sync disabled — local data takes priority
+  // setTimeout(syncAllAndRefresh, 800);
 }
 
 function updateUserDisplay() {
@@ -2480,39 +2583,138 @@ function generateFinancialReport() {
 
 // ========== USERS ==========
 function loadUsers() {
-  if (currentUser?.role !== 'SuperAdmin') { document.getElementById('users-table-body').innerHTML = '<tr><td colspan="6"><div class="empty-state"><div class="empty-icon">🔒</div><div class="empty-text">Access restricted to SuperAdmin.</div></div></td></tr>'; return; }
+  if (currentUser?.role !== 'SuperAdmin') {
+    document.getElementById('users-table-body').innerHTML = '<tr><td colspan="6"><div class="empty-state"><div class="empty-icon">🔒</div><div class="empty-text">Access restricted to SuperAdmin only.</div></div></td></tr>';
+    return;
+  }
   allUsers = loadGlobal('users');
+
+  // Update stats
+  const admins = allUsers.filter(u => u.role === 'Admin' || u.role === 'SuperAdmin').length;
+  const staff = allUsers.filter(u => u.role === 'Staff').length;
+  const both = allUsers.filter(u => u.company_access === 'both').length;
+  const totalEl = document.getElementById('u-stat-total');
+  const adminEl = document.getElementById('u-stat-admin');
+  const staffEl = document.getElementById('u-stat-staff');
+  const bothEl = document.getElementById('u-stat-both');
+  const badgeEl = document.getElementById('u-count-badge');
+  // Count SuperAdmin (you) + created users
+  const total = allUsers.length + 1;
+  if (totalEl) totalEl.textContent = total;
+  if (adminEl) adminEl.textContent = admins + 1;
+  if (staffEl) staffEl.textContent = staff;
+  if (bothEl) bothEl.textContent = both + 1;
+  if (badgeEl) badgeEl.textContent = total + ' users';
+
   const tbody = document.getElementById('users-table-body');
-  if (!allUsers.length) { tbody.innerHTML = '<tr><td colspan="6"><div class="empty-state"><div class="empty-icon">⚙</div><div class="empty-text">No users created yet.</div></div></td></tr>'; return; }
-  tbody.innerHTML = allUsers.map(u => `<tr>
-    <td>${u.name}</td>
-    <td>${u.email}</td>
-    <td><span class="badge badge-gold">${u.role}</span></td>
-    <td>${u.company_access === 'both' ? 'Both Companies' : u.company_access === '1' ? 'Expedia Business' : 'Expedia Maintenance'}</td>
-    <td>${new Date(u.created_at).toLocaleDateString('en-AE')}</td>
-    <td><button class="btn btn-danger btn-sm" onclick="deleteUser('${u.id}')">Delete</button></td>
-  </tr>`).join('');
+
+  // Always show SuperAdmin (you) as first row
+  const superAdminRow = `<tr style="background:rgba(201,168,76,0.04)">
+    <td><div style="display:flex;align-items:center;gap:8px">
+      <div style="width:28px;height:28px;border-radius:50%;background:var(--gold);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:var(--navy)">SA</div>
+      <div>
+        <div style="font-weight:600;color:var(--text-primary)">Super Admin</div>
+        <div style="font-size:10px;color:var(--text-muted)">Owner Account</div>
+      </div>
+    </div></td>
+    <td>khalithcvr@gmail.com</td>
+    <td><span class="badge badge-gold">SuperAdmin</span></td>
+    <td><span class="badge badge-info">Both Companies</span></td>
+    <td>${new Date().toLocaleDateString('en-AE')}</td>
+    <td><span style="font-size:11px;color:var(--text-muted)">— Owner —</span></td>
+  </tr>`;
+
+  if (!allUsers.length) {
+    tbody.innerHTML = superAdminRow + '<tr><td colspan="6"><div style="padding:20px;text-align:center;color:var(--text-muted);font-size:13px">No additional staff users yet. Click "+ Add User" to create staff logins.</div></td></tr>';
+    return;
+  }
+
+  const roleColors = { SuperAdmin: 'badge-gold', Admin: 'badge-info', Staff: 'badge-muted' };
+  const companyName = { both: 'Both Companies', '1': 'Expedia Business', '2': 'Expedia Maintenance' };
+
+  tbody.innerHTML = superAdminRow + allUsers.map(u => {
+    const initials = (u.name||'?').split(' ').map(w=>w[0]).join('').toUpperCase().slice(0,2);
+    return `<tr>
+      <td><div style="display:flex;align-items:center;gap:8px">
+        <div style="width:28px;height:28px;border-radius:50%;background:var(--navy-accent);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:var(--gold)">${initials}</div>
+        <div>
+          <div style="font-weight:600;color:var(--text-primary)">${u.name}</div>
+          <div style="font-size:10px;color:var(--text-muted)">Staff Account</div>
+        </div>
+      </div></td>
+      <td>${u.email}</td>
+      <td><span class="badge ${roleColors[u.role]||'badge-muted'}">${u.role}</span></td>
+      <td><span class="badge badge-muted">${companyName[u.company_access]||'Both'}</span></td>
+      <td>${u.created_at ? new Date(u.created_at).toLocaleDateString('en-AE') : '—'}</td>
+      <td>
+        <div style="display:flex;gap:6px">
+          <button class="btn btn-outline btn-sm" onclick="resetUserPassword('${u.id}')" title="Reset Password">🔑</button>
+          <button class="btn btn-danger btn-sm" onclick="confirmDeleteUser('${u.id}')">🗑 Delete</button>
+        </div>
+      </td>
+    </tr>`;
+  }).join('');
+}
+
+function openAddUserModal() {
+  document.getElementById('user-modal-title').textContent = 'Add New User';
+  document.getElementById('u-save-btn') && (document.getElementById('u-save-btn').textContent = 'Create User');
+  openModal('user-modal');
+}
+
+function toggleUserPassword() {
+  const input = document.getElementById('u-password');
+  const eye = document.getElementById('u-pwd-eye');
+  if (input.type === 'password') {
+    input.type = 'text';
+    eye.textContent = '🙈';
+  } else {
+    input.type = 'password';
+    eye.textContent = '👁';
+  }
 }
 
 function saveUser() {
   const name = document.getElementById('u-name').value.trim();
   const email = document.getElementById('u-email').value.trim();
   const pass = document.getElementById('u-password').value;
-  if (!name || !email || !pass) { showToast('All fields are required', 'error'); return; }
+
+  if (!name) { showToast('Please enter a name', 'error'); return; }
+  if (!email || !email.includes('@')) { showToast('Please enter a valid email', 'error'); return; }
+  if (!pass || pass.length < 6) { showToast('Password must be at least 6 characters', 'error'); return; }
+
+  // Check if email already exists
+  allUsers = loadGlobal('users');
+  if (email === 'khalithcvr@gmail.com') { showToast('That email is reserved for SuperAdmin', 'error'); return; }
+  if (allUsers.find(u => u.email === email)) { showToast('A user with this email already exists', 'error'); return; }
+
   const user = {
     id: genId(),
-    name, email,
+    name,
+    email,
     password: pass,
     role: document.getElementById('u-role').value,
     company_access: document.getElementById('u-company').value,
     created_at: new Date().toISOString()
   };
-  allUsers = loadGlobal('users');
+
   allUsers.push(user);
   saveGlobal('users', allUsers);
   closeModal('user-modal');
   loadUsers();
-  showToast('User created successfully', 'success');
+  showToast('✅ User "' + name + '" created! They can now log in.', 'success');
+}
+
+function confirmDeleteUser(id) {
+  const users = loadGlobal('users');
+  const user = users.find(u => u.id === id);
+  const name = user ? user.name : 'this user';
+  if (confirm('Delete user "' + name + '"?\nThey will no longer be able to log in.')) {
+    allUsers = users.filter(u => u.id !== id);
+    saveGlobal('users', allUsers);
+    loadUsers();
+    showToast('User "' + name + '" deleted', 'success');
+  }
 }
 
 function deleteUser(id) {
@@ -2520,6 +2722,24 @@ function deleteUser(id) {
   saveGlobal('users', allUsers);
   loadUsers();
   showToast('User deleted', 'success');
+}
+
+function resetUserPassword(id) {
+  const newPass = prompt('Enter new password for this user (min 6 characters):');
+  if (!newPass || newPass.length < 6) { showToast('Password too short — minimum 6 characters', 'error'); return; }
+  allUsers = loadGlobal('users');
+  allUsers = allUsers.map(u => u.id === id ? {...u, password: newPass} : u);
+  saveGlobal('users', allUsers);
+  showToast('✅ Password updated successfully!', 'success');
+}
+
+function copyCRMLink() {
+  const link = 'https://khalithcvr-art.github.io/expedia-crm';
+  navigator.clipboard.writeText(link).then(() => {
+    showToast('✅ CRM link copied to clipboard!', 'success');
+  }).catch(() => {
+    showToast('Link: ' + link, 'info');
+  });
 }
 
 // ========== REMINDERS ==========
@@ -2610,13 +2830,49 @@ function confirmDelete(type, id) {
 
 function deleteRecord(type, id) {
   switch(type) {
-    case 'client': allClients = allClients.filter(x=>x.id!==id); saveData('clients',allClients); renderClientsTable(allClients); break;
-    case 'customer': allCustomers = allCustomers.filter(x=>x.id!==id); saveData('customers',allCustomers); renderCustomersTable(allCustomers); break;
-    case 'employee': allEmployees = allEmployees.filter(x=>x.id!==id); saveData('employees',allEmployees); renderEmployeesTable(allEmployees); break;
-    case 'task': allTasks = allTasks.filter(x=>x.id!==id); saveData('tasks',allTasks); renderTasksTable(allTasks); break;
-    case 'invoice': allInvoices = allInvoices.filter(x=>x.id!==id); saveData('invoices',allInvoices); renderInvoicesTable(allInvoices); break;
-    case 'quotation': allQuotations = allQuotations.filter(x=>x.id!==id); saveData('quotations',allQuotations); renderQuotationsTable(allQuotations); break;
-    case 'transaction': allTransactions = allTransactions.filter(x=>x.id!==id); saveData('transactions',allTransactions); renderAccountsTable(allTransactions); updateAccountTotals(allTransactions); break;
+    case 'client':
+      allClients = allClients.filter(x=>x.id!==id);
+      saveData('clients', allClients);
+      deleteFromSB('clients', id);
+      renderClientsTable(allClients);
+      break;
+    case 'customer':
+      allCustomers = allCustomers.filter(x=>x.id!==id);
+      saveData('customers', allCustomers);
+      deleteFromSB('customers', id);
+      renderCustomersTable(allCustomers);
+      break;
+    case 'employee':
+      allEmployees = allEmployees.filter(x=>x.id!==id);
+      saveData('employees', allEmployees);
+      deleteFromSB('employees', id);
+      renderEmployeesTable(allEmployees);
+      break;
+    case 'task':
+      allTasks = allTasks.filter(x=>x.id!==id);
+      saveData('tasks', allTasks);
+      deleteFromSB('tasks', id);
+      renderTasksTable(allTasks);
+      break;
+    case 'invoice':
+      allInvoices = allInvoices.filter(x=>x.id!==id);
+      saveData('invoices', allInvoices);
+      deleteFromSB('invoices', id);
+      renderInvoicesTable(allInvoices);
+      break;
+    case 'quotation':
+      allQuotations = allQuotations.filter(x=>x.id!==id);
+      saveData('quotations', allQuotations);
+      deleteFromSB('quotations', id);
+      renderQuotationsTable(allQuotations);
+      break;
+    case 'transaction':
+      allTransactions = allTransactions.filter(x=>x.id!==id);
+      saveData('transactions', allTransactions);
+      deleteFromSB('transactions', id);
+      renderAccountsTable(allTransactions);
+      updateAccountTotals(allTransactions);
+      break;
   }
   closeModal('confirm-modal');
   showToast(`${type.charAt(0).toUpperCase()+type.slice(1)} deleted`, 'success');
