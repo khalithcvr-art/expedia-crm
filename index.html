@@ -1191,6 +1191,8 @@ let db = null;
 let currentUser = null;
 let currentCompany = 1;
 let editingId = null;
+let companyProfiles = {};  // Cache: {1: {...}, 2: {...}}
+let companyLogos = {};     // Cache: {1: 'base64...', 2: 'base64...'}
 let pendingAttachments = []; // Array of {data, mime, name} for multiple files
 // Legacy single receipt vars kept for backward compat
 let pendingReceipt = null;
@@ -3019,6 +3021,47 @@ function convertToInvoice(id) {
   saveRecord('invoices', inv);
   showSection('invoices');
   showToast('✅ Quotation converted to Invoice!', 'success');
+}
+
+// ===== PRELOAD COMPANY PROFILES =====
+async function preloadCompanyProfiles() {
+  try {
+    const res = await fetch(
+      SUPABASE_URL + '/rest/v1/company_profiles?order=company_id.asc',
+      { headers: { 'apikey': SUPABASE_KEY, 'Authorization': 'Bearer ' + SUPABASE_KEY } }
+    );
+    if (res.ok) {
+      const profiles = await res.json();
+      profiles.forEach(p => {
+        companyProfiles[p.company_id] = p;
+        // Also update COMPANIES config with latest data
+        if (COMPANIES[p.company_id]) {
+          COMPANIES[p.company_id] = {
+            ...COMPANIES[p.company_id],
+            name:             p.name             || COMPANIES[p.company_id].name,
+            address:          p.address          || COMPANIES[p.company_id].address,
+            email:            p.email            || COMPANIES[p.company_id].email,
+            phone:            p.phone            || COMPANIES[p.company_id].phone,
+            trn:              p.trn              || COMPANIES[p.company_id].trn,
+            bank_name:        p.bank_name        || COMPANIES[p.company_id].bank_name,
+            bank_account_name:p.bank_account_name|| COMPANIES[p.company_id].bank_account_name,
+            bank_account_no:  p.bank_account_no  || COMPANIES[p.company_id].bank_account_no,
+            bank_iban:        p.iban             || COMPANIES[p.company_id].bank_iban,
+            bank_swift:       p.bank_swift       || COMPANIES[p.company_id].bank_swift,
+            bank_branch:      p.bank_branch      || COMPANIES[p.company_id].bank_branch,
+            logo:             p.logo             || COMPANIES[p.company_id].logo
+          };
+        }
+      });
+      console.log('✅ Company profiles loaded:', Object.keys(companyProfiles));
+    }
+  } catch(e) { console.log('Profile preload error:', e); }
+}
+
+function getLogoForCompany(companyId) {
+  if (companyProfiles[companyId] && companyProfiles[companyId].logo)
+    return companyProfiles[companyId].logo;
+  try { return localStorage.getItem('crm_logo_' + companyId) || null; } catch(e) { return null; }
 }
 
 // ===== TOAST =====
