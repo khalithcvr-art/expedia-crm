@@ -790,7 +790,7 @@ select.form-control{cursor:pointer}
   <div class="modal modal-lg">
     <div class="modal-header"><span class="modal-title" id="client-modal-title">Add Client</span><button class="modal-close" onclick="closeModal('client-modal')">✕</button></div>
     <div class="modal-body">
-      <div class="tabs"><div class="tab active" onclick="switchTab(this,'client-tab-info')">Basic Info</div><div class="tab" onclick="switchTab(this,'client-tab-docs')">📁 Documents</div></div>
+      <div class="tabs" id="client-tabs"><div class="tab active" onclick="switchTab(this,'client-tab-info')">Basic Info</div><div class="tab" onclick="switchTab(this,'client-tab-docs',window._editingClientId,window._editingClientName)">📁 Documents <span id="client-doc-count" style="background:rgba(204,0,0,0.15);color:#CC0000;font-size:10px;font-weight:700;padding:1px 6px;border-radius:10px;margin-left:4px"></span></div></div>
       <div id="client-tab-info">
         <div class="form-grid">
           <div class="form-group form-full"><label class="form-label">Company Name <span>*</span></label><input class="form-control" id="c-company-name" placeholder="ABC Trading LLC"></div>
@@ -809,7 +809,7 @@ select.form-control{cursor:pointer}
         <div class="receipt-drop" onclick="document.getElementById('client-doc-input').click()" ondragover="event.preventDefault();this.classList.add('drag-over')" ondragleave="this.classList.remove('drag-over')" ondrop="handleInlineDrop(event,'client')">
           <div style="font-size:28px;margin-bottom:6px">📁</div>
           <div style="font-size:13px;color:var(--text-2)">Drag & drop or <span style="color:var(--gold)">click to upload</span></div>
-          <input type="file" id="client-doc-input" style="display:none" multiple accept=".pdf,.doc,.docx,.jpg,.jpeg,.png,.xlsx" onchange="handleInlineUpload(this,'client')">
+          <input type="file" id="client-doc-input" style="display:none" multiple accept=".pdf,.doc,.docx,.jpg,.jpeg,.png,.xlsx" onchange="handleInlineUpload(this,'client',window._editingClientId,window._editingClientName)">
         </div>
         <div id="client-docs-list" style="margin-top:14px"></div>
       </div>
@@ -823,7 +823,7 @@ select.form-control{cursor:pointer}
   <div class="modal modal-lg">
     <div class="modal-header"><span class="modal-title" id="customer-modal-title">Add Customer</span><button class="modal-close" onclick="closeModal('customer-modal')">✕</button></div>
     <div class="modal-body">
-      <div class="tabs"><div class="tab active" onclick="switchTab(this,'cu-tab-info')">Basic Info</div><div class="tab" onclick="switchTab(this,'cu-tab-docs')">📁 Documents</div></div>
+      <div class="tabs"><div class="tab active" onclick="switchTab(this,'cu-tab-info')">Basic Info</div><div class="tab" onclick="switchTab(this,'cu-tab-docs',window._editingCustId,window._editingCustName)">📁 Documents <span id="cu-doc-count" style="background:rgba(204,0,0,0.15);color:#CC0000;font-size:10px;font-weight:700;padding:1px 6px;border-radius:10px;margin-left:4px"></span></div></div>
       <div id="cu-tab-info">
         <div class="form-grid">
           <div class="form-group form-full"><label class="form-label">Full Name <span>*</span></label><input class="form-control" id="cu-name" placeholder="Mohammed Al-Rashid"></div>
@@ -843,7 +843,7 @@ select.form-control{cursor:pointer}
         <div class="receipt-drop" onclick="document.getElementById('cu-doc-input').click()" ondragover="event.preventDefault();this.classList.add('drag-over')" ondragleave="this.classList.remove('drag-over')" ondrop="handleInlineDrop(event,'customer')">
           <div style="font-size:28px;margin-bottom:6px">📁</div>
           <div style="font-size:13px;color:var(--text-2)">Drag & drop or <span style="color:var(--gold)">click to upload</span></div>
-          <input type="file" id="cu-doc-input" style="display:none" multiple accept=".pdf,.doc,.docx,.jpg,.jpeg,.png,.xlsx" onchange="handleInlineUpload(this,'customer')">
+          <input type="file" id="cu-doc-input" style="display:none" multiple accept=".pdf,.doc,.docx,.jpg,.jpeg,.png,.xlsx" onchange="handleInlineUpload(this,'customer',window._editingCustId,window._editingCustName)">
         </div>
         <div id="cu-docs-list" style="margin-top:14px"></div>
       </div>
@@ -860,7 +860,7 @@ select.form-control{cursor:pointer}
       <div class="tabs">
         <div class="tab active" onclick="switchTab(this,'emp-tab-info')">Personal Info</div>
         <div class="tab" onclick="switchTab(this,'emp-tab-salary')">Salary</div>
-        <div class="tab" onclick="switchTab(this,'emp-tab-docs')">📁 Documents</div>
+        <div class="tab" onclick="switchTab(this,'emp-tab-docs',window._editingEmpId,window._editingEmpName)">📁 Documents <span id="emp-doc-count" style="background:rgba(204,0,0,0.15);color:#CC0000;font-size:10px;font-weight:700;padding:1px 6px;border-radius:10px;margin-left:4px"></span></div>
       </div>
       <div id="emp-tab-info">
         <div class="form-grid">
@@ -896,7 +896,7 @@ select.form-control{cursor:pointer}
         <div class="receipt-drop" onclick="document.getElementById('emp-doc-input').click()" ondragover="event.preventDefault();this.classList.add('drag-over')" ondragleave="this.classList.remove('drag-over')" ondrop="handleInlineDrop(event,'employee')">
           <div style="font-size:28px;margin-bottom:6px">📁</div>
           <div style="font-size:13px;color:var(--text-2)">Drag & drop or <span style="color:var(--gold)">click to upload</span></div>
-          <input type="file" id="emp-doc-input" style="display:none" multiple accept=".pdf,.doc,.docx,.jpg,.jpeg,.png" onchange="handleInlineUpload(this,'employee')">
+          <input type="file" id="emp-doc-input" style="display:none" multiple accept=".pdf,.doc,.docx,.jpg,.jpeg,.png" onchange="handleInlineUpload(this,'employee',window._editingEmpId,window._editingEmpName)">
         </div>
         <div style="display:flex;flex-wrap:wrap;gap:6px;margin:10px 0">
           <button class="btn btn-outline btn-sm" onclick="setDocLabel('Passport')">🛂 Passport</button>
@@ -954,10 +954,14 @@ select.form-control{cursor:pointer}
       <div class="inv-total-box">
         <div class="inv-total-row"><span style="color:var(--text-2)">Subtotal</span><span id="inv-subtotal">AED 0.00</span></div>
         <div class="inv-total-row">
-          <span style="display:flex;align-items:center;gap:8px;color:var(--text-2)">
-            VAT <input type="checkbox" id="inv-vat-toggle" onchange="calcInvoice()" style="cursor:pointer"> 5%
+          <span style="display:flex;align-items:center;gap:10px">
+            <span style="color:var(--text-2)">VAT 5%</span>
+            <label style="display:flex;align-items:center;gap:6px;cursor:pointer;user-select:none;background:var(--bg);border:2px solid var(--border);border-radius:20px;padding:4px 12px;transition:all .2s" id="inv-vat-label">
+              <input type="checkbox" id="inv-vat-toggle" onchange="calcInvoice();toggleVatLabel('inv')" style="cursor:pointer;width:16px;height:16px;accent-color:var(--gold)">
+              <span id="inv-vat-text" style="font-size:12px;font-weight:700;color:var(--text-3)">OFF</span>
+            </label>
           </span>
-          <span id="inv-vat">AED 0.00</span>
+          <span id="inv-vat" style="color:var(--text-3)">AED 0.00</span>
         </div>
         <div class="inv-total-row grand"><span>TOTAL</span><span id="inv-total">AED 0.00</span></div>
       </div>
@@ -991,7 +995,16 @@ select.form-control{cursor:pointer}
       </div>
       <div class="inv-total-box">
         <div class="inv-total-row"><span style="color:var(--text-2)">Subtotal</span><span id="q-subtotal">AED 0.00</span></div>
-        <div class="inv-total-row"><span style="display:flex;align-items:center;gap:8px;color:var(--text-2)">VAT <input type="checkbox" id="q-vat-toggle" onchange="calcQuotation()"> 5%</span><span id="q-vat">AED 0.00</span></div>
+        <div class="inv-total-row">
+          <span style="display:flex;align-items:center;gap:10px">
+            <span style="color:var(--text-2)">VAT 5%</span>
+            <label style="display:flex;align-items:center;gap:6px;cursor:pointer;user-select:none;background:var(--bg);border:2px solid var(--border);border-radius:20px;padding:4px 12px;transition:all .2s" id="q-vat-label">
+              <input type="checkbox" id="q-vat-toggle" onchange="calcQuotation();toggleVatLabel('q')" style="cursor:pointer;width:16px;height:16px;accent-color:var(--gold)">
+              <span id="q-vat-text" style="font-size:12px;font-weight:700;color:var(--text-3)">OFF</span>
+            </label>
+          </span>
+          <span id="q-vat" style="color:var(--text-3)">AED 0.00</span>
+        </div>
         <div class="inv-total-row grand"><span>TOTAL</span><span id="q-total">AED 0.00</span></div>
       </div>
       <div class="form-grid" style="margin-top:14px">
@@ -1149,11 +1162,11 @@ const COMPANIES = {
     phone: '+971 58 5858 816',
     trn: 'TRN 100xxxxxxxx',
     bank_name: 'ADCB Bank',
-    bank_account_name: 'Expedia Business & Services L.L.C',
-    bank_account_no: 'XXXX-XXXX-XXXX-1',
-    bank_iban: 'AE XX XXXX XXXX XXXX XXXX X01',
+    bank_account_name: 'Expedia Business and Services LLC',
+    bank_account_no: '14462393920001',
+    bank_iban: 'AE360030014462393920001',
     bank_swift: 'ADCBAEAAXXX',
-    bank_branch: 'Abu Dhabi Mall Branch'
+    bank_branch: 'Abu Dhabi Main Branch'
   },
   2: {
     name: 'Expedia Pro General Maintenance L.L.C – S.P.C',
@@ -1163,11 +1176,11 @@ const COMPANIES = {
     phone: '+971 58 5858 816',
     trn: 'TRN 100xxxxxxxx',
     bank_name: 'ADCB Bank',
-    bank_account_name: 'Expedia Pro General Maintenance L.L.C',
-    bank_account_no: 'XXXX-XXXX-XXXX-2',
-    bank_iban: 'AE XX XXXX XXXX XXXX XXXX X02',
+    bank_account_name: 'Expedia Pro General Maintenance LLC',
+    bank_account_no: '14460786920001',
+    bank_iban: 'AE700030014460786920001',
     bank_swift: 'ADCBAEAAXXX',
-    bank_branch: 'Abu Dhabi Mall Branch'
+    bank_branch: 'Abu Dhabi Main Branch'
   }
 };
 
@@ -2291,7 +2304,9 @@ function renderDocs(docs) {
         <span style="font-size:32px">${getDocIcon(d.mime,d.name)}</span>
         <span style="background:${catColors[d.type]||'var(--text-3)'};color:${d.type==='Employee'||d.type==='Invoice'?'var(--bg)':'var(--bg)'};font-size:10px;font-weight:700;padding:2px 8px;border-radius:10px">${d.type||'Other'}</span>
       </div>
-      <div style="font-size:13px;font-weight:500;color:var(--text);margin-bottom:4px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="${d.name}">${d.name}</div>
+      <div style="font-size:13px;font-weight:700;color:var(--text);margin-bottom:2px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="${d.name}">${d.name}</div>
+      ${d.record_name ? `<div style="font-size:11px;color:#CC0000;font-weight:600;margin-bottom:2px">👤 ${d.record_name}</div>` : ''}
+      ${d.label ? `<div style="display:inline-block;font-size:10px;background:rgba(204,0,0,0.1);color:#CC0000;padding:1px 7px;border-radius:4px;font-weight:700;margin-bottom:4px">${d.label}</div>` : ''}
       <div style="font-size:11px;color:var(--text-3);margin-bottom:12px">${formatSize(d.size||0)} · ${fmtDate(d.uploaded)}</div>
       <div style="display:flex;gap:6px">
         <button class="btn btn-gold btn-sm" style="flex:1" onclick="viewDocument('${d.id}')">👁 View</button>
@@ -2322,20 +2337,83 @@ function deleteDocument(id) { if(!confirm('Delete this document?')) return; allD
 
 // INLINE DOC UPLOAD (in modals)
 function setDocLabel(label) { pendingDocLabel=label; showToast('Next upload: '+label,'info'); }
-function handleInlineUpload(input, section) {
-  const files=Array.from(input.files); if(!files.length) return;
-  files.forEach(file=>{ const reader=new FileReader(); reader.onload=e=>{ const doc={ id:genId(), name:pendingDocLabel?pendingDocLabel+' — '+file.name:file.name, type:section==='employee'?'Employee':section==='client'?'Client':'Customer', size:file.size, data:e.target.result, mime:file.type, uploaded:new Date().toISOString(), company_id:currentCompany, section }; allDocuments.push(doc); saveData('documents',allDocuments); renderInlineDocs(section); showToast(file.name+' uploaded!','success'); pendingDocLabel=''; }; reader.readAsDataURL(file); });
-  input.value='';
+function handleInlineUpload(input, section, recordId, recordName) {
+  const files = Array.from(input.files); if (!files.length) return;
+  files.forEach(file => {
+    const reader = new FileReader();
+    reader.onload = e => {
+      const docType = section === 'employee' ? 'Employee' : section === 'client' ? 'Client' : 'Customer';
+      const label = pendingDocLabel || '';
+      const docName = label ? label + ' — ' + file.name : file.name;
+      const doc = {
+        id: genId(),
+        name: docName,
+        type: docType,
+        label: label,
+        size: file.size,
+        data: e.target.result,
+        mime: file.type,
+        uploaded: new Date().toISOString(),
+        company_id: currentCompany,
+        section: section,
+        record_id: recordId || null,
+        record_name: recordName || null
+      };
+      allDocuments.push(doc);
+      saveData('documents', allDocuments);
+      renderInlineDocs(section, recordId);
+      showToast(file.name + ' uploaded!', 'success');
+      pendingDocLabel = '';
+    };
+    reader.readAsDataURL(file);
+  });
+  input.value = '';
 }
-function handleInlineDrop(event,section) { event.preventDefault(); event.currentTarget.classList.remove('drag-over'); const files=Array.from(event.dataTransfer.files); if(!files.length) return; files.forEach(file=>{ const fi={files:[file]}; handleInlineUpload(fi,section); }); }
-function renderInlineDocs(section) {
-  const listId=section==='employee'?'emp-docs-list':section==='client'?'client-docs-list':'cu-docs-list';
-  const listEl=document.getElementById(listId); if(!listEl) return;
-  const docs=allDocuments.filter(d=>d.section===section);
-  if(!docs.length){ listEl.innerHTML='<div style="font-size:12px;color:var(--text-3);text-align:center;padding:16px">No documents uploaded yet.</div>'; return; }
-  listEl.innerHTML=docs.map(d=>`<div style="display:flex;align-items:center;gap:10px;padding:10px;background:var(--bg);border:1px solid var(--border-2);border-radius:8px;margin-bottom:6px"><span style="font-size:20px">${getDocIcon(d.mime,d.name)}</span><div style="flex:1;min-width:0"><div style="font-size:12px;font-weight:500;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${d.name}</div><div style="font-size:10px;color:var(--text-3)">${formatSize(d.size||0)}</div></div><div style="display:flex;gap:4px"><button class="btn btn-outline btn-sm btn-icon" onclick="viewDocument('${d.id}')">👁</button><button class="btn btn-outline btn-sm btn-icon" onclick="downloadDocument('${d.id}')">⬇</button><button class="btn btn-outline btn-sm btn-icon" style="color:var(--danger)" onclick="deleteInlineDoc('${d.id}','${section}')">🗑</button></div></div>`).join('');
+function handleInlineDrop(event, section, recordId, recordName) {
+  event.preventDefault();
+  event.currentTarget.classList.remove('drag-over');
+  const files = Array.from(event.dataTransfer.files);
+  if (!files.length) return;
+  const fakeInput = { files };
+  handleInlineUpload(fakeInput, section, recordId, recordName);
 }
-function deleteInlineDoc(id,section) { allDocuments=allDocuments.filter(d=>d.id!==id); saveData('documents',allDocuments); renderInlineDocs(section); }
+function renderInlineDocs(section, recordId) {
+  const listId = section === 'employee' ? 'emp-docs-list' : section === 'client' ? 'client-docs-list' : 'cu-docs-list';
+  const listEl = document.getElementById(listId); if (!listEl) return;
+  const docs = allDocuments.filter(d => {
+    if (d.section !== section) return false;
+    if (recordId) return d.record_id === recordId;
+    return true;
+  });
+  if (!docs.length) {
+    listEl.innerHTML = '<div style="text-align:center;padding:20px;color:var(--text-3)"><div style="font-size:28px;margin-bottom:8px">📁</div><div style="font-size:12px;font-weight:600">No documents uploaded yet</div><div style="font-size:11px;margin-top:4px;color:var(--text-3)">Use labels above to categorize files</div></div>';
+    return;
+  }
+  listEl.innerHTML = docs.map(d => `
+    <div style="display:flex;align-items:center;gap:10px;padding:10px 12px;background:var(--bg);border:1px solid var(--border-2);border-radius:8px;margin-bottom:6px">
+      <span style="font-size:22px">${getDocIcon(d.mime, d.name)}</span>
+      <div style="flex:1;min-width:0">
+        <div style="font-size:12px;font-weight:700;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${d.name}</div>
+        <div style="display:flex;gap:8px;margin-top:3px;flex-wrap:wrap">
+          ${d.label ? `<span style="font-size:10px;background:rgba(204,0,0,0.1);color:#CC0000;padding:1px 7px;border-radius:4px;font-weight:700">${d.label}</span>` : ''}
+          <span style="font-size:10px;color:var(--text-3)">${formatSize(d.size || 0)}</span>
+          <span style="font-size:10px;color:var(--text-3)">${fmtDate(d.uploaded)}</span>
+        </div>
+      </div>
+      <div style="display:flex;gap:4px">
+        <button class="btn btn-outline btn-sm btn-icon" onclick="viewDocument('${d.id}')" title="View">👁</button>
+        <button class="btn btn-outline btn-sm btn-icon" onclick="downloadDocument('${d.id}')" title="Download">⬇</button>
+        <button class="btn btn-outline btn-sm btn-icon" style="color:var(--danger)" onclick="deleteInlineDoc('${d.id}','${section}','${recordId||''}')" title="Delete">🗑</button>
+      </div>
+    </div>`).join('');
+}
+
+function deleteInlineDoc(id, section, recordId) {
+  allDocuments = allDocuments.filter(d => d.id !== id);
+  saveData('documents', allDocuments);
+  renderInlineDocs(section, recordId || null);
+  showToast('Document deleted', 'success');
+}
 
 // ===== USERS =====
 async function loadUsers() {
@@ -2510,8 +2588,8 @@ function openModal(id) {
   modal.querySelectorAll('[id$="-tab-docs"],[id$="-tab-salary"],[id^="cu-tab-docs"]').forEach(t=>t.style.display='none');
   // Special resets
   if(id==='transaction-modal'){ document.getElementById('tr-date').value=today(); document.getElementById('tr-receipt-drop').className='receipt-drop'; pendingAttachments=[]; pendingReceipt=null; pendingReceiptMime=null; pendingReceiptName=null; document.getElementById('tr-receipt-input').value=''; const al=document.getElementById('tr-attachments-list'); if(al) al.innerHTML=''; }
-  if(id==='invoice-modal'){ invoiceItems=[]; renderInvoiceItems(); addInvoiceItem(); calcInvoice(); const invs=loadData('invoices'); document.getElementById('inv-number').value='INV-'+new Date().getFullYear()+'-'+String(invs.length+1).padStart(3,'0'); document.getElementById('invoice-modal-title').textContent='New Invoice'; document.getElementById('inv-status').value='Draft'; }
-  if(id==='quotation-modal'){ quotationItems=[]; renderQuotationItems(); addQuotationItem(); calcQuotation(); const qs=loadData('quotations'); document.getElementById('q-number').value='QUO-'+new Date().getFullYear()+'-'+String(qs.length+1).padStart(3,'0'); document.getElementById('quotation-modal-title').textContent='New Quotation'; }
+  if(id==='invoice-modal'){ invoiceItems=[]; renderInvoiceItems(); addInvoiceItem(); calcInvoice(); const invs=cacheGet('invoices')||[]; document.getElementById('inv-number').value='INV-'+new Date().getFullYear()+'-'+String(invs.length+1).padStart(3,'0'); document.getElementById('invoice-modal-title').textContent='New Invoice'; document.getElementById('inv-status').value='Draft'; document.getElementById('inv-vat-toggle').checked=false; toggleVatLabel('inv'); }
+  if(id==='quotation-modal'){ quotationItems=[]; renderQuotationItems(); addQuotationItem(); calcQuotation(); const qs=cacheGet('quotations')||[]; document.getElementById('q-number').value='QUO-'+new Date().getFullYear()+'-'+String(qs.length+1).padStart(3,'0'); document.getElementById('quotation-modal-title').textContent='New Quotation'; document.getElementById('q-vat-toggle').checked=false; toggleVatLabel('q'); }
   if(id==='employee-modal'){ document.getElementById('employee-modal-title').textContent='Add Employee'; calcNetSalary(); document.getElementById('emp-docs-list').innerHTML=''; }
   if(id==='client-modal'){ document.getElementById('client-modal-title').textContent='Add Client'; document.getElementById('client-docs-list').innerHTML=''; }
   if(id==='customer-modal'){ document.getElementById('customer-modal-title').textContent='Add Customer'; document.getElementById('cu-docs-list').innerHTML=''; }
@@ -2520,20 +2598,20 @@ function openModal(id) {
 }
 function closeModal(id) { document.getElementById(id).classList.remove('open'); editingId=null; }
 
-function switchTab(el, tabId) {
-  const modal=el.closest('.modal-body')||el.closest('.modal-overlay');
-  const tabs=el.parentElement;
-  tabs.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+function switchTab(el, tabId, recordId, recordName) {
+  const modal = el.closest('.modal-body') || el.closest('.modal-overlay');
+  const tabs = el.parentElement;
+  tabs.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
   el.classList.add('active');
-  // Hide all tab content in this modal
-  const allTabPanes=modal?modal.querySelectorAll('[id*="-tab-"]'):[];
-  allTabPanes.forEach(p=>p.style.display='none');
-  const target=document.getElementById(tabId);
-  if(target) target.style.display='';
-  // Render inline docs if needed
-  if(tabId.includes('docs')) {
-    const section=tabId.includes('emp')?'employee':tabId.includes('client')?'client':'customer';
-    allDocuments=loadData('documents'); renderInlineDocs(section);
+  const allTabPanes = modal ? modal.querySelectorAll('[id*="-tab-"]') : [];
+  allTabPanes.forEach(p => p.style.display = 'none');
+  const target = document.getElementById(tabId);
+  if (target) target.style.display = '';
+  // Render inline docs filtered by record
+  if (tabId.includes('docs')) {
+    const section = tabId.includes('emp') ? 'employee' : tabId.includes('client') ? 'client' : 'customer';
+    allDocuments = cacheGet('documents') || [];
+    renderInlineDocs(section, recordId || null);
   }
 }
 
@@ -3012,6 +3090,28 @@ async function preloadCompanyProfiles() {
       };
     }
   });
+}
+
+// ===== VAT TOGGLE HELPER =====
+function toggleVatLabel(prefix) {
+  const toggle = document.getElementById(prefix + '-vat-toggle');
+  const label = document.getElementById(prefix + '-vat-label');
+  const text = document.getElementById(prefix + '-vat-text');
+  const vatAmount = document.getElementById(prefix + '-vat');
+  if (!toggle || !label || !text) return;
+  if (toggle.checked) {
+    label.style.background = 'rgba(46,125,50,0.12)';
+    label.style.borderColor = 'var(--success)';
+    text.style.color = 'var(--success)';
+    text.textContent = 'ON — 5%';
+    if (vatAmount) vatAmount.style.color = 'var(--danger)';
+  } else {
+    label.style.background = 'var(--bg)';
+    label.style.borderColor = 'var(--border)';
+    text.style.color = 'var(--text-3)';
+    text.textContent = 'OFF';
+    if (vatAmount) vatAmount.style.color = 'var(--text-3)';
+  }
 }
 
 // ===== TOAST =====
