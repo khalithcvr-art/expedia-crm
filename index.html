@@ -2118,7 +2118,7 @@ function copyCRMLink() { navigator.clipboard.writeText('https://khalithcvr-art.g
 async function loadReminders() {
   const d7=new Date(); d7.setDate(d7.getDate()+7);
   const d30=new Date(); d30.setDate(d30.getDate()+30);
-  allClients=loadData('clients'); allEmployees=loadData('employees');
+  allClients=await loadData('clients'); allEmployees=await loadData('employees');
   const reminders=[];
   allClients.forEach(c=>{ if(c.license_expiry){ const d=new Date(c.license_expiry); if(d<=d30) reminders.push({type:d<=d7?'danger':'warning',icon:'🏢',title:c.company_name,msg:'Trade license expires '+fmtDate(c.license_expiry)}); } });
   allEmployees.forEach(e=>{
