@@ -11,24 +11,24 @@
 <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&display=swap" rel="stylesheet">
 <style>
 :root {
-  --bg: #F5F5EE;
-  --bg-2: #EDEEE6;
-  --card: #FFFFFF;
-  --card-2: #F0F2EC;
-  --card-3: #E4E8E0;
-  --gold: #2E7D32;
-  --gold-light: #43A047;
-  --gold-dark: #1B5E20;
-  --gold-muted: rgba(46,125,50,0.10);
-  --text: #1565C0;
-  --text-2: #111111;
-  --text-3: #555555;
-  --border: rgba(46,125,50,0.25);
-  --border-2: rgba(46,125,50,0.10);
-  --success: #2E7D32;
-  --danger: #E55A5A;
-  --warning: #E09030;
-  --info: #1565C0;
+  --bg: #E8E8E0;
+  --bg-2: #DEDED6;
+  --card: #F2F2EA;
+  --card-2: #E8E8E0;
+  --card-3: #DCDCD4;
+  --gold: #CC0000;
+  --gold-light: #FF3333;
+  --gold-dark: #990000;
+  --gold-muted: rgba(204,0,0,0.08);
+  --text: #111111;
+  --text-2: #000000;
+  --text-3: #444444;
+  --border: rgba(0,0,0,0.18);
+  --border-2: rgba(0,0,0,0.10);
+  --success: #006400;
+  --danger: #CC0000;
+  --warning: #CC6600;
+  --info: #003399;
   --sidebar-w: 248px;
   --radius: 12px;
   --radius-sm: 8px;
@@ -37,17 +37,18 @@
 }
 *{box-sizing:border-box;margin:0;padding:0}
 body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden;-webkit-font-smoothing:antialiased;font-size:15px}
-/* All black (#111111) text elements bold */
-.card-title,.page-title,.modal-title,.stat-value,.brand-name,
-tbody td:first-child,.user-name,.form-label,.nav-group-label,
+/* DARK THEME: Bold black headings, red accents */
+.card-title,.modal-title,.brand-name,.user-name,
 .topbar-title,.insight-label,.insight-value,.report-summary-label,
 .report-summary-value,.empty-title,.salary-label,
-thead th, .filter-label, .auth-card label,
-[style*="font-weight:600"],[style*="font-weight:700"],[style*="font-weight:800"]{font-weight:700 !important}
-/* Make all text-2 (black) bold */
-.form-label{font-weight:700 !important}
-tbody td{font-weight:600}
-.nav-item{font-weight:600}
+thead th,.filter-label,.auth-card label{font-weight:800 !important;color:#000000}
+.page-title{font-weight:900 !important}
+.form-label{font-weight:700 !important;color:#111111}
+tbody td{font-weight:600;color:#111111}
+tbody td:first-child{font-weight:800;color:#000000}
+.nav-item{font-weight:700}
+.nav-group-label{font-weight:900;color:rgba(255,200,200,0.7) !important;letter-spacing:2px}
+.stat-label{font-weight:700;color:#333333}
 h1,h2,h3,h4,h5{font-family:'Syne',sans-serif}
 ::-webkit-scrollbar{width:6px;height:6px}
 ::-webkit-scrollbar-track{background:var(--bg-2)}
@@ -55,19 +56,19 @@ h1,h2,h3,h4,h5{font-family:'Syne',sans-serif}
 ::-webkit-scrollbar-thumb:hover{background:var(--gold-dark)}
 
 /* ===== AUTH ===== */
-#auth-screen{min-height:100vh;display:flex;align-items:center;justify-content:center;background:radial-gradient(ellipse at 20% 50%,#C8E6C9 0%,var(--bg) 60%),radial-gradient(ellipse at 80% 20%,rgba(46,125,50,0.15) 0%,transparent 50%)}
+#auth-screen{min-height:100vh;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#1A1A1A 0%,#2D2D2D 40%,#CC0000 100%)}
 .auth-wrap{width:440px;max-width:95vw}
 .auth-logo-area{text-align:center;margin-bottom:36px}
 .auth-logo-area .logo-icon{width:64px;height:64px;background:linear-gradient(135deg,var(--gold-dark),var(--gold));border-radius:16px;display:inline-flex;align-items:center;justify-content:center;font-size:28px;margin-bottom:16px;box-shadow:0 8px 32px rgba(212,175,55,0.3)}
 .auth-logo-area h1{font-size:24px;color:var(--gold);letter-spacing:0.5px}
 .auth-logo-area p{font-size:12px;color:var(--text-3);margin-top:4px;letter-spacing:2px;text-transform:uppercase}
-.auth-card{background:var(--card);border:1px solid var(--border);border-radius:20px;padding:40px;box-shadow:0 8px 40px rgba(46,125,50,0.15)}
+.auth-card{background:#F2F2EA;border:2px solid #CC0000;border-radius:20px;padding:40px;box-shadow:0 20px 60px rgba(0,0,0,0.4)}
 .auth-card label{display:block;font-size:12px;color:var(--text-2);margin-bottom:6px;font-weight:500;letter-spacing:0.3px}
 .auth-input{width:100%;background:var(--bg);border:1px solid var(--border-2);border-radius:var(--radius-sm);padding:14px 16px;color:var(--text);font-size:15px;font-family:'DM Sans',sans-serif;outline:none;transition:border-color .2s,box-shadow .2s}
 .auth-input:focus{border-color:var(--gold);box-shadow:0 0 0 3px rgba(212,175,55,0.1)}
 .auth-field{margin-bottom:20px}
-.auth-btn{width:100%;background:linear-gradient(135deg,var(--gold-dark),var(--gold));color:#FFFFFF;font-weight:700;font-size:14px;border:none;border-radius:var(--radius-sm);padding:14px;cursor:pointer;font-family:'Syne',sans-serif;letter-spacing:0.5px;transition:all .2s;margin-top:8px;font-size:15px}
-.auth-btn:hover{transform:translateY(-1px);box-shadow:0 6px 20px rgba(212,175,55,0.4)}
+.auth-btn{width:100%;background:linear-gradient(135deg,#990000,#CC0000);color:#FFFFFF;font-weight:700;font-size:14px;border:none;border-radius:var(--radius-sm);padding:14px;cursor:pointer;font-family:'Syne',sans-serif;letter-spacing:0.5px;transition:all .2s;margin-top:8px;font-size:15px}
+.auth-btn:hover{transform:translateY(-1px);box-shadow:0 8px 24px rgba(204,0,0,0.5)}
 .auth-btn:active{transform:translateY(0)}
 .auth-error{color:var(--danger);font-size:13px;margin-top:12px;padding:10px 14px;background:rgba(229,90,90,0.1);border-radius:var(--radius-sm);border:1px solid rgba(229,90,90,0.2);display:none}
 .auth-error.show{display:block}
@@ -78,15 +79,15 @@ h1,h2,h3,h4,h5{font-family:'Syne',sans-serif}
 .layout{display:flex;min-height:100vh}
 
 /* ===== SIDEBAR ===== */
-.sidebar{width:var(--sidebar-w);background:#FFFFFF;border-right:1px solid rgba(46,125,50,0.15);display:flex;flex-direction:column;position:fixed;top:0;left:0;bottom:0;z-index:100;transition:transform .3s}
+.sidebar{width:var(--sidebar-w);background:linear-gradient(180deg,#1A1A1A 0%,#2D2D2D 100%);border-right:none;display:flex;flex-direction:column;position:fixed;top:0;left:0;bottom:0;z-index:100;transition:transform .3s}
 .sidebar-header{padding:20px 16px;border-bottom:1px solid var(--border-2)}
 .sidebar-brand{display:flex;align-items:center;gap:10px;margin-bottom:14px}
-.brand-icon{width:36px;height:36px;background:linear-gradient(135deg,#1B5E20,#2E7D32);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0}
+.brand-icon{width:36px;height:36px;background:linear-gradient(135deg,#990000,#CC0000);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0}
 .brand-name{font-family:'Syne',sans-serif;font-size:13px;font-weight:700;color:var(--gold);line-height:1.2}
 .brand-sub{font-size:9px;color:var(--text-3);letter-spacing:1px;text-transform:uppercase}
-.company-switcher{background:var(--bg);border:1px solid var(--border);border-radius:var(--radius-sm);padding:9px 12px;cursor:pointer;display:flex;align-items:center;justify-content:space-between;transition:border-color .2s;position:relative}
+.company-switcher{background:rgba(255,255,255,0.12);border:1px solid rgba(255,255,255,0.2);border-radius:var(--radius-sm);padding:9px 12px;cursor:pointer;display:flex;align-items:center;justify-content:space-between;transition:border-color .2s;position:relative}
 .company-switcher:hover{border-color:var(--gold)}
-.company-name-display{font-size:11px;color:var(--text-2);font-weight:500;line-height:1.3;flex:1}
+.company-name-display{font-size:11px;color:#FFCCCC;font-weight:700;line-height:1.3;flex:1}
 .company-arrow{color:var(--gold);font-size:10px;transition:transform .2s}
 .company-dropdown{background:#FFFFFF;border:1px solid rgba(46,125,50,0.3);border-radius:var(--radius-sm);overflow:hidden;display:none;position:absolute;top:100%;left:0;right:0;z-index:999;margin-top:4px;box-shadow:0 8px 24px rgba(0,0,0,0.12)}
 .company-dropdown.open{display:block}
@@ -94,33 +95,51 @@ h1,h2,h3,h4,h5{font-family:'Syne',sans-serif}
 .company-option:last-child{border-bottom:none}
 .company-option:hover,.company-option.active{background:var(--gold-muted);color:var(--gold)}
 .sidebar-nav{flex:1;overflow-y:auto;padding:12px 0}
-.nav-group-label{padding:8px 18px 4px;font-size:10px;color:var(--text-3);letter-spacing:1.5px;text-transform:uppercase;font-weight:600}
-.nav-item{display:flex;align-items:center;gap:10px;padding:10px 16px 10px 18px;cursor:pointer;color:var(--text-2);font-size:14px;font-weight:700;transition:all .15s;border-left:2px solid transparent;margin:1px 0;border-radius:0 8px 8px 0;margin-right:10px}
-.nav-item:hover{color:var(--text);background:rgba(255,255,255,0.04)}
-.nav-item.active{color:#1B5E20;border-left-color:#2E7D32;background:rgba(46,125,50,0.08);font-weight:600}
+.nav-group-label{padding:8px 18px 4px;font-size:10px;color:rgba(255,255,255,0.45);letter-spacing:1.5px;text-transform:uppercase;font-weight:600}
+.nav-item{display:flex;align-items:center;gap:10px;padding:10px 16px 10px 18px;cursor:pointer;color:#FFFFFF;font-size:14px;font-weight:700;transition:all .15s;border-left:2px solid transparent;margin:1px 0;border-radius:0 8px 8px 0;margin-right:10px}
+.nav-item:hover{color:#FF9999;background:rgba(255,255,255,0.08)}
+.nav-item.active{color:#FF4444;border-left-color:#CC0000;background:rgba(204,0,0,0.15);font-weight:700}
 .nav-icon{width:18px;text-align:center;font-size:15px;flex-shrink:0}
 .nav-badge{background:var(--danger);color:#fff;font-size:10px;font-weight:700;padding:2px 6px;border-radius:10px;margin-left:auto}
-.sidebar-footer{padding:14px;border-top:1px solid var(--border-2)}
+.sidebar-footer{padding:14px;border-top:1px solid rgba(255,255,255,0.12)}
 .user-pill{display:flex;align-items:center;gap:10px}
-.user-avatar{width:34px;height:34px;border-radius:50%;background:linear-gradient(135deg,var(--gold-dark),var(--gold));display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:var(--bg);flex-shrink:0}
-.user-name{font-size:12px;font-weight:600;color:var(--text);line-height:1.2}
-.user-role{font-size:10px;color:var(--text-3)}
-.btn-logout{background:none;border:none;color:var(--text-3);cursor:pointer;font-size:16px;padding:4px;margin-left:auto;transition:color .15s}
-.btn-logout:hover{color:var(--danger)}
+.user-avatar{width:34px;height:34px;border-radius:50%;background:linear-gradient(135deg,#990000,#CC0000);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:var(--bg);flex-shrink:0}
+.user-name{font-size:12px;font-weight:600;color:#FFFFFF;line-height:1.2}
+.user-role{font-size:10px;color:rgba(255,255,255,0.55)}
+.btn-logout{background:none;border:none;color:rgba(255,255,255,0.5);cursor:pointer;font-size:16px;padding:4px;margin-left:auto;transition:color .15s}
+.btn-logout:hover{color:#EF233C}
 
 /* ===== MAIN ===== */
 .main{margin-left:var(--sidebar-w);flex:1;display:flex;flex-direction:column;min-height:100vh}
-.topbar{background:#FFFFFF;border-bottom:1px solid rgba(46,125,50,0.15);padding:0 28px;height:60px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:50}
+.topbar{background:var(--card);border-bottom:3px solid #CC0000;box-shadow:0 2px 12px rgba(0,0,0,0.15);padding:0 28px;height:60px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:50}
 .topbar-left{display:flex;align-items:center;gap:12px}
 .topbar-title{font-family:'Syne',sans-serif;font-size:18px;font-weight:700}
 .topbar-company{font-size:11px;color:var(--gold);letter-spacing:0.5px}
 .topbar-right{display:flex;gap:8px;align-items:center}
 .content{padding:28px;flex:1}
+/* Section colored page titles */
+#section-clients .page-title{color:#CC0000;font-weight:900}
+#section-customers .page-title{color:#CC0000;font-weight:900}
+#section-employees .page-title{color:#CC0000;font-weight:900}
+#section-tasks .page-title{color:#CC0000;font-weight:900}
+#section-invoices .page-title{color:#CC0000;font-weight:900}
+#section-quotations .page-title{color:#CC0000;font-weight:900}
+#section-accounts .page-title{color:#CC0000;font-weight:900}
+#section-documents .page-title{color:#CC0000;font-weight:900}
+#section-users .page-title{color:#CC0000;font-weight:900}
+#section-reminders .page-title{color:#CC0000;font-weight:900}
+/* Colorful nav icons */
+.nav-item:nth-child(2) .nav-icon{color:#A29BFE}
+/* Card hover border colors per section */
+#section-clients .card:hover{border-color:#CC0000}
+#section-customers .card:hover{border-color:#CC0000}
+#section-accounts .card:hover{border-color:#CC0000}
+#section-invoices .card:hover{border-color:#CC0000}
 
 /* ===== BUTTONS ===== */
 .btn{display:inline-flex;align-items:center;gap:6px;padding:10px 20px;border-radius:var(--radius-sm);font-size:14px;font-weight:600;cursor:pointer;transition:all .15s;border:none;font-family:'DM Sans',sans-serif;letter-spacing:0.2px;white-space:nowrap}
-.btn-gold{background:linear-gradient(135deg,var(--gold-dark),var(--gold));color:#FFFFFF}
-.btn-gold:hover{transform:translateY(-1px);box-shadow:0 4px 16px rgba(46,125,50,0.4)}
+.btn-gold{background:linear-gradient(135deg,#6C63FF,#A29BFE);color:#FFFFFF}
+.btn-gold:hover{transform:translateY(-1px);box-shadow:0 6px 20px rgba(204,0,0,0.45)}
 .btn-outline{background:transparent;border:1px solid var(--border);color:var(--text-2)}
 .btn-outline:hover{border-color:var(--gold);color:var(--gold);background:var(--gold-muted)}
 .btn-danger{background:var(--danger);color:#fff}
@@ -140,14 +159,19 @@ h1,h2,h3,h4,h5{font-family:'Syne',sans-serif}
 /* ===== STAT CARDS ===== */
 .stats-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:16px;margin-bottom:24px}
 .stat-card{background:var(--card);border:1px solid var(--border-2);border-radius:var(--radius);padding:22px;position:relative;overflow:hidden;transition:all .2s;cursor:default}
-.stat-card::before{content:'';position:absolute;top:-30px;right:-30px;width:100px;height:100px;border-radius:50%;background:rgba(212,175,55,0.04)}
-.stat-card:hover{border-color:var(--border);transform:translateY(-2px);box-shadow:0 8px 30px rgba(0,0,0,0.3)}
+.stat-card::before{content:'';position:absolute;top:-30px;right:-30px;width:100px;height:100px;border-radius:50%;background:rgba(108,99,255,0.06)}
+.stat-card:hover{border-color:var(--gold);transform:translateY(-3px);box-shadow:0 10px 30px rgba(108,99,255,0.2)}
+.stat-card:nth-child(1){border-top:4px solid #CC0000}
+.stat-card:nth-child(2){border-top:4px solid #000000}
+.stat-card:nth-child(3){border-top:4px solid #CC0000}
+.stat-card:nth-child(4){border-top:4px solid #000000}
+.stat-card:nth-child(5){border-top:4px solid #CC0000}
 .stat-icon{font-size:22px;margin-bottom:14px}
-.stat-value{font-family:'Syne',sans-serif;font-size:28px;font-weight:700;color:#1B5E20;line-height:1}
+.stat-value{font-family:'Syne',sans-serif;font-size:28px;font-weight:800;color:#CC0000;line-height:1}
 .stat-label{font-size:13px;color:var(--text-3);margin-top:6px;letter-spacing:0.3px}
 .stat-sub{font-size:11px;margin-top:6px;color:var(--text-3)}
 .progress-bar{height:3px;background:var(--border-2);border-radius:2px;overflow:hidden;margin-top:12px}
-.progress-fill{height:100%;background:linear-gradient(90deg,#1B5E20,#43A047);border-radius:2px;transition:width .6s ease}
+.progress-fill{height:100%;background:linear-gradient(90deg,#CC0000,#FF4444);border-radius:2px;transition:width .6s ease}
 
 /* ===== TABLES ===== */
 .table-wrap{overflow-x:auto;border-radius:var(--radius-sm)}
@@ -165,7 +189,7 @@ tbody td:first-child{color:var(--text);font-weight:500}
 .badge-danger{background:rgba(229,90,90,0.12);color:var(--danger)}
 .badge-warning{background:rgba(224,144,48,0.12);color:var(--warning)}
 .badge-info{background:rgba(74,158,224,0.12);color:var(--info)}
-.badge-gold{background:var(--gold-muted);color:var(--gold)}
+.badge-gold{background:rgba(108,99,255,0.12);color:#6C63FF}
 .badge-muted{background:rgba(255,255,255,0.06);color:var(--text-3)}
 
 /* ===== FORMS ===== */
@@ -188,7 +212,7 @@ select.form-control{cursor:pointer}
 .modal-lg{max-width:820px}
 .modal-sm{max-width:440px}
 @keyframes modalIn{from{opacity:0;transform:translateY(-12px) scale(0.97)}to{opacity:1;transform:translateY(0) scale(1)}}
-.modal-header{padding:22px 26px 16px;border-bottom:1px solid var(--border-2);display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;background:var(--card);z-index:5}
+.modal-header{padding:22px 26px 16px;border-bottom:3px solid #CC0000;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;background:var(--card);z-index:5}
 .modal-title{font-family:'Syne',sans-serif;font-size:19px;font-weight:700}
 .modal-close{background:none;border:none;color:var(--text-3);font-size:22px;cursor:pointer;line-height:1;padding:4px;transition:color .15s;border-radius:6px}
 .modal-close:hover{color:var(--danger);background:rgba(229,90,90,0.1)}
@@ -212,7 +236,7 @@ select.form-control{cursor:pointer}
 .tabs{display:flex;border-bottom:1px solid var(--border-2);margin-bottom:22px;gap:0}
 .tab{padding:10px 22px;cursor:pointer;font-size:13px;color:var(--text-3);border-bottom:2px solid transparent;margin-bottom:-1px;transition:all .15s;font-weight:500}
 .tab:hover{color:var(--text-2)}
-.tab.active{color:var(--gold);border-bottom-color:var(--gold);font-weight:600}
+.tab.active{color:#CC0000;border-bottom-color:#CC0000;font-weight:700}
 
 /* ===== ALERTS ===== */
 .alert{padding:12px 16px;border-radius:var(--radius-sm);font-size:13px;margin-bottom:16px;display:flex;align-items:center;gap:8px}
@@ -246,16 +270,16 @@ select.form-control{cursor:pointer}
 .section.active{display:block}
 
 /* ===== WELCOME BANNER ===== */
-.welcome-banner{background:linear-gradient(135deg,#C8E6C9 0%,#E8F5E9 100%);border:1px solid var(--border);border-radius:16px;padding:28px 32px;margin-bottom:28px;position:relative;overflow:hidden}
+.welcome-banner{background:linear-gradient(135deg,#1A1A1A 0%,#2D2D2D 60%,#CC0000 100%);border:1px solid var(--border);border-radius:16px;padding:28px 32px;margin-bottom:28px;position:relative;overflow:hidden}
 .welcome-banner::before{content:'';position:absolute;top:-50px;right:-50px;width:200px;height:200px;border-radius:50%;background:radial-gradient(circle,rgba(212,175,55,0.08) 0%,transparent 70%)}
-.section-tag{display:inline-flex;align-items:center;background:rgba(46,125,50,0.10);color:#1B5E20;font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;padding:4px 12px;border-radius:20px;margin-bottom:10px;border:1px solid var(--border)}
+.section-tag{display:inline-flex;align-items:center;background:rgba(204,0,0,0.10);color:#990000;font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;padding:4px 12px;border-radius:20px;margin-bottom:10px;border:1px solid var(--border)}
 .status-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0}
 .status-dot.green{background:var(--success);box-shadow:0 0 6px var(--success)}
 .status-dot.orange{background:var(--warning)}
 .status-dot.red{background:var(--danger);box-shadow:0 0 6px var(--danger)}
 .quick-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:18px}
-.quick-btn{background:var(--gold-muted);border:1px solid var(--border);color:var(--gold);border-radius:var(--radius-sm);padding:7px 14px;font-size:12px;cursor:pointer;transition:all .15s;font-weight:500;display:flex;align-items:center;gap:6px;font-family:'DM Sans',sans-serif}
-.quick-btn:hover{background:rgba(212,175,55,0.2);transform:translateY(-1px)}
+.quick-btn{background:rgba(204,0,0,0.25);border:1px solid rgba(255,100,100,0.5);color:#FFFFFF;border-radius:var(--radius-sm);padding:7px 14px;font-size:12px;cursor:pointer;transition:all .15s;font-weight:500;display:flex;align-items:center;gap:6px;font-family:'DM Sans',sans-serif}
+.quick-btn:hover{background:rgba(255,255,255,0.25);transform:translateY(-2px);box-shadow:0 4px 12px rgba(0,0,0,0.15)}
 
 /* ===== INSIGHT CARDS ===== */
 .insight-card{background:var(--card-2);border:1px solid var(--border-2);border-radius:10px;padding:16px}
@@ -319,7 +343,7 @@ select.form-control{cursor:pointer}
 .kanban-card:hover{border-color:var(--gold);transform:translateY(-1px)}
 
 /* ===== RESPONSIVE TOPBAR TITLE ===== */
-#topbar-title-main{font-family:'Syne',sans-serif;font-size:19px;font-weight:700}
+#topbar-title-main{font-family:'Syne',sans-serif;font-size:19px;font-weight:900;color:#000000}
 #topbar-company-sub{font-size:11px;color:var(--gold);letter-spacing:0.3px}
 </style>
 </head>
@@ -436,8 +460,8 @@ select.form-control{cursor:pointer}
               <div class="section-tag">COMMAND CENTER</div>
               <div style="display:flex;align-items:flex-start;justify-content:space-between;flex-wrap:wrap;gap:12px">
                 <div>
-                  <div style="font-family:'Syne',sans-serif;font-size:26px;font-weight:800;color:var(--text)" id="dashboard-greeting">Good morning ☀️</div>
-                  <div style="font-size:13px;color:var(--text-2);margin-top:4px" id="dashboard-company-sub">Expedia Business & Services L.L.C · Overview</div>
+                  <div style="font-family:'Syne',sans-serif;font-size:26px;font-weight:900;color:#FFFFFF" id="dashboard-greeting">Good morning ☀️</div>
+                  <div style="font-size:13px;color:rgba(255,255,255,0.85);margin-top:4px" id="dashboard-company-sub">Expedia Business & Services L.L.C · Overview</div>
                   <div style="display:flex;align-items:center;gap:16px;margin-top:10px;flex-wrap:wrap">
                     <div style="display:flex;align-items:center;gap:5px"><span class="status-dot green"></span><span style="font-size:11px;color:var(--text-3)">System Online</span></div>
                     <div style="font-size:11px;color:var(--text-3);background:var(--gold-muted);border:1px solid var(--border);padding:3px 10px;border-radius:20px" id="dash-date">Loading...</div>
@@ -893,7 +917,7 @@ select.form-control{cursor:pointer}
 
 <!-- TRANSACTION MODAL -->
 <div class="modal-overlay" id="transaction-modal">
-  <div class="modal">
+  <div class="modal modal-lg">
     <div class="modal-header"><span class="modal-title" id="transaction-modal-title">Add Transaction</span><button class="modal-close" onclick="closeModal('transaction-modal')">✕</button></div>
     <div class="modal-body">
       <div class="form-grid">
@@ -913,12 +937,19 @@ select.form-control{cursor:pointer}
         </div>
         <div class="form-group"><label class="form-label">Link to Client</label><input class="form-control" id="tr-client" placeholder="Optional client name"></div>
         <div class="form-group form-full">
-          <label class="form-label">📎 Attach Receipt (PDF / Image)</label>
-          <div class="receipt-drop" id="tr-receipt-drop" onclick="document.getElementById('tr-receipt-input').click()" ondragover="event.preventDefault();this.classList.add('drag-over')" ondragleave="this.classList.remove('drag-over')" ondrop="handleReceiptDrop(event)">
-            <div style="font-size:22px;margin-bottom:4px">📄</div>
-            <div id="tr-receipt-label" style="font-size:13px;color:var(--text-2)">Click or drag & drop receipt here (PDF, JPG, PNG)</div>
+          <label class="form-label">📎 Attachments — <span style="color:var(--gold);font-weight:600">Multiple files allowed</span></label>
+          <div class="receipt-drop" id="tr-receipt-drop"
+            onclick="document.getElementById('tr-receipt-input').click()"
+            ondragover="event.preventDefault();this.classList.add('drag-over')"
+            ondragleave="this.classList.remove('drag-over')"
+            ondrop="handleReceiptDrop(event)">
+            <div style="font-size:28px;margin-bottom:6px">📎</div>
+            <div style="font-size:13px;color:var(--text-2);font-weight:600">Click or drag & drop files here</div>
+            <div style="font-size:11px;color:var(--text-3);margin-top:4px">PDF, JPG, PNG — You can attach multiple files</div>
           </div>
-          <input type="file" id="tr-receipt-input" style="display:none" accept=".pdf,.jpg,.jpeg,.png" onchange="attachReceipt(this)">
+          <input type="file" id="tr-receipt-input" style="display:none" accept=".pdf,.jpg,.jpeg,.png" multiple onchange="attachMultipleReceipts(this)">
+          <!-- Attached files list -->
+          <div id="tr-attachments-list" style="margin-top:10px;display:flex;flex-direction:column;gap:6px"></div>
         </div>
       </div>
     </div>
@@ -1031,6 +1062,8 @@ let db = null;
 let currentUser = null;
 let currentCompany = 1;
 let editingId = null;
+let pendingAttachments = []; // Array of {data, mime, name} for multiple files
+// Legacy single receipt vars kept for backward compat
 let pendingReceipt = null;
 let pendingReceiptMime = null;
 let pendingReceiptName = null;
@@ -1048,7 +1081,7 @@ try {
   console.log('Supabase initialized');
 } catch(e) { console.log('Supabase init failed:', e); }
 
-// ===== DATA LAYER (Supabase PRIMARY + localStorage CACHE) =====
+// ===== DATA LAYER (Supabase ONLY — localStorage is display cache) =====
 const SB_TABLES = { clients:'clients',customers:'customers',employees:'employees',tasks:'tasks',invoices:'invoices',quotations:'quotations',transactions:'transactions' };
 
 function genId() { return Date.now().toString(36) + Math.random().toString(36).substr(2); }
@@ -1056,32 +1089,37 @@ function fmtAED(n) { return 'AED ' + parseFloat(n||0).toLocaleString('en-AE',{mi
 function fmtDate(d) { return d ? new Date(d).toLocaleDateString('en-AE') : '—'; }
 function today() { return new Date().toISOString().split('T')[0]; }
 
-// localStorage cache (fast reads, offline fallback)
-function cacheSet(key, data) { try { localStorage.setItem(`crm_${currentCompany}_${key}`, JSON.stringify(data)); } catch(e) {} }
-function cacheGet(key) { try { const d = localStorage.getItem(`crm_${currentCompany}_${key}`); return d ? JSON.parse(d) : null; } catch(e) { return null; } }
-function saveGlobal(key, data) { try { localStorage.setItem(`crm_global_${key}`, JSON.stringify(data)); } catch(e) {} }
-function loadGlobal(key) { try { const d = localStorage.getItem(`crm_global_${key}`); return d ? JSON.parse(d) : []; } catch(e) { return []; } }
+// localStorage = display cache ONLY. Never primary source.
+function cacheSet(key, data) { try { localStorage.setItem('crm_'+currentCompany+'_'+key, JSON.stringify(data)); } catch(e) {} }
+function cacheGet(key) { try { const d = localStorage.getItem('crm_'+currentCompany+'_'+key); return d ? JSON.parse(d) : []; } catch(e) { return []; } }
+function saveGlobal(key, data) { try { localStorage.setItem('crm_global_'+key, JSON.stringify(data)); } catch(e) {} }
+function loadGlobal(key) { try { const d = localStorage.getItem('crm_global_'+key); return d ? JSON.parse(d) : []; } catch(e) { return []; } }
 
 // LOAD: Supabase first, fallback to cache
 async function loadData(key) {
   const tbl = SB_TABLES[key];
   if (tbl) {
     try {
-      // Direct fetch with anon key - most reliable method
+      const controller = new AbortController();
+      const timer = setTimeout(() => controller.abort(), 8000);
       const res = await fetch(
         SUPABASE_URL + '/rest/v1/' + tbl + '?company_id=eq.' + currentCompany + '&order=created_at.asc',
-        { headers: { 'apikey': SUPABASE_KEY, 'Authorization': 'Bearer ' + SUPABASE_KEY, 'Content-Type': 'application/json' } }
+        { headers: { 'apikey': SUPABASE_KEY, 'Authorization': 'Bearer ' + SUPABASE_KEY }, signal: controller.signal }
       );
+      clearTimeout(timer);
       if (res.ok) {
         const data = await res.json();
-        cacheSet(key, data);
-        return data;
-      } else {
-        console.log('Fetch error for', key, res.status, await res.text());
+        if (data && Array.isArray(data)) {
+          cacheSet(key, data); // Update cache with fresh data
+          return data;
+        }
       }
-    } catch(e) { console.log('loadData error:', key, e); }
+    } catch(e) { /* offline - use cache */ }
   }
-  return cacheGet(key) || [];
+  // Offline fallback
+  const cached = cacheGet(key);
+  if (cached && cached.length > 0) return cached;
+  return [];
 }
 
 // SAVE: Supabase first, always update cache
@@ -1089,37 +1127,41 @@ async function saveData(key, data) {
   cacheSet(key, data); // instant cache update
 }
 
-// UPSERT single record to Supabase
+// UPSERT single record to Supabase - ALWAYS saves to cloud
 async function saveRecord(key, record) {
   const tbl = SB_TABLES[key];
   const withCompany = { ...record, company_id: currentCompany };
-  // Update cache immediately
+  
+  // Update cache immediately so UI feels fast
   const cached = cacheGet(key) || [];
   const idx = cached.findIndex(x => x.id === record.id);
   if (idx >= 0) cached[idx] = withCompany; else cached.push(withCompany);
   cacheSet(key, cached);
-  // Save to Supabase via direct fetch (upsert)
+  
+  // Save to Supabase cloud (permanent storage)
   if (tbl) {
     try {
-      const res = await fetch(
-        SUPABASE_URL + '/rest/v1/' + tbl,
-        {
-          method: 'POST',
-          headers: {
-            'apikey': SUPABASE_KEY,
-            'Authorization': 'Bearer ' + SUPABASE_KEY,
-            'Content-Type': 'application/json',
-            'Prefer': 'resolution=merge-duplicates'
-          },
-          body: JSON.stringify(withCompany)
-        }
-      );
-      if (!res.ok) {
-        const err = await res.text();
-        console.log('Save error:', err);
-        showToast('Cloud save failed — saved locally only', 'warning');
+      const res = await fetch(SUPABASE_URL + '/rest/v1/' + tbl, {
+        method: 'POST',
+        headers: {
+          'apikey': SUPABASE_KEY,
+          'Authorization': 'Bearer ' + SUPABASE_KEY,
+          'Content-Type': 'application/json',
+          'Prefer': 'resolution=merge-duplicates'
+        },
+        body: JSON.stringify(withCompany)
+      });
+      if (res.ok) {
+        // Success - refresh cache from Supabase to stay in sync
+        const fresh = await loadData(key);
+        return withCompany;
+      } else {
+        console.log('Supabase save error:', res.status);
+        showToast('⚠️ Saved locally only — check internet', 'warning');
       }
-    } catch(e) { showToast('Offline — saved locally', 'warning'); }
+    } catch(e) {
+      showToast('⚠️ Offline — data saved locally, will sync when online', 'warning');
+    }
   }
   return withCompany;
 }
@@ -1130,14 +1172,14 @@ async function deleteRecord(type, id) {
   // Remove from cache
   const cached = cacheGet(type) || [];
   cacheSet(type, cached.filter(x => x.id !== id));
-  // Delete from Supabase via direct fetch
+  // Delete from Supabase cloud permanently
   if (tbl) {
     try {
-      await fetch(
-        SUPABASE_URL + '/rest/v1/' + tbl + '?id=eq.' + id,
-        { method: 'DELETE', headers: { 'apikey': SUPABASE_KEY, 'Authorization': 'Bearer ' + SUPABASE_KEY } }
-      );
-    } catch(e) {}
+      await fetch(SUPABASE_URL + '/rest/v1/' + tbl + '?id=eq.' + id, {
+        method: 'DELETE',
+        headers: { 'apikey': SUPABASE_KEY, 'Authorization': 'Bearer ' + SUPABASE_KEY }
+      });
+    } catch(e) { console.log('Delete from cloud failed:', e); }
   }
   // Update UI
   switch(type) {
@@ -1156,16 +1198,22 @@ async function deleteRecord(type, id) {
 // SYNC ALL: pull latest from Supabase into cache
 async function syncAllAndRefresh() {
   showSyncStatus('syncing');
-  try {
-    for (const key of Object.keys(SB_TABLES)) await loadData(key);
-    showSyncStatus('ok');
-    showToast('✅ Synced from cloud!', 'success');
-    const active = document.querySelector('.section.active');
-    if (active) await loadSection(active.id.replace('section-', ''));
-  } catch(e) {
-    showSyncStatus('error');
-    showToast('Could not reach cloud — showing local data', 'warning');
+  let anySuccess = false;
+  for (const key of Object.keys(SB_TABLES)) {
+    try {
+      await loadData(key);
+      anySuccess = true;
+    } catch(e) {}
   }
+  if (anySuccess) {
+    showSyncStatus('ok');
+    showToast('✅ All data loaded from cloud!', 'success');
+  } else {
+    showSyncStatus('error');
+    showToast('⚠️ Could not reach cloud — check internet connection', 'warning');
+  }
+  const active = document.querySelector('.section.active');
+  if (active) await loadSection(active.id.replace('section-', ''));
 }
 
 function showSyncStatus(status) {
@@ -1911,48 +1959,96 @@ function renderAccountsTable(txns) {
     </div></td>
   </tr>`).join('');
 }
-function attachReceipt(input) {
-  const file=input.files[0]; if(!file) return;
-  const reader=new FileReader();
-  reader.onload=e=>{ pendingReceipt=e.target.result; pendingReceiptMime=file.type; pendingReceiptName=file.name; document.getElementById('tr-receipt-label').innerHTML=`✅ <strong style="color:var(--gold)">${file.name}</strong> ready to save`; document.getElementById('tr-receipt-drop').classList.add('has-file'); };
-  reader.readAsDataURL(file);
+// ===== MULTI-ATTACHMENT FUNCTIONS =====
+function attachMultipleReceipts(input) {
+  const files = Array.from(input.files);
+  if (!files.length) return;
+  files.forEach(file => {
+    const reader = new FileReader();
+    reader.onload = e => {
+      pendingAttachments.push({ data: e.target.result, mime: file.type, name: file.name, size: file.size });
+      renderAttachmentsList();
+      document.getElementById('tr-receipt-drop').classList.add('has-file');
+    };
+    reader.readAsDataURL(file);
+  });
+  input.value = '';
 }
 function handleReceiptDrop(event) {
-  event.preventDefault(); document.getElementById('tr-receipt-drop').classList.remove('drag-over');
-  const file=event.dataTransfer.files[0]; if(!file) return;
-  const reader=new FileReader();
-  reader.onload=e=>{ pendingReceipt=e.target.result; pendingReceiptMime=file.type; pendingReceiptName=file.name; document.getElementById('tr-receipt-label').innerHTML=`✅ <strong style="color:var(--gold)">${file.name}</strong> ready to save`; document.getElementById('tr-receipt-drop').classList.add('has-file'); };
-  reader.readAsDataURL(file);
+  event.preventDefault();
+  document.getElementById('tr-receipt-drop').classList.remove('drag-over');
+  const files = Array.from(event.dataTransfer.files);
+  files.forEach(file => {
+    const reader = new FileReader();
+    reader.onload = e => {
+      pendingAttachments.push({ data: e.target.result, mime: file.type, name: file.name, size: file.size });
+      renderAttachmentsList();
+      document.getElementById('tr-receipt-drop').classList.add('has-file');
+    };
+    reader.readAsDataURL(file);
+  });
 }
-function viewReceipt(id) {
+function renderAttachmentsList() {
+  const list = document.getElementById('tr-attachments-list');
+  if (!list) return;
+  if (!pendingAttachments.length) { list.innerHTML = ''; return; }
+  list.innerHTML = pendingAttachments.map((a, i) => `
+    <div style="display:flex;align-items:center;gap:10px;padding:9px 12px;background:var(--card-2);border:1px solid var(--border);border-radius:8px">
+      <span style="font-size:18px">${a.mime.includes('image') ? '🖼' : '📄'}</span>
+      <div style="flex:1;min-width:0">
+        <div style="font-size:12px;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${a.name}</div>
+        <div style="font-size:10px;color:var(--text-3)">${(a.size/1024).toFixed(1)} KB</div>
+      </div>
+      <button onclick="removePendingAttachment(${i})" style="background:none;border:none;color:var(--danger);cursor:pointer;font-size:16px;padding:2px 6px">✕</button>
+    </div>`).join('');
+}
+function removePendingAttachment(idx) {
+  pendingAttachments.splice(idx, 1);
+  renderAttachmentsList();
+  if (!pendingAttachments.length) document.getElementById('tr-receipt-drop').classList.remove('has-file');
+}
+// Legacy single receipt (kept for backward compat)
+function attachReceipt(input) { attachMultipleReceipts(input); }
+function viewReceipt(id) { viewAttachments(id); }
+function viewAttachments(id) {
   const t = allTransactions.find(x => x.id === id);
-  if (!t || !t.receipt) { showToast('No receipt attached', 'warning'); return; }
-  try {
-    const isImage = t.receiptMime && t.receiptMime.includes('image');
-    const w = window.open('', '_blank');
-    if (!w) {
-      // Popup blocked - download instead
-      const a = document.createElement('a');
-      a.href = t.receipt;
-      a.download = t.receiptName || 'receipt';
-      a.click();
-      showToast('Receipt downloaded (popup was blocked)', 'info');
-      return;
-    }
-    if (isImage) {
-      w.document.write('<html><head><title>Receipt - ' + (t.receiptName||'') + '</title></head><body style="margin:0;background:#111;display:flex;align-items:center;justify-content:center;min-height:100vh"><img src="' + t.receipt + '" style="max-width:100%;max-height:100vh;object-fit:contain"></body></html>');
-    } else {
-      w.document.write('<html><head><title>Receipt - ' + (t.receiptName||'') + '</title></head><body style="margin:0"><embed src="' + t.receipt + '" type="application/pdf" width="100%" height="100%" style="position:fixed;inset:0;border:none"></body></html>');
-    }
-    w.document.close();
-  } catch(e) {
-    // Fallback: download the file
-    const a = document.createElement('a');
-    a.href = t.receipt;
-    a.download = t.receiptName || 'receipt';
-    a.click();
-    showToast('Receipt downloaded', 'info');
+  if (!t) return;
+  // Build attachments list (new format or legacy single)
+  let files = [];
+  if (t.attachments && t.attachments.length > 0) {
+    files = t.attachments;
+  } else if (t.receipt) {
+    files = [{ data: t.receipt, mime: t.receiptMime, name: t.receiptName || 'receipt' }];
   }
+  if (!files.length) { showToast('No attachments for this transaction', 'warning'); return; }
+  // Open all files in a single viewer window
+  const w = window.open('', '_blank');
+  if (!w) {
+    // Popup blocked - download all
+    files.forEach(f => { const a = document.createElement('a'); a.href = f.data; a.download = f.name || 'attachment'; a.click(); });
+    showToast('Files downloaded (popup blocked)', 'info');
+    return;
+  }
+  const filesHTML = files.map((f, i) => {
+    const isImage = f.mime && f.mime.includes('image');
+    const content = isImage
+      ? `<img src="${f.data}" style="max-width:100%;border-radius:8px;box-shadow:0 4px 20px rgba(0,0,0,0.3)">`
+      : `<embed src="${f.data}" type="application/pdf" width="100%" height="600px" style="border-radius:8px">`;
+    return `<div style="background:#1a1a1a;border-radius:12px;padding:16px;margin-bottom:20px">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+        <span style="color:#D4AF37;font-weight:700;font-size:14px">📎 ${f.name || 'Attachment '+(i+1)}</span>
+        <a href="${f.data}" download="${f.name||'attachment'}" style="background:#D4AF37;color:#000;padding:6px 14px;border-radius:6px;text-decoration:none;font-size:12px;font-weight:700">⬇ Download</a>
+      </div>
+      ${content}
+    </div>`;
+  }).join('');
+  w.document.write(`<html><head><title>Attachments (${files.length}) - ${t.description}</title></head>
+    <body style="margin:0;padding:20px;background:#111;font-family:Arial,sans-serif;min-height:100vh">
+      <h2 style="color:#D4AF37;margin-bottom:6px">${t.description}</h2>
+      <p style="color:#888;font-size:12px;margin-bottom:20px">${files.length} attachment(s) · ${fmtDate(t.date)} · ${fmtAED(t.amount)}</p>
+      ${filesHTML}
+    </body></html>`);
+  w.document.close();
 }
 function editTransaction(id) {
   const t=allTransactions.find(x=>x.id===id); if(!t) return;
@@ -1960,24 +2056,60 @@ function editTransaction(id) {
   document.getElementById('tr-date').value=t.date||''; document.getElementById('tr-type').value=t.type||'Income';
   document.getElementById('tr-desc').value=t.description||''; document.getElementById('tr-amount').value=t.amount||'';
   document.getElementById('tr-category').value=t.category||''; document.getElementById('tr-client').value=t.client||'';
-  if(t.receipt){ document.getElementById('tr-receipt-label').innerHTML='✅ <strong style="color:var(--gold)">Receipt already attached</strong>'; document.getElementById('tr-receipt-drop').classList.add('has-file'); }
+  // Load existing attachments
+  pendingAttachments = [];
+  if (t.attachments && t.attachments.length > 0) {
+    pendingAttachments = [...t.attachments];
+  } else if (t.receipt) {
+    pendingAttachments = [{ data: t.receipt, mime: t.receiptMime, name: t.receiptName || 'receipt' }];
+  }
+  if (pendingAttachments.length > 0) {
+    document.getElementById('tr-receipt-drop').classList.add('has-file');
+    renderAttachmentsList();
+  }
   pendingReceipt=null; pendingReceiptMime=null; pendingReceiptName=null;
   document.getElementById('transaction-modal').classList.add('open');
 }
 async function saveTransaction() {
   try {
-    const desc=(document.getElementById('tr-desc').value||'').trim();
-    if(!desc){ showToast('Please enter a description','error'); return; }
-    const isEditing=!!editingId;
-    const existing=isEditing?allTransactions.find(x=>x.id===editingId):null;
-    const record={ id:isEditing?editingId:genId(), date:document.getElementById('tr-date').value||today(), type:document.getElementById('tr-type').value||'Income', description:desc, amount:parseFloat(document.getElementById('tr-amount').value)||0, category:document.getElementById('tr-category').value||'', client:document.getElementById('tr-client').value.trim(), receipt:pendingReceipt!==null?pendingReceipt:(existing?existing.receipt:null), receiptMime:pendingReceiptMime!==null?pendingReceiptMime:(existing?existing.receiptMime:null), receiptName:pendingReceiptName||(existing?existing.receiptName:null), company_id:currentCompany, created_at:existing?existing.created_at:new Date().toISOString() };
-    if(isEditing) allTransactions=allTransactions.map(t=>t.id===editingId?record:t); else allTransactions.push(record);
+    const desc = (document.getElementById('tr-desc').value || '').trim();
+    if (!desc) { showToast('Please enter a description', 'error'); return; }
+    const isEditing = !!editingId;
+    const existing = isEditing ? allTransactions.find(x => x.id === editingId) : null;
+    // Build attachments array
+    let attachments = [];
+    if (pendingAttachments && pendingAttachments.length > 0) {
+      attachments = pendingAttachments.map(a => ({ data: a.data, mime: a.mime, name: a.name }));
+    } else if (existing && existing.attachments && existing.attachments.length) {
+      attachments = existing.attachments;
+    } else if (existing && existing.receipt) {
+      attachments = [{ data: existing.receipt, mime: existing.receiptMime, name: existing.receiptName || 'receipt' }];
+    }
+    const record = {
+      id: isEditing ? editingId : genId(),
+      date: document.getElementById('tr-date').value || today(),
+      type: document.getElementById('tr-type').value || 'Income',
+      description: desc,
+      amount: parseFloat(document.getElementById('tr-amount').value) || 0,
+      category: document.getElementById('tr-category').value || '',
+      client: document.getElementById('tr-client').value.trim(),
+      attachments: attachments,
+      receipt: attachments.length > 0 ? attachments[0].data : null,
+      receiptMime: attachments.length > 0 ? attachments[0].mime : null,
+      receiptName: attachments.length > 0 ? attachments[0].name : null,
+      company_id: currentCompany,
+      created_at: existing ? existing.created_at : new Date().toISOString()
+    };
+    if (isEditing) allTransactions = allTransactions.map(t => t.id === editingId ? record : t);
+    else allTransactions.push(record);
+    closeModal('transaction-modal');
+    editingId = null; pendingAttachments = [];
+    pendingReceipt = null; pendingReceiptMime = null; pendingReceiptName = null;
+    renderAccountsTable(allTransactions);
+    updateAccountTotals(allTransactions);
     await saveRecord('transactions', record);
-    document.getElementById('transaction-modal').classList.remove('open');
-    editingId=null; pendingReceipt=null; pendingReceiptMime=null; pendingReceiptName=null;
-    renderAccountsTable(allTransactions); updateAccountTotals(allTransactions);
-    showToast(isEditing?'Transaction updated!':'Transaction saved!','success');
-  } catch(err) { showToast('Error saving: '+err.message,'error'); }
+    showToast(isEditing ? 'Transaction updated! ✅' : 'Transaction saved! ✅', 'success');
+  } catch(err) { showToast('Error saving: ' + err.message, 'error'); }
 }
 
 // MONTHLY REPORT
@@ -2260,7 +2392,7 @@ function openModal(id) {
   modal.querySelectorAll('[id$="-tab-info"],[id^="cu-tab-info"],[id^="client-tab-info"],[id^="emp-tab-info"],[id^="cu-tab-info"]').forEach(t=>t.style.display='');
   modal.querySelectorAll('[id$="-tab-docs"],[id$="-tab-salary"],[id^="cu-tab-docs"]').forEach(t=>t.style.display='none');
   // Special resets
-  if(id==='transaction-modal'){ document.getElementById('tr-date').value=today(); document.getElementById('tr-receipt-label').textContent='Click or drag & drop receipt here (PDF, JPG, PNG)'; document.getElementById('tr-receipt-drop').className='receipt-drop'; pendingReceipt=null; pendingReceiptMime=null; pendingReceiptName=null; document.getElementById('tr-receipt-input').value=''; }
+  if(id==='transaction-modal'){ document.getElementById('tr-date').value=today(); document.getElementById('tr-receipt-drop').className='receipt-drop'; pendingAttachments=[]; pendingReceipt=null; pendingReceiptMime=null; pendingReceiptName=null; document.getElementById('tr-receipt-input').value=''; const al=document.getElementById('tr-attachments-list'); if(al) al.innerHTML=''; }
   if(id==='invoice-modal'){ invoiceItems=[]; renderInvoiceItems(); addInvoiceItem(); calcInvoice(); const invs=loadData('invoices'); document.getElementById('inv-number').value='INV-'+new Date().getFullYear()+'-'+String(invs.length+1).padStart(3,'0'); document.getElementById('invoice-modal-title').textContent='New Invoice'; document.getElementById('inv-status').value='Draft'; }
   if(id==='quotation-modal'){ quotationItems=[]; renderQuotationItems(); addQuotationItem(); calcQuotation(); const qs=loadData('quotations'); document.getElementById('q-number').value='QUO-'+new Date().getFullYear()+'-'+String(qs.length+1).padStart(3,'0'); document.getElementById('quotation-modal-title').textContent='New Quotation'; }
   if(id==='employee-modal'){ document.getElementById('employee-modal-title').textContent='Add Employee'; calcNetSalary(); document.getElementById('emp-docs-list').innerHTML=''; }
