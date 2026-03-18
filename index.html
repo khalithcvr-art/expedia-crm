@@ -1262,36 +1262,41 @@ async function saveData(key, data) {
 async function saveRecord(key, record) {
   const tbl = SB_TABLES[key];
   const withCompany = { ...record, company_id: currentCompany };
-  
+
   // Update cache immediately so UI feels fast
   const cached = cacheGet(key) || [];
   const idx = cached.findIndex(x => x.id === record.id);
   if (idx >= 0) cached[idx] = withCompany; else cached.push(withCompany);
   cacheSet(key, cached);
-  
+
   // Save to Supabase cloud (permanent storage)
   if (tbl) {
     try {
+      // Serialize jsonb fields properly (items array)
+      const payload = { ...withCompany };
+      if (payload.items && typeof payload.items !== 'string') {
+        payload.items = JSON.stringify(payload.items);
+      }
       const res = await fetch(SUPABASE_URL + '/rest/v1/' + tbl, {
         method: 'POST',
         headers: {
           'apikey': SUPABASE_KEY,
           'Authorization': 'Bearer ' + SUPABASE_KEY,
           'Content-Type': 'application/json',
-          'Prefer': 'resolution=merge-duplicates'
+          'Prefer': 'resolution=merge-duplicates,return=minimal'
         },
-        body: JSON.stringify(withCompany)
+        body: JSON.stringify(payload)
       });
-      if (res.ok) {
-        // Success - refresh cache from Supabase to stay in sync
-        const fresh = await loadData(key);
+      if (res.ok || res.status === 201) {
         return withCompany;
       } else {
-        console.log('Supabase save error:', res.status);
-        showToast('⚠️ Saved locally only — check internet', 'warning');
+        const errText = await res.text();
+        console.error('Supabase save error:', res.status, errText);
+        showToast('⚠️ Saved locally — check internet connection', 'warning');
       }
     } catch(e) {
-      showToast('⚠️ Offline — data saved locally, will sync when online', 'warning');
+      console.error('Save network error:', e);
+      showToast('⚠️ Offline — data saved locally', 'warning');
     }
   }
   return withCompany;
@@ -1962,17 +1967,36 @@ function editInvoice(id) {
   document.getElementById('invoice-modal').classList.add('open');
 }
 async function saveInvoice(forceStatus) {
-  const client=document.getElementById('inv-client').value.trim();
-  if(!client){ showToast('Client is required','error'); return; }
-  const sub=invoiceItems.reduce((s,i)=>s+(i.qty||1)*(i.price||0),0);
-  const vatOn=document.getElementById('inv-vat-toggle')?.checked;
-  const vat=vatOn?sub*0.05:0;
-  const orig=editingId?allInvoices.find(x=>x.id===editingId):null;
-  const record={ id:editingId||genId(), invoice_number:document.getElementById('inv-number').value.trim()||'INV-'+Date.now(), client, description:document.getElementById('inv-desc').value.trim(), items:invoiceItems, amount:sub, vat, total:sub+vat, due_date:document.getElementById('inv-due-date').value, status:forceStatus||document.getElementById('inv-status').value, notes:document.getElementById('inv-notes').value.trim(), company_id:currentCompany, created_at:orig?.created_at||new Date().toISOString() };
-  if(editingId) allInvoices=allInvoices.map(x=>x.id===editingId?record:x); else allInvoices.push(record);
+  const client = document.getElementById('inv-client').value.trim();
+  if (!client) { showToast('Client name is required', 'error'); return; }
+  const sub = invoiceItems.reduce((s, i) => s + (i.qty||1) * (i.price||0), 0);
+  const vatOn = document.getElementById('inv-vat-toggle')?.checked;
+  const vat = vatOn ? parseFloat((sub * 0.05).toFixed(2)) : 0;
+  const orig = editingId ? allInvoices.find(x => x.id === editingId) : null;
+  // Build record matching exact Supabase column names
+  const record = {
+    id:             editingId || genId(),
+    invoice_number: document.getElementById('inv-number').value.trim() || 'INV-' + Date.now(),
+    client:         client,
+    description:    document.getElementById('inv-desc').value.trim(),
+    items:          invoiceItems,
+    amount:         parseFloat(sub.toFixed(2)),
+    vat:            vat,
+    total:          parseFloat((sub + vat).toFixed(2)),
+    due_date:       document.getElementById('inv-due-date').value || null,
+    status:         forceStatus || document.getElementById('inv-status').value || 'Draft',
+    notes:          document.getElementById('inv-notes').value.trim(),
+    vat_enabled:    vatOn || false,
+    company_id:     currentCompany,
+    created_at:     orig?.created_at || new Date().toISOString()
+  };
+  if (editingId) allInvoices = allInvoices.map(x => x.id === editingId ? record : x);
+  else allInvoices.push(record);
   await saveRecord('invoices', record);
-  closeModal('invoice-modal'); renderInvoicesTable(allInvoices);
-  showToast(editingId?'Invoice updated!':'Invoice created!','success');
+  closeModal('invoice-modal');
+  renderInvoicesTable(allInvoices);
+  editingId = null;
+  showToast(editingId ? 'Invoice updated! ✅' : 'Invoice created! ✅', 'success');
 }
 
 // ===== QUOTATIONS =====
@@ -2031,17 +2055,35 @@ function editQuotation(id) {
   document.getElementById('quotation-modal').classList.add('open');
 }
 async function saveQuotation() {
-  const client=document.getElementById('q-client').value.trim();
-  if(!client){ showToast('Client is required','error'); return; }
-  const sub=quotationItems.reduce((s,i)=>s+(i.qty||1)*(i.price||0),0);
-  const vatOn=document.getElementById('q-vat-toggle')?.checked;
-  const vat=vatOn?sub*0.05:0;
-  const orig=editingId?allQuotations.find(x=>x.id===editingId):null;
-  const record={ id:editingId||genId(), quotation_number:document.getElementById('q-number').value.trim()||'QUO-'+Date.now(), client, description:document.getElementById('q-desc').value.trim(), items:quotationItems, amount:sub, vat, total:sub+vat, valid_until:document.getElementById('q-valid-until').value, status:document.getElementById('q-status').value||'Draft', notes:document.getElementById('q-notes').value.trim(), company_id:currentCompany, created_at:orig?.created_at||new Date().toISOString() };
-  if(editingId) allQuotations=allQuotations.map(x=>x.id===editingId?record:x); else allQuotations.push(record);
+  const client = document.getElementById('q-client').value.trim();
+  if (!client) { showToast('Client name is required', 'error'); return; }
+  const sub = quotationItems.reduce((s, i) => s + (i.qty||1) * (i.price||0), 0);
+  const vatOn = document.getElementById('q-vat-toggle')?.checked;
+  const vat = vatOn ? parseFloat((sub * 0.05).toFixed(2)) : 0;
+  const orig = editingId ? allQuotations.find(x => x.id === editingId) : null;
+  const record = {
+    id:               editingId || genId(),
+    quotation_number: document.getElementById('q-number').value.trim() || 'QUO-' + Date.now(),
+    client:           client,
+    description:      document.getElementById('q-desc').value.trim(),
+    items:            quotationItems,
+    amount:           parseFloat(sub.toFixed(2)),
+    vat:              vat,
+    total:            parseFloat((sub + vat).toFixed(2)),
+    valid_until:      document.getElementById('q-valid-until').value || null,
+    status:           document.getElementById('q-status').value || 'Draft',
+    notes:            document.getElementById('q-notes').value.trim(),
+    vat_enabled:      vatOn || false,
+    company_id:       currentCompany,
+    created_at:       orig?.created_at || new Date().toISOString()
+  };
+  if (editingId) allQuotations = allQuotations.map(x => x.id === editingId ? record : x);
+  else allQuotations.push(record);
   await saveRecord('quotations', record);
-  closeModal('quotation-modal'); renderQuotationsTable(allQuotations);
-  showToast(editingId?'Quotation updated!':'Quotation created!','success');
+  closeModal('quotation-modal');
+  renderQuotationsTable(allQuotations);
+  editingId = null;
+  showToast(editingId ? 'Quotation updated! ✅' : 'Quotation created! ✅', 'success');
 }
 function convertToInvoice(id) {
   const q=allQuotations.find(x=>x.id===id); if(!q) return;
