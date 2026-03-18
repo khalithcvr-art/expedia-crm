@@ -2096,13 +2096,34 @@ async function saveData(key, data) {
 }
 
 // UPSERT single record to Supabase - ALWAYS saves to cloud
+// Known Supabase columns per table (add new columns here when you ALTER TABLE)
+const SB_COLUMNS = {
+  clients: ['id','company_name','trade_license','license_expiry','contact_person','phone','email','service_type','followup','address','notes','company_id','created_at'],
+  customers: ['id','name','phone','email','nationality','passport','passport_expiry','eid','eid_expiry','service_type','followup','notes','company_id','created_at'],
+  employees: ['id','name','designation','position','phone','email','passport_no','passport_expiry','visa_expiry','eid','eid_expiry','nationality','basic','allowance','food','advance','notes','company_id','created_at'],
+  tasks: ['id','title','assigned','due','priority','status','notes','company_id','created_at'],
+  invoices: ['id','invoice_number','client','description','items','amount','vat','total','due_date','status','notes','vat_enabled','company_id','created_at'],
+  quotations: ['id','quotation_number','client','description','items','amount','vat','total','valid_until','status','notes','vat_enabled','company_id','created_at'],
+  transactions: ['id','date','type','category','description','amount','payment_method','reference','notes','receipt','receipt_mime','receipt_name','receipts','company_id','created_at']
+};
+
+function stripToKnownColumns(tableName, payload) {
+  const known = SB_COLUMNS[tableName];
+  if (!known) return payload; // unknown table, send as-is
+  const clean = {};
+  for (const [k, v] of Object.entries(payload)) {
+    if (known.includes(k)) clean[k] = v;
+  }
+  return clean;
+}
+
 async function saveRecord(key, record) {
   const tbl = SB_TABLES[key];
   // Sanitize all string fields to prevent XSS
   const sanitized = sanitizeRecord(record);
   const withCompany = { ...sanitized, company_id: currentCompany };
 
-  // Update cache immediately so UI feels fast
+  // Update cache immediately so UI feels fast (cache keeps ALL fields including extras like currency)
   const cached = cacheGet(key) || [];
   const idx = cached.findIndex(x => x.id === record.id);
   if (idx >= 0) cached[idx] = withCompany; else cached.push(withCompany);
@@ -2116,7 +2137,9 @@ async function saveRecord(key, record) {
       if (payload.items && typeof payload.items !== 'string') {
         payload.items = JSON.stringify(payload.items);
       }
-      const res = await fetch(SUPABASE_URL + '/rest/v1/' + tbl, {
+
+      // First attempt: send ALL fields (in case user has added the columns)
+      let res = await fetch(SUPABASE_URL + '/rest/v1/' + tbl, {
         method: 'POST',
         headers: {
           'apikey': SUPABASE_KEY,
@@ -2126,12 +2149,30 @@ async function saveRecord(key, record) {
         },
         body: JSON.stringify(payload)
       });
+
+      if (res.ok || res.status === 201) {
+        return withCompany;
+      }
+
+      // If failed (likely unknown columns), retry with only known columns
+      const cleanPayload = stripToKnownColumns(tbl, payload);
+      res = await fetch(SUPABASE_URL + '/rest/v1/' + tbl, {
+        method: 'POST',
+        headers: {
+          'apikey': SUPABASE_KEY,
+          'Authorization': 'Bearer ' + SUPABASE_KEY,
+          'Content-Type': 'application/json',
+          'Prefer': 'resolution=merge-duplicates,return=minimal'
+        },
+        body: JSON.stringify(cleanPayload)
+      });
+
       if (res.ok || res.status === 201) {
         return withCompany;
       } else {
         const errText = await res.text();
         console.error('Supabase save error:', res.status, errText);
-        showToast('⚠️ Saved locally — check internet connection', 'warning');
+        showToast('⚠️ Saved locally — cloud sync issue', 'warning');
       }
     } catch(e) {
       console.error('Save network error:', e);
