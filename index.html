@@ -551,12 +551,56 @@ body.dark-mode #topbar-title-main{color:#E0E0E0}
   .stat-card{padding:14px}
   .stat-value{font-size:22px}
 }
+
+/* ===== PHASE 4: SKELETON LOADING ===== */
+.skeleton{background:linear-gradient(90deg,var(--card-2) 25%,var(--card-3) 50%,var(--card-2) 75%);background-size:200% 100%;animation:shimmer 1.5s infinite;border-radius:6px}
+@keyframes shimmer{0%{background-position:200% 0}100%{background-position:-200% 0}}
+.skeleton-row{display:flex;gap:12px;padding:14px 0;border-bottom:1px solid var(--border-2)}
+.skeleton-circle{width:34px;height:34px;border-radius:50%}
+.skeleton-text{height:14px;border-radius:4px;flex:1}
+.skeleton-text.short{max-width:80px}
+.skeleton-text.medium{max-width:150px}
+.skeleton-card{height:80px;border-radius:var(--radius);margin-bottom:12px}
+
+/* ===== PHASE 4: KEYBOARD SHORTCUT HINTS ===== */
+.kbd{display:inline-flex;align-items:center;gap:2px;background:var(--bg);border:1px solid var(--border);border-radius:4px;padding:1px 6px;font-size:10px;font-family:'DM Sans',sans-serif;color:var(--text-3);font-weight:600;line-height:1.6}
+.shortcut-toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:#1a1a1a;color:#fff;padding:10px 20px;border-radius:var(--radius-sm);font-size:13px;font-weight:600;z-index:9999;display:none;box-shadow:0 8px 30px rgba(0,0,0,0.4)}
+.shortcut-toast.show{display:flex;align-items:center;gap:8px}
+
+/* ===== PHASE 4: EXPORT DROPDOWN ===== */
+.export-dropdown{position:relative;display:inline-block}
+.export-menu{position:absolute;top:calc(100% + 4px);right:0;background:var(--card);border:1px solid var(--border);border-radius:var(--radius-sm);box-shadow:var(--shadow);min-width:180px;z-index:100;display:none}
+.export-menu.open{display:block;animation:dropIn .15s ease}
+.export-menu-item{display:flex;align-items:center;gap:8px;padding:10px 14px;font-size:13px;cursor:pointer;transition:background .1s;color:var(--text-2)}
+.export-menu-item:hover{background:var(--gold-muted)}
+
+/* ===== PHASE 5: WHATSAPP BUTTON ===== */
+.wa-float{position:fixed;bottom:24px;right:24px;width:48px;height:48px;background:#25D366;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:24px;cursor:pointer;box-shadow:0 4px 16px rgba(37,211,102,0.4);z-index:90;transition:all .2s;border:none;color:#fff}
+.wa-float:hover{transform:scale(1.1);box-shadow:0 6px 24px rgba(37,211,102,0.5)}
+
+/* ===== PHASE 5: RTL PREP ===== */
+[dir="rtl"] .sidebar{left:auto;right:0;transform:translateX(100%)}
+[dir="rtl"] .sidebar.open{transform:translateX(0)}
+[dir="rtl"] .main{margin-left:0;margin-right:var(--sidebar-w)}
+[dir="rtl"] .nav-item{border-left:none;border-right:2px solid transparent;border-radius:8px 0 0 8px;margin-right:0;margin-left:10px;padding:10px 18px 10px 16px}
+[dir="rtl"] .nav-item.active{border-right-color:#CC0000}
+@media(max-width:768px){[dir="rtl"] .main{margin-right:0}[dir="rtl"] .sidebar{transform:translateX(100%)}[dir="rtl"] .sidebar.open{transform:translateX(0)}}
+
+/* ===== PHASE 4: PAGE TRANSITIONS ===== */
+.section{transition:opacity .2s ease}
+.section.active{opacity:1}
 </style>
 </head>
 <body>
 
 <!-- TOAST -->
 <div id="toast"></div>
+
+<!-- KEYBOARD SHORTCUT TOAST -->
+<div class="shortcut-toast" id="shortcut-toast"></div>
+
+<!-- WHATSAPP FLOAT BUTTON -->
+<button class="wa-float" id="wa-float" onclick="openWhatsApp()" title="Chat on WhatsApp" style="display:none">💬</button>
 
 <!-- AUTH SCREEN -->
 <div id="auth-screen">
@@ -767,7 +811,7 @@ body.dark-mode #topbar-title-main{color:#E0E0E0}
         <div class="section" id="section-customers">
           <div class="page-header">
             <div><div class="page-title">Customer Management</div><div class="page-subtitle">Individual customers & service records</div></div>
-            <div class="page-actions"><button class="btn btn-gold" onclick="openModal('customer-modal')">+ Add Customer</button></div>
+            <div class="page-actions"><button class="btn btn-outline" onclick="exportCustomers()">📊 Export</button><button class="btn btn-gold" onclick="openModal('customer-modal')">+ Add Customer</button></div>
           </div>
           <div class="card"><div class="card-body">
             <div class="search-bar">
@@ -782,7 +826,7 @@ body.dark-mode #topbar-title-main{color:#E0E0E0}
         <div class="section" id="section-employees">
           <div class="page-header">
             <div><div class="page-title">Employee Management</div><div class="page-subtitle">HR records & document expiry tracking</div></div>
-            <div class="page-actions"><button class="btn btn-outline" onclick="generatePayrollReport()">📊 Payroll Report</button><button class="btn btn-gold" onclick="openModal('employee-modal')">+ Add Employee</button></div>
+            <div class="page-actions"><button class="btn btn-outline" onclick="exportEmployees()">📊 Export</button><button class="btn btn-outline" onclick="generatePayrollReport()">📊 Payroll Report</button><button class="btn btn-gold" onclick="openModal('employee-modal')">+ Add Employee</button></div>
           </div>
           <div id="employee-alerts"></div>
           <div class="card"><div class="card-body">
@@ -801,6 +845,7 @@ body.dark-mode #topbar-title-main{color:#E0E0E0}
                 <button class="view-toggle-btn" id="task-view-kanban" onclick="switchTaskView('kanban')">📊 Kanban</button>
               </div>
               <select class="filter-select" id="tasks-status-filter" onchange="filterTasks()"><option value="">All Status</option><option>Pending</option><option>In Progress</option><option>Done</option></select>
+              <button class="btn btn-outline" onclick="exportTasks()">📊 Export</button>
               <button class="btn btn-gold" onclick="openModal('task-modal')">+ Add Task</button>
             </div>
           </div>
@@ -833,6 +878,7 @@ body.dark-mode #topbar-title-main{color:#E0E0E0}
             <div><div class="page-title">Invoice Management</div><div class="page-subtitle">Create & manage UAE VAT invoices</div></div>
             <div class="page-actions">
               <select class="filter-select" id="invoices-status-filter" onchange="filterInvoices()"><option value="">All Status</option><option>Draft</option><option>Sent</option><option>Paid</option><option>Overdue</option></select>
+              <button class="btn btn-outline" onclick="exportInvoices()">📊 Export</button>
               <button class="btn btn-gold" onclick="openModal('invoice-modal')">+ New Invoice</button>
             </div>
           </div>
@@ -846,7 +892,10 @@ body.dark-mode #topbar-title-main{color:#E0E0E0}
         <div class="section" id="section-quotations">
           <div class="page-header">
             <div><div class="page-title">Quotations</div><div class="page-subtitle">Create quotes & convert to invoices</div></div>
-            <div class="page-actions"><button class="btn btn-gold" onclick="openModal('quotation-modal')">+ New Quotation</button></div>
+            <div class="page-actions">
+              <button class="btn btn-outline" onclick="exportQuotations()">📊 Export</button>
+              <button class="btn btn-gold" onclick="openModal('quotation-modal')">+ New Quotation</button>
+            </div>
           </div>
           <div class="card"><div class="card-body">
             <div class="search-bar"><input class="search-input" id="quotations-search" placeholder="🔍 Search quotations..." oninput="filterQuotations()"></div>
@@ -859,6 +908,7 @@ body.dark-mode #topbar-title-main{color:#E0E0E0}
           <div class="page-header">
             <div><div class="page-title">Accounts / Cashbook</div><div class="page-subtitle">Track all income & expenses</div></div>
             <div class="page-actions">
+              <button class="btn btn-outline" onclick="exportTransactions()">📥 Export CSV</button>
               <button class="btn btn-outline" onclick="openMonthlyReportModal()">📊 Monthly Report</button>
               <button class="btn btn-gold" onclick="openModal('transaction-modal')">+ Add Entry</button>
             </div>
@@ -2057,6 +2107,29 @@ function fmtAED(n) { return 'AED ' + parseFloat(n||0).toLocaleString('en-AE',{mi
 function fmtDate(d) { return d ? new Date(d).toLocaleDateString('en-AE') : '—'; }
 function today() { return new Date().toISOString().split('T')[0]; }
 
+// ===== MULTI-CURRENCY =====
+const CURRENCY_SYMBOLS = { AED:'AED', USD:'$', EUR:'€', GBP:'£', SAR:'SAR', INR:'₹' };
+const CURRENCY_RATES_TO_AED = { AED:1, USD:3.6725, EUR:4.02, GBP:4.65, SAR:0.9793, INR:0.044 };
+
+function fmtCurrency(amount, currency) {
+  const sym = CURRENCY_SYMBOLS[currency] || currency || 'AED';
+  const val = parseFloat(amount || 0).toLocaleString('en-AE', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+  return sym + ' ' + val;
+}
+
+function convertToAED(amount, fromCurrency) {
+  const rate = CURRENCY_RATES_TO_AED[fromCurrency] || 1;
+  return parseFloat(amount || 0) * rate;
+}
+
+function getInvoiceCurrency() {
+  return document.getElementById('inv-currency')?.value || 'AED';
+}
+
+function getQuotationCurrency() {
+  return document.getElementById('q-currency')?.value || 'AED';
+}
+
 // localStorage = display cache ONLY. Never primary source.
 function cacheSet(key, data) { try { localStorage.setItem('crm_'+currentCompany+'_'+key, JSON.stringify(data)); } catch(e) {} }
 function cacheGet(key) { try { const d = localStorage.getItem('crm_'+currentCompany+'_'+key); return d ? JSON.parse(d) : []; } catch(e) { return []; } }
@@ -2440,6 +2513,7 @@ async function initApp() {
   document.getElementById('app').style.display = 'block';
   restoreDarkMode();
   loadNotifications();
+  showWaButton();
   updateUserDisplay();
   updateCompanyDisplay();
   // Load dashboard immediately from cache so UI appears fast
@@ -2907,6 +2981,7 @@ function renderInvoicesTable(invs) {
     <td><span class="badge ${statColors[i.status]||'badge-muted'}">${i.status||'—'}</span></td>
     <td><div style="display:flex;gap:4px">
       <button class="btn btn-outline btn-sm btn-icon" onclick="generateInvoicePDF('${i.id}')" title="PDF">📥</button>
+      <button class="btn btn-outline btn-sm btn-icon" onclick="sendWhatsAppInvoice('${i.id}')" title="WhatsApp" style="color:#25D366">💬</button>
       <button class="btn btn-outline btn-sm btn-icon" onclick="editInvoice('${i.id}')">✎</button>
       <button class="btn btn-outline btn-sm btn-icon" style="color:var(--danger)" onclick="confirmDelete('invoice','${i.id}')">🗑</button>
     </div></td>
@@ -2937,6 +3012,20 @@ function calcInvoice() {
   document.getElementById('inv-subtotal').textContent=fmtCurrency(sub, currency);
   document.getElementById('inv-vat').textContent=fmtCurrency(vat, currency);
   document.getElementById('inv-total').textContent=fmtCurrency(sub+vat, currency);
+}
+
+function toggleVatLabel(prefix) {
+  const toggle = document.getElementById(prefix + '-vat-toggle');
+  const text = document.getElementById(prefix + '-vat-text');
+  const label = document.getElementById(prefix + '-vat-label');
+  if (!toggle || !text) return;
+  const isOn = toggle.checked;
+  text.textContent = isOn ? 'ON' : 'OFF';
+  text.style.color = isOn ? 'var(--success)' : 'var(--text-3)';
+  if (label) {
+    label.style.borderColor = isOn ? 'var(--success)' : 'var(--border)';
+    label.style.background = isOn ? 'rgba(0,100,0,0.06)' : 'var(--bg)';
+  }
 }
 function editInvoice(id) {
   const inv=allInvoices.find(x=>x.id===id); if(!inv) return;
@@ -3003,6 +3092,7 @@ function renderQuotationsTable(quots) {
     <td><span class="badge ${statColors[q.status]||'badge-muted'}">${q.status||'Draft'}</span></td>
     <td><div style="display:flex;gap:4px">
       <button class="btn btn-outline btn-sm btn-icon" onclick="generateQuotationPDF('${q.id}')" title="PDF">📥</button>
+      <button class="btn btn-outline btn-sm btn-icon" onclick="sendWhatsAppQuotation('${q.id}')" title="WhatsApp" style="color:#25D366">💬</button>
       <button class="btn btn-outline btn-sm btn-icon" onclick="convertToInvoice('${q.id}')" title="Convert">📄</button>
       <button class="btn btn-outline btn-sm btn-icon" onclick="editQuotation('${q.id}')">✎</button>
       <button class="btn btn-outline btn-sm btn-icon" style="color:var(--danger)" onclick="confirmDelete('quotation','${q.id}')">🗑</button>
@@ -4410,28 +4500,7 @@ function generateReminderNotifications() {
   if (count > 0) localStorage.setItem(notifiedKey, '1');
 }
 
-// ===== PHASE 3: MULTI-CURRENCY =====
-const CURRENCY_SYMBOLS = { AED:'AED', USD:'$', EUR:'€', GBP:'£', SAR:'SAR', INR:'₹' };
-const CURRENCY_RATES_TO_AED = { AED:1, USD:3.6725, EUR:4.02, GBP:4.65, SAR:0.9793, INR:0.044 };
-
-function fmtCurrency(amount, currency) {
-  const sym = CURRENCY_SYMBOLS[currency] || currency || 'AED';
-  const val = parseFloat(amount || 0).toLocaleString('en-AE', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-  return sym + ' ' + val;
-}
-
-function convertToAED(amount, fromCurrency) {
-  const rate = CURRENCY_RATES_TO_AED[fromCurrency] || 1;
-  return parseFloat(amount || 0) * rate;
-}
-
-function getInvoiceCurrency() {
-  return document.getElementById('inv-currency')?.value || 'AED';
-}
-
-function getQuotationCurrency() {
-  return document.getElementById('q-currency')?.value || 'AED';
-}
+// ===== PHASE 3: MULTI-CURRENCY — see top of script for constants =====
 
 // ===== PHASE 3: TASK KANBAN BOARD =====
 let currentTaskView = 'table';
@@ -5198,9 +5267,235 @@ function showToast(msg, type='success') {
   setTimeout(() => item.remove(), type==='error' ? 6000 : 3500);
 }
 
+// ===== PHASE 4: SKELETON LOADERS =====
+function showSkeletonTable(tbodyId, cols, rows) {
+  const tbody = document.getElementById(tbodyId);
+  if (!tbody) return;
+  const skeletonRows = Array(rows || 5).fill(0).map(() =>
+    `<tr>${Array(cols || 6).fill(0).map(() => '<td><div class="skeleton skeleton-text" style="height:14px;width:'+Math.floor(60+Math.random()*40)+'%"></div></td>').join('')}</tr>`
+  ).join('');
+  tbody.innerHTML = skeletonRows;
+}
+
+function showSkeletonCards(containerId, count) {
+  const el = document.getElementById(containerId);
+  if (!el) return;
+  el.innerHTML = Array(count || 3).fill(0).map(() =>
+    '<div class="skeleton skeleton-card"></div>'
+  ).join('');
+}
+
+// ===== PHASE 4: KEYBOARD SHORTCUTS =====
+const SHORTCUTS = {
+  'n': { desc: 'New record', action: () => quickNew() },
+  'k': { desc: 'Search', action: () => document.getElementById('global-search')?.focus(), ctrl: true },
+  'd': { desc: 'Dashboard', action: () => showSection('dashboard') },
+  'i': { desc: 'Invoices', action: () => showSection('invoices') },
+  'c': { desc: 'Clients', action: () => showSection('clients') },
+  't': { desc: 'Tasks', action: () => showSection('tasks') },
+  'q': { desc: 'Quotations', action: () => showSection('quotations') },
+  'e': { desc: 'Employees', action: () => showSection('employees') },
+  '/': { desc: 'Shortcuts help', action: () => showShortcutHelp() }
+};
+
+function showShortcutToast(text) {
+  const toast = document.getElementById('shortcut-toast');
+  if (!toast) return;
+  toast.textContent = text;
+  toast.classList.add('show');
+  setTimeout(() => toast.classList.remove('show'), 1500);
+}
+
+function showShortcutHelp() {
+  const shortcuts = [
+    ['Alt + N', 'New record'],
+    ['Ctrl + K', 'Global search'],
+    ['Alt + D', 'Dashboard'],
+    ['Alt + I', 'Invoices'],
+    ['Alt + C', 'Clients'],
+    ['Alt + T', 'Tasks'],
+    ['Alt + Q', 'Quotations'],
+    ['Alt + E', 'Employees'],
+    ['Alt + /', 'Show shortcuts']
+  ];
+  showToast('Keyboard shortcuts: ' + shortcuts.map(s => s[0] + ' → ' + s[1]).join(' · '), 'info');
+}
+
+// Enhanced keyboard handler
+document.addEventListener('keydown', (e) => {
+  // Don't trigger if typing in an input/textarea
+  const tag = (e.target.tagName || '').toLowerCase();
+  if (tag === 'input' || tag === 'textarea' || tag === 'select') {
+    if (e.key === 'Escape') { e.target.blur(); document.getElementById('global-search-results')?.classList.remove('open'); }
+    return;
+  }
+
+  // Ctrl+K — search (works everywhere)
+  if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
+    e.preventDefault();
+    document.getElementById('global-search')?.focus();
+    return;
+  }
+
+  // Alt + key shortcuts
+  if (e.altKey && SHORTCUTS[e.key]) {
+    e.preventDefault();
+    const s = SHORTCUTS[e.key];
+    s.action();
+    showShortcutToast(s.desc);
+    return;
+  }
+
+  // Escape — close everything
+  if (e.key === 'Escape') {
+    closeAllDropdowns();
+    document.getElementById('global-search-results')?.classList.remove('open');
+    document.getElementById('notif-panel')?.classList.remove('open');
+    closeSidebar();
+    // Close any open export menu
+    document.querySelectorAll('.export-menu').forEach(m => m.classList.remove('open'));
+  }
+});
+
+// ===== PHASE 4: UNIVERSAL EXPORT =====
+function exportTableToCSV(data, columns, filename) {
+  if (!data || !data.length) { showToast('No data to export', 'error'); return; }
+  const headers = columns.map(c => c.label);
+  const rows = data.map(item => columns.map(c => {
+    let val = item[c.key] || '';
+    if (typeof val === 'object') val = JSON.stringify(val);
+    return '"' + String(val).replace(/"/g, '""') + '"';
+  }));
+  const csv = [headers.join(','), ...rows.map(r => r.join(','))].join('\n');
+  const blob = new Blob(['\ufeff' + csv], { type: 'text/csv;charset=utf-8' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = filename + '_' + new Date().toISOString().split('T')[0] + '.csv';
+  a.click();
+  URL.revokeObjectURL(a.href);
+  showToast(filename + ' exported!', 'success');
+}
+
+function exportInvoices() {
+  exportTableToCSV(allInvoices, [
+    {key:'invoice_number',label:'Invoice #'},{key:'client',label:'Client'},{key:'description',label:'Description'},
+    {key:'amount',label:'Amount'},{key:'vat',label:'VAT'},{key:'total',label:'Total'},
+    {key:'currency',label:'Currency'},{key:'due_date',label:'Due Date'},{key:'status',label:'Status'},{key:'created_at',label:'Created'}
+  ], 'Invoices');
+}
+
+function exportQuotations() {
+  exportTableToCSV(allQuotations, [
+    {key:'quotation_number',label:'Quotation #'},{key:'client',label:'Client'},{key:'description',label:'Description'},
+    {key:'amount',label:'Amount'},{key:'vat',label:'VAT'},{key:'total',label:'Total'},
+    {key:'valid_until',label:'Valid Until'},{key:'status',label:'Status'},{key:'created_at',label:'Created'}
+  ], 'Quotations');
+}
+
+function exportCustomers() {
+  exportTableToCSV(allCustomers, [
+    {key:'name',label:'Name'},{key:'phone',label:'Phone'},{key:'email',label:'Email'},
+    {key:'nationality',label:'Nationality'},{key:'passport',label:'Passport'},{key:'passport_expiry',label:'Passport Expiry'},
+    {key:'eid',label:'Emirates ID'},{key:'eid_expiry',label:'EID Expiry'},{key:'service_type',label:'Service'}
+  ], 'Customers');
+}
+
+function exportEmployees() {
+  exportTableToCSV(allEmployees, [
+    {key:'name',label:'Name'},{key:'designation',label:'Designation'},{key:'phone',label:'Phone'},
+    {key:'passport_no',label:'Passport'},{key:'passport_expiry',label:'Passport Expiry'},
+    {key:'visa_expiry',label:'Visa Expiry'},{key:'nationality',label:'Nationality'},
+    {key:'basic',label:'Basic'},{key:'allowance',label:'Allowance'}
+  ], 'Employees');
+}
+
+function exportTasks() {
+  exportTableToCSV(allTasks, [
+    {key:'title',label:'Task'},{key:'assigned',label:'Assigned To'},
+    {key:'priority',label:'Priority'},{key:'due',label:'Due Date'},{key:'status',label:'Status'},{key:'notes',label:'Notes'}
+  ], 'Tasks');
+}
+
+function exportTransactions() {
+  exportTableToCSV(allTransactions, [
+    {key:'date',label:'Date'},{key:'type',label:'Type'},{key:'category',label:'Category'},
+    {key:'description',label:'Description'},{key:'amount',label:'Amount'},{key:'payment_method',label:'Payment Method'},
+    {key:'reference',label:'Reference'}
+  ], 'Transactions');
+}
+
+// ===== PHASE 5: WHATSAPP INTEGRATION =====
+function openWhatsApp() {
+  const co = COMPANIES[currentCompany];
+  const phone = (co?.phone || '+971585858816').replace(/\D/g, '');
+  window.open('https://wa.me/' + phone, '_blank');
+}
+
+function sendWhatsAppInvoice(invoiceId) {
+  const inv = allInvoices.find(i => i.id === invoiceId);
+  if (!inv) return;
+  const co = COMPANIES[currentCompany];
+  const cur = inv.currency || 'AED';
+  const msg = encodeURIComponent(
+    `*Invoice ${inv.invoice_number}*\n` +
+    `From: ${co?.name || 'Expedia Business'}\n` +
+    `Client: ${inv.client}\n` +
+    `Amount: ${fmtCurrency(inv.total, cur)}\n` +
+    `Status: ${inv.status}\n` +
+    `Due: ${inv.due_date || 'N/A'}\n\n` +
+    `Please make payment at your earliest convenience.\nThank you!`
+  );
+  const clientPhone = prompt('Enter client WhatsApp number (with country code):', '+971');
+  if (clientPhone && clientPhone.length > 4) {
+    window.open('https://wa.me/' + clientPhone.replace(/\D/g, '') + '?text=' + msg, '_blank');
+    showToast('WhatsApp opened with invoice details', 'success');
+    if (typeof logAudit === 'function') logAudit('update', 'invoices', invoiceId, { action: 'whatsapp_sent', client: inv.client });
+  }
+}
+
+function sendWhatsAppQuotation(quotationId) {
+  const q = allQuotations.find(x => x.id === quotationId);
+  if (!q) return;
+  const co = COMPANIES[currentCompany];
+  const msg = encodeURIComponent(
+    `*Quotation ${q.quotation_number}*\n` +
+    `From: ${co?.name || 'Expedia Business'}\n` +
+    `Client: ${q.client}\n` +
+    `Amount: ${fmtAED(q.total)}\n` +
+    `Valid Until: ${q.valid_until || 'N/A'}\n\n` +
+    `Please review and confirm.\nThank you!`
+  );
+  const clientPhone = prompt('Enter client WhatsApp number (with country code):', '+971');
+  if (clientPhone && clientPhone.length > 4) {
+    window.open('https://wa.me/' + clientPhone.replace(/\D/g, '') + '?text=' + msg, '_blank');
+    showToast('WhatsApp opened with quotation details', 'success');
+  }
+}
+
+// Show WA button when app is loaded
+function showWaButton() {
+  const btn = document.getElementById('wa-float');
+  if (btn) btn.style.display = 'flex';
+}
+
+// ===== PHASE 5: LANGUAGE / RTL TOGGLE =====
+function toggleRTL() {
+  const isRTL = document.documentElement.dir === 'rtl';
+  document.documentElement.dir = isRTL ? 'ltr' : 'rtl';
+  localStorage.setItem('crm_rtl', isRTL ? '0' : '1');
+  showToast(isRTL ? 'Switched to English (LTR)' : 'Switched to Arabic mode (RTL)', 'info');
+}
+
+function restoreRTL() {
+  if (localStorage.getItem('crm_rtl') === '1') {
+    document.documentElement.dir = 'rtl';
+  }
+}
+
 // ===== STARTUP =====
 document.addEventListener('DOMContentLoaded', () => {
-  restoreDarkMode(); // Restore theme before anything renders
+  restoreDarkMode();
+  restoreRTL();
   if (checkSession()) initApp();
 });
 
