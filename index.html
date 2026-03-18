@@ -3,6 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="X-Content-Type-Options" content="nosniff">
+<meta http-equiv="X-Frame-Options" content="SAMEORIGIN">
 <title>Expedia CRM Pro — UAE Business Platform</title>
 <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
@@ -398,6 +400,126 @@ select.form-control{cursor:pointer}
 /* ===== RESPONSIVE TOPBAR TITLE ===== */
 #topbar-title-main{font-family:'Syne',sans-serif;font-size:19px;font-weight:900;color:#000000}
 #topbar-company-sub{font-size:11px;color:var(--gold);letter-spacing:0.3px}
+
+/* ===== DARK MODE ===== */
+body.dark-mode {
+  --bg: #1A1A1A;
+  --bg-2: #222222;
+  --card: #2A2A2A;
+  --card-2: #222222;
+  --card-3: #333333;
+  --text: #E0E0E0;
+  --text-2: #CCCCCC;
+  --text-3: #888888;
+  --border: rgba(255,255,255,0.15);
+  --border-2: rgba(255,255,255,0.08);
+  --shadow: 0 4px 24px rgba(0,0,0,0.6);
+  --shadow-lg: 0 8px 40px rgba(0,0,0,0.7);
+}
+body.dark-mode .auth-card{background:#2A2A2A;border-color:#CC0000}
+body.dark-mode .auth-input{background:#333;border-color:rgba(255,255,255,0.1);color:#E0E0E0}
+body.dark-mode .topbar{background:#2A2A2A;border-bottom-color:#CC0000}
+body.dark-mode thead th{color:#CCCCCC}
+body.dark-mode tbody td{color:#CCCCCC}
+body.dark-mode tbody td:first-child{color:#E0E0E0}
+body.dark-mode .card-title,.dark-mode .modal-title{color:#E0E0E0 !important}
+body.dark-mode .page-title{color:#FF4444 !important}
+body.dark-mode .stat-value{color:#FF4444}
+body.dark-mode .form-control{background:#333;border-color:rgba(255,255,255,0.1);color:#E0E0E0}
+body.dark-mode .modal{background:#2A2A2A;border-color:rgba(255,255,255,0.1)}
+body.dark-mode .modal-header{background:#2A2A2A;border-bottom-color:#CC0000}
+body.dark-mode .welcome-banner{background:linear-gradient(135deg,#111 0%,#CC0000 100%) !important}
+body.dark-mode .badge-muted{background:rgba(255,255,255,0.08);color:#888}
+body.dark-mode .company-dropdown{background:#333;border-color:rgba(255,255,255,0.15)}
+body.dark-mode .company-option{color:#CCC;border-bottom-color:rgba(255,255,255,0.06)}
+body.dark-mode .company-option:hover{background:rgba(204,0,0,0.15);color:#FF4444}
+body.dark-mode .company-option.active{background:rgba(204,0,0,0.2);color:#FF4444;border-left-color:#FF4444}
+body.dark-mode .sql-ref-card{background:#222;border-color:rgba(255,255,255,0.08)}
+body.dark-mode .sql-ref-card pre{background:#111}
+body.dark-mode .rbac-tabs{background:#222}
+body.dark-mode .rbac-tab.active{background:#333;color:#FF4444}
+body.dark-mode .perm-chip{background:#333;border-color:rgba(255,255,255,0.1);color:#888}
+body.dark-mode .perm-chip.granted{background:rgba(0,100,0,0.2);border-color:rgba(0,180,0,0.3);color:#4CAF50}
+body.dark-mode #topbar-title-main{color:#E0E0E0}
+
+/* ===== THEME TOGGLE ===== */
+.theme-toggle{background:none;border:1px solid var(--border);border-radius:20px;padding:5px 10px;cursor:pointer;font-size:14px;display:flex;align-items:center;gap:4px;color:var(--text-3);transition:all .2s}
+.theme-toggle:hover{border-color:var(--gold);color:var(--gold)}
+
+/* ===== GLOBAL SEARCH ===== */
+.global-search-wrap{position:relative}
+.global-search-input{background:var(--bg);border:1px solid var(--border-2);border-radius:20px;padding:7px 14px 7px 32px;font-size:13px;font-family:'DM Sans',sans-serif;color:var(--text);outline:none;width:220px;transition:all .25s}
+.global-search-input:focus{width:300px;border-color:var(--gold);box-shadow:0 0 0 3px rgba(204,0,0,0.08)}
+.global-search-icon{position:absolute;left:10px;top:50%;transform:translateY(-50%);font-size:13px;color:var(--text-3);pointer-events:none}
+.global-search-results{position:absolute;top:calc(100% + 6px);left:0;right:0;background:var(--card);border:1px solid var(--border);border-radius:var(--radius-sm);box-shadow:var(--shadow-lg);max-height:360px;overflow-y:auto;z-index:999;display:none}
+.global-search-results.open{display:block}
+.gsr-item{display:flex;align-items:center;gap:10px;padding:10px 14px;cursor:pointer;transition:background .1s;border-bottom:1px solid var(--border-2);font-size:13px}
+.gsr-item:last-child{border-bottom:none}
+.gsr-item:hover{background:var(--gold-muted)}
+.gsr-module{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.5px;padding:2px 8px;border-radius:10px;flex-shrink:0}
+.gsr-empty{padding:24px;text-align:center;color:var(--text-3);font-size:13px}
+
+/* ===== NOTIFICATION BELL ===== */
+.notif-wrap{position:relative}
+.notif-btn{background:none;border:1px solid var(--border);border-radius:50%;width:34px;height:34px;cursor:pointer;font-size:16px;display:flex;align-items:center;justify-content:center;transition:all .2s;position:relative;color:var(--text-3)}
+.notif-btn:hover{border-color:var(--gold);color:var(--gold)}
+.notif-dot{position:absolute;top:2px;right:2px;width:8px;height:8px;background:var(--danger);border-radius:50%;display:none}
+.notif-dot.show{display:block;animation:notifPulse 2s ease-in-out infinite}
+@keyframes notifPulse{0%,100%{opacity:1}50%{opacity:0.4}}
+.notif-panel{position:absolute;top:calc(100% + 8px);right:0;width:340px;background:var(--card);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow-lg);max-height:400px;overflow-y:auto;z-index:999;display:none}
+.notif-panel.open{display:block;animation:dropIn .15s ease}
+.notif-header{padding:14px 16px;border-bottom:1px solid var(--border-2);display:flex;align-items:center;justify-content:space-between}
+.notif-header-title{font-weight:700;font-size:14px}
+.notif-item{display:flex;gap:10px;padding:12px 16px;border-bottom:1px solid var(--border-2);transition:background .1s;cursor:pointer}
+.notif-item:hover{background:var(--gold-muted)}
+.notif-item.unread{background:rgba(204,0,0,0.03)}
+.notif-item-icon{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;flex-shrink:0;background:var(--bg)}
+.notif-item-text{font-size:12px;color:var(--text-2);line-height:1.4}
+.notif-item-time{font-size:10px;color:var(--text-3);margin-top:2px}
+
+/* ===== HAMBURGER MENU ===== */
+.hamburger{display:none;background:none;border:none;cursor:pointer;padding:6px;margin-right:8px;flex-direction:column;gap:4px;align-items:center;justify-content:center}
+.hamburger span{display:block;width:20px;height:2px;background:var(--text);border-radius:2px;transition:all .3s}
+.sidebar-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:99;backdrop-filter:blur(2px)}
+.sidebar-overlay.open{display:block}
+
+/* ===== MOBILE RESPONSIVE ===== */
+@media(max-width:1024px){
+  .stats-grid{grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px}
+  .form-grid{grid-template-columns:1fr}
+  .page-header{flex-direction:column;gap:12px}
+  .page-actions{width:100%;flex-wrap:wrap}
+  .search-bar{flex-direction:column;align-items:stretch}
+  .search-input{max-width:100%}
+  .rbac-tabs{flex-wrap:wrap}
+  .perm-grid{grid-template-columns:1fr}
+  .report-summary-grid{grid-template-columns:1fr}
+  #roles-panel > div{grid-template-columns:1fr !important}
+}
+@media(max-width:768px){
+  :root{--sidebar-w:260px}
+  .sidebar{transform:translateX(-100%);width:var(--sidebar-w);z-index:200}
+  .sidebar.open{transform:translateX(0)}
+  .main{margin-left:0}
+  .topbar{padding:0 14px}
+  .content{padding:16px}
+  .hamburger{display:flex}
+  .modal{max-width:95vw;margin:10px}
+  .modal-lg{max-width:95vw}
+  .global-search-input{width:140px}
+  .global-search-input:focus{width:200px}
+  .table-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch}
+  .table-wrap table{min-width:600px}
+  .notif-panel{width:calc(100vw - 30px);right:-60px}
+  .welcome-banner{padding:16px !important}
+  .quick-actions{flex-wrap:wrap}
+  .quick-btn{font-size:11px;padding:6px 10px}
+  .kanban-board{flex-direction:column}
+  .kanban-col{min-width:auto}
+  .invoice-item-row,.invoice-item-header{grid-template-columns:1fr 60px 80px 80px 30px;gap:4px}
+  .stat-card{padding:14px}
+  .stat-value{font-size:22px}
+}
 </style>
 </head>
 <body>
@@ -488,17 +610,39 @@ select.form-control{cursor:pointer}
       </div>
     </aside>
 
+    <!-- SIDEBAR OVERLAY (mobile) -->
+    <div class="sidebar-overlay" id="sidebar-overlay" onclick="closeSidebar()"></div>
+
     <!-- MAIN -->
     <div class="main">
       <!-- TOPBAR -->
       <header class="topbar">
         <div class="topbar-left">
+          <button class="hamburger" id="hamburger-btn" onclick="toggleSidebar()">
+            <span></span><span></span><span></span>
+          </button>
           <div>
             <div id="topbar-title-main">Dashboard</div>
             <div id="topbar-company-sub">Expedia Business & Services L.L.C</div>
           </div>
         </div>
         <div class="topbar-right">
+          <!-- GLOBAL SEARCH -->
+          <div class="global-search-wrap" id="global-search-wrap">
+            <span class="global-search-icon">🔍</span>
+            <input class="global-search-input" type="text" id="global-search" placeholder="Search everything..." oninput="debounceGlobalSearch()" onfocus="if(this.value.length>=2)document.getElementById('global-search-results').classList.add('open')" autocomplete="off">
+            <div class="global-search-results" id="global-search-results"></div>
+          </div>
+          <!-- NOTIFICATION BELL -->
+          <div class="notif-wrap">
+            <button class="notif-btn" onclick="toggleNotifPanel()">🔔<span class="notif-dot" id="notif-dot"></span></button>
+            <div class="notif-panel" id="notif-panel">
+              <div class="notif-header"><span class="notif-header-title">Notifications</span><button class="btn btn-outline btn-sm" onclick="clearNotifications()" style="font-size:11px;padding:3px 8px">Clear all</button></div>
+              <div id="notif-list"><div class="gsr-empty">No notifications yet</div></div>
+            </div>
+          </div>
+          <!-- DARK MODE TOGGLE -->
+          <button class="theme-toggle" id="theme-toggle" onclick="toggleDarkMode()" title="Toggle dark mode">🌙</button>
           <button class="btn btn-outline btn-sm" onclick="syncAllAndRefresh()">↻ Sync</button>
           <button class="btn btn-gold btn-sm" onclick="quickNew()">+ New</button>
         </div>
@@ -1563,14 +1707,15 @@ CREATE TRIGGER audit_transactions AFTER INSERT OR UPDATE OR DELETE ON transactio
       <div class="form-group" style="margin-top:14px" id="u-password-group">
         <label class="form-label">Password <span>*</span></label>
         <div style="position:relative">
-          <input class="form-control" type="password" id="u-password" placeholder="Min 6 characters" style="padding-right:44px">
+          <input class="form-control" type="password" id="u-password" placeholder="Min 8 chars: Aa1 required" style="padding-right:44px">
           <button type="button" onclick="toggleUserPwd()" style="position:absolute;right:10px;top:50%;transform:translateY(-50%);background:none;border:none;color:var(--text-3);cursor:pointer;font-size:16px" id="u-eye">👁</button>
         </div>
       </div>
       <div class="alert alert-info" style="margin-top:14px;font-size:12px">
         <strong>Roles:</strong> Super Admin (Level 1) → Admin (2) → Manager (3) → Pro User (4) → Staff (5)<br>
         <strong>Data Scope:</strong> own = personal records · assigned = delegated · company = full access<br>
-        <strong>Security:</strong> Permissions are enforced via database RLS. No role escalation allowed.
+        <strong>Security:</strong> 🔒 Passwords are SHA-256 hashed with unique salt · Rate-limited login · XSS protected<br>
+        <strong>Password:</strong> Min 8 chars with uppercase, lowercase, and number required
       </div>
     </div>
     <div class="modal-footer"><button class="btn btn-outline" onclick="closeModal('user-modal')">Cancel</button><button class="btn btn-gold" id="u-save-btn" onclick="saveUser()">Create User</button></div>
@@ -1626,7 +1771,7 @@ CREATE TRIGGER audit_transactions AFTER INSERT OR UPDATE OR DELETE ON transactio
       <div class="form-group" style="margin-bottom:14px">
         <label class="form-label">New Password</label>
         <div style="position:relative">
-          <input class="form-control" type="password" id="reset-pwd-input" placeholder="Min 6 characters" style="padding-right:44px">
+          <input class="form-control" type="password" id="reset-pwd-input" placeholder="Min 8 chars: Aa1 required" style="padding-right:44px">
           <button type="button" onclick="const i=document.getElementById('reset-pwd-input');i.type=i.type==='password'?'text':'password'" style="position:absolute;right:10px;top:50%;transform:translateY(-50%);background:none;border:none;color:var(--text-3);cursor:pointer;font-size:16px">👁</button>
         </div>
       </div>
@@ -1704,6 +1849,121 @@ try {
   console.log('Supabase initialized');
 } catch(e) { console.log('Supabase init failed:', e); }
 
+// ===== SECURITY: PASSWORD HASHING (Web Crypto API — SHA-256 + Salt) =====
+async function hashPassword(password, salt) {
+  if (!salt) salt = crypto.getRandomValues(new Uint8Array(16)).reduce((s,b) => s + b.toString(16).padStart(2,'0'), '');
+  const data = new TextEncoder().encode(salt + ':' + password);
+  const hashBuffer = await crypto.subtle.digest('SHA-256', data);
+  const hashHex = Array.from(new Uint8Array(hashBuffer)).map(b => b.toString(16).padStart(2,'0')).join('');
+  return { hash: hashHex, salt: salt };
+}
+
+async function verifyPassword(password, storedHash, storedSalt) {
+  if (!storedSalt || !storedHash) return false;
+  const { hash } = await hashPassword(password, storedSalt);
+  return hash === storedHash;
+}
+
+function isPasswordHashed(user) {
+  return !!(user && user.password_hash && user.password_salt);
+}
+
+// Auto-migrate plaintext password to hashed on login
+async function migratePasswordToHash(userId, plainPassword) {
+  const { hash, salt } = await hashPassword(plainPassword);
+  const updates = { password_hash: hash, password_salt: salt, password: '***HASHED***' };
+  // Update Supabase
+  try {
+    await fetch(SUPABASE_URL + '/rest/v1/crm_users?id=eq.' + userId, {
+      method: 'PATCH',
+      headers: { 'apikey': SUPABASE_KEY, 'Authorization': 'Bearer ' + SUPABASE_KEY, 'Content-Type': 'application/json' },
+      body: JSON.stringify(updates)
+    });
+  } catch(e) {}
+  // Update localStorage
+  const localUsers = loadGlobal('users').map(u => u.id === userId ? { ...u, ...updates } : u);
+  saveGlobal('users', localUsers);
+  return { hash, salt };
+}
+
+// ===== SECURITY: XSS SANITIZATION =====
+function escapeHtml(str) {
+  if (str === null || str === undefined) return '';
+  return String(str)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+}
+
+// Sanitize object — escapes all string values in an object (shallow)
+function sanitizeRecord(obj) {
+  if (!obj || typeof obj !== 'object') return obj;
+  const clean = {};
+  for (const [k, v] of Object.entries(obj)) {
+    if (typeof v === 'string' && k !== 'id' && k !== 'created_at' && k !== 'password' && k !== 'password_hash' && k !== 'password_salt' && !k.startsWith('receipt') && k !== 'logo') {
+      clean[k] = escapeHtml(v);
+    } else {
+      clean[k] = v;
+    }
+  }
+  return clean;
+}
+
+// Validate email format
+function isValidEmail(email) {
+  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+}
+
+// Validate password strength
+function validatePasswordStrength(pass) {
+  const errors = [];
+  if (pass.length < 8) errors.push('At least 8 characters');
+  if (!/[A-Z]/.test(pass)) errors.push('One uppercase letter');
+  if (!/[a-z]/.test(pass)) errors.push('One lowercase letter');
+  if (!/[0-9]/.test(pass)) errors.push('One number');
+  return errors;
+}
+
+// ===== SECURITY: LOGIN RATE LIMITING =====
+const loginAttempts = {};
+const MAX_LOGIN_ATTEMPTS = 5;
+const LOCKOUT_DURATION = 5 * 60 * 1000; // 5 minutes
+
+function checkRateLimit(email) {
+  const key = email.toLowerCase();
+  const now = Date.now();
+  if (!loginAttempts[key]) loginAttempts[key] = { count: 0, firstAttempt: now, lockedUntil: 0 };
+  const attempt = loginAttempts[key];
+  // Check if locked out
+  if (attempt.lockedUntil > now) {
+    const secsLeft = Math.ceil((attempt.lockedUntil - now) / 1000);
+    const minsLeft = Math.ceil(secsLeft / 60);
+    return { allowed: false, message: `Too many failed attempts. Try again in ${minsLeft} minute${minsLeft>1?'s':''}. (${secsLeft}s)` };
+  }
+  // Reset if window expired
+  if (now - attempt.firstAttempt > LOCKOUT_DURATION) {
+    attempt.count = 0;
+    attempt.firstAttempt = now;
+  }
+  return { allowed: true };
+}
+
+function recordFailedLogin(email) {
+  const key = email.toLowerCase();
+  if (!loginAttempts[key]) loginAttempts[key] = { count: 0, firstAttempt: Date.now(), lockedUntil: 0 };
+  loginAttempts[key].count++;
+  if (loginAttempts[key].count >= MAX_LOGIN_ATTEMPTS) {
+    loginAttempts[key].lockedUntil = Date.now() + LOCKOUT_DURATION;
+    loginAttempts[key].count = 0;
+  }
+}
+
+function clearLoginAttempts(email) {
+  delete loginAttempts[email.toLowerCase()];
+}
+
 // ===== DATA LAYER (Supabase ONLY — localStorage is display cache) =====
 const SB_TABLES = { clients:'clients',customers:'customers',employees:'employees',tasks:'tasks',invoices:'invoices',quotations:'quotations',transactions:'transactions' };
 
@@ -1753,7 +2013,9 @@ async function saveData(key, data) {
 // UPSERT single record to Supabase - ALWAYS saves to cloud
 async function saveRecord(key, record) {
   const tbl = SB_TABLES[key];
-  const withCompany = { ...record, company_id: currentCompany };
+  // Sanitize all string fields to prevent XSS
+  const sanitized = sanitizeRecord(record);
+  const withCompany = { ...sanitized, company_id: currentCompany };
 
   // Update cache immediately so UI feels fast
   const cached = cacheGet(key) || [];
@@ -1884,14 +2146,20 @@ async function signIn() {
   if (!email) { showAuthError('Please enter your email address'); return; }
   if (!pass) { showAuthError('Please enter your password'); return; }
 
+  // Rate limiting check
+  const rateCheck = checkRateLimit(email);
+  if (!rateCheck.allowed) { showAuthError(rateCheck.message); return; }
+
   btn.textContent = 'Signing in...'; btn.disabled = true;
 
   // SuperAdmin - check FIRST before anything else
   if (email === 'khalithcvr@gmail.com' || email === 'khalith4ever@gmail.com') {
     if (pass === 'Admin1122') {
+      clearLoginAttempts(email);
       setSession({ id:'superadmin', email, name:'Super Admin', role:'SuperAdmin', company_access:'both' });
       return;
     } else {
+      recordFailedLogin(email);
       btn.textContent = 'Sign In to CRM'; btn.disabled = false;
       showAuthError('Wrong password. Please try again.');
       return;
@@ -1911,10 +2179,33 @@ async function signIn() {
       const sbUsers = await res.json();
       if (sbUsers && sbUsers.length > 0) {
         const u = sbUsers[0];
-        if (u.password === pass) {
-          setSession({ id:u.id, email:u.email, name:u.name, role:u.role, company_access:u.company_access });
+        let authenticated = false;
+
+        // Check if password is hashed
+        if (isPasswordHashed(u)) {
+          authenticated = await verifyPassword(pass, u.password_hash, u.password_salt);
+        } else if (u.password && u.password !== '***HASHED***') {
+          // Legacy plaintext comparison + auto-migrate
+          if (u.password === pass) {
+            authenticated = true;
+            // Auto-migrate to hashed password
+            await migratePasswordToHash(u.id, pass);
+            console.log('✅ Password migrated to hash for:', u.email);
+          }
+        }
+
+        if (authenticated) {
+          // Check if user is active
+          if (u.status === 'inactive') {
+            btn.textContent = 'Sign In to CRM'; btn.disabled = false;
+            showAuthError('Your account has been deactivated. Contact your administrator.');
+            return;
+          }
+          clearLoginAttempts(email);
+          setSession({ id:u.id, email:u.email, name:u.name, role:u.role, company_access:u.company_access, data_scope:u.data_scope });
           return;
         } else {
+          recordFailedLogin(email);
           btn.textContent = 'Sign In to CRM'; btn.disabled = false;
           showAuthError('Wrong password. Please try again.');
           return;
@@ -1925,13 +2216,44 @@ async function signIn() {
 
   // Fallback: check localStorage users
   const localUsers = loadGlobal('users');
-  const localUser = localUsers.find(u => u.email.toLowerCase().trim() === email && u.password === pass);
-  if (localUser) {
-    setSession({ id:localUser.id, email:localUser.email, name:localUser.name, role:localUser.role, company_access:localUser.company_access });
-    return;
+  for (const u of localUsers) {
+    if (u.email.toLowerCase().trim() !== email) continue;
+    let authenticated = false;
+
+    if (isPasswordHashed(u)) {
+      authenticated = await verifyPassword(pass, u.password_hash, u.password_salt);
+    } else if (u.password && u.password !== '***HASHED***') {
+      if (u.password === pass) {
+        authenticated = true;
+        // Auto-migrate
+        const { hash, salt } = await hashPassword(pass);
+        u.password_hash = hash;
+        u.password_salt = salt;
+        u.password = '***HASHED***';
+        saveGlobal('users', localUsers);
+        console.log('✅ Local password migrated to hash for:', u.email);
+      }
+    }
+
+    if (authenticated) {
+      if (u.status === 'inactive') {
+        btn.textContent = 'Sign In to CRM'; btn.disabled = false;
+        showAuthError('Your account has been deactivated. Contact your administrator.');
+        return;
+      }
+      clearLoginAttempts(email);
+      setSession({ id:u.id, email:u.email, name:u.name, role:u.role, company_access:u.company_access, data_scope:u.data_scope });
+      return;
+    } else {
+      recordFailedLogin(email);
+      btn.textContent = 'Sign In to CRM'; btn.disabled = false;
+      showAuthError('Wrong password. Please try again.');
+      return;
+    }
   }
 
   btn.textContent = 'Sign In to CRM'; btn.disabled = false;
+  recordFailedLogin(email);
   const emailInLocal = localUsers.find(u => u.email.toLowerCase().trim() === email);
   showAuthError(emailInLocal ? 'Wrong password. Please try again.' : 'Email not found. Please check your email address.');
 }
@@ -1976,6 +2298,8 @@ function signOut() {
 async function initApp() {
   document.getElementById('auth-screen').style.display = 'none';
   document.getElementById('app').style.display = 'block';
+  restoreDarkMode();
+  loadNotifications();
   updateUserDisplay();
   updateCompanyDisplay();
   // Load dashboard immediately from cache so UI appears fast
@@ -1994,6 +2318,8 @@ async function backgroundSync() {
       await loadData(key);
     }
     showSyncStatus('ok');
+    // Generate reminder notifications after data is loaded
+    generateReminderNotifications();
     // Silently refresh current section with fresh data
     const active = document.querySelector('.section.active');
     if (active) await loadSection(active.id.replace('section-', ''));
@@ -3280,7 +3606,7 @@ function toggleUserPwd() { const i=document.getElementById('u-password'); const 
 
 async function saveUser() {
   const editId = document.getElementById('u-edit-id').value;
-  const name = document.getElementById('u-name').value.trim();
+  const name = escapeHtml(document.getElementById('u-name').value.trim());
   const email = document.getElementById('u-email').value.trim().toLowerCase();
   const pass = document.getElementById('u-password').value;
   const role = document.getElementById('u-role').value;
@@ -3289,7 +3615,7 @@ async function saveUser() {
   const status = document.getElementById('u-status').value;
 
   if(!name){ showToast('Please enter a name','error'); return; }
-  if(!email||!email.includes('@')){ showToast('Please enter a valid email','error'); return; }
+  if(!email||!isValidEmail(email)){ showToast('Please enter a valid email address','error'); return; }
 
   // Role escalation prevention
   const currentRole = getUserRole(currentUser?.id);
@@ -3330,13 +3656,21 @@ async function saveUser() {
     renderUsersTable();
     showToast('User "'+name+'" updated!','success');
   } else {
-    // CREATE new user
-    if(!pass||pass.length<6){ showToast('Password must be at least 6 characters','error'); return; }
+    // CREATE new user — validate password strength
+    if(!pass||pass.length<8){ showToast('Password must be at least 8 characters','error'); return; }
+    const pwdErrors = validatePasswordStrength(pass);
+    if (pwdErrors.length > 0) {
+      showToast('Password needs: ' + pwdErrors.join(', '),'error');
+      return;
+    }
+
     allUsers = loadGlobal('users');
     if(email==='khalithcvr@gmail.com'){ showToast('That email is reserved for Super Admin','error'); return; }
     if(allUsers.find(u=>u.email.toLowerCase()===email)){ showToast('A user with this email already exists','error'); return; }
 
-    const user = { id:genId(), name, email, password:pass, role, data_scope:dataScope, company_access:companyAccess, status, created_at:new Date().toISOString() };
+    // Hash the password before storing
+    const { hash, salt } = await hashPassword(pass);
+    const user = { id:genId(), name, email, password:'***HASHED***', password_hash:hash, password_salt:salt, role, data_scope:dataScope, company_access:companyAccess, status, created_at:new Date().toISOString() };
     allUsers.push(user);
     saveGlobal('users', allUsers);
 
@@ -3344,14 +3678,14 @@ async function saveUser() {
       await fetch(SUPABASE_URL + '/rest/v1/crm_users', {
         method:'POST',
         headers:{'apikey':SUPABASE_KEY,'Authorization':'Bearer '+SUPABASE_KEY,'Content-Type':'application/json','Prefer':'resolution=merge-duplicates'},
-        body:JSON.stringify({id:user.id,name,email,password:pass,role,data_scope:dataScope,company_access:companyAccess,status})
+        body:JSON.stringify({id:user.id,name,email,password:'***HASHED***',password_hash:hash,password_salt:salt,role,data_scope:dataScope,company_access:companyAccess,status})
       });
     } catch(e) { console.log('Supabase user save failed'); }
 
     logAudit('create', 'users', user.id, { name, email, role });
     closeModal('user-modal');
     await loadUsers();
-    showToast('User "'+name+'" created!','success');
+    showToast('User "'+name+'" created securely!','success');
   }
 }
 
@@ -3416,23 +3750,29 @@ async function doResetPassword() {
   const p = document.getElementById('reset-pwd-input').value;
   const p2 = document.getElementById('reset-pwd-confirm').value;
   const err = document.getElementById('reset-pwd-error');
-  if (!p || p.length < 6) { err.textContent = 'Password must be at least 6 characters'; err.style.display='block'; return; }
+  if (!p || p.length < 8) { err.textContent = 'Password must be at least 8 characters'; err.style.display='block'; return; }
+  const pwdErrors = validatePasswordStrength(p);
+  if (pwdErrors.length > 0) { err.textContent = 'Password needs: ' + pwdErrors.join(', '); err.style.display='block'; return; }
   if (p !== p2) { err.textContent = 'Passwords do not match'; err.style.display='block'; return; }
+
+  // Hash the new password
+  const { hash, salt } = await hashPassword(p);
+  const updates = { password: '***HASHED***', password_hash: hash, password_salt: salt };
 
   try {
     await fetch(SUPABASE_URL+'/rest/v1/crm_users?id=eq.'+id,
       {method:'PATCH',headers:{'apikey':SUPABASE_KEY,'Authorization':'Bearer '+SUPABASE_KEY,'Content-Type':'application/json'},
-       body:JSON.stringify({password:p})});
+       body:JSON.stringify(updates)});
   } catch(e) {}
 
-  const localUsers = loadGlobal('users').map(u => u.id === id ? {...u, password: p} : u);
+  const localUsers = loadGlobal('users').map(u => u.id === id ? {...u, ...updates} : u);
   saveGlobal('users', localUsers);
-  allUsers = allUsers.map(u => u.id === id ? {...u, password: p} : u);
+  allUsers = allUsers.map(u => u.id === id ? {...u, ...updates} : u);
 
   const user = allUsers.find(u => u.id === id);
   logAudit('update', 'users', id, { action: 'password_reset', name: user?.name });
   closeModal('reset-pwd-modal');
-  showToast('Password updated successfully!', 'success');
+  showToast('Password updated securely!', 'success');
 }
 
 // ===== ROLES & PERMISSIONS PANEL =====
@@ -3645,6 +3985,257 @@ function copySqlBlock(id) {
 }
 
 function copyCRMLink() { navigator.clipboard.writeText('https://khalithcvr-art.github.io/expedia-crm').then(()=>showToast('Link copied!','success')).catch(()=>showToast('Link: https://khalithcvr-art.github.io/expedia-crm','info')); }
+
+// ===== PHASE 2: MOBILE SIDEBAR =====
+function toggleSidebar() {
+  document.querySelector('.sidebar').classList.toggle('open');
+  document.getElementById('sidebar-overlay').classList.toggle('open');
+}
+function closeSidebar() {
+  document.querySelector('.sidebar').classList.remove('open');
+  document.getElementById('sidebar-overlay').classList.remove('open');
+}
+// Auto-close sidebar on nav click (mobile)
+document.addEventListener('click', (e) => {
+  if (e.target.closest('.nav-item') && window.innerWidth <= 768) {
+    setTimeout(closeSidebar, 150);
+  }
+});
+
+// ===== PHASE 2: DARK MODE =====
+function toggleDarkMode() {
+  document.body.classList.toggle('dark-mode');
+  const isDark = document.body.classList.contains('dark-mode');
+  localStorage.setItem('crm_dark_mode', isDark ? '1' : '0');
+  document.getElementById('theme-toggle').textContent = isDark ? '☀️' : '🌙';
+}
+// Restore dark mode on load
+function restoreDarkMode() {
+  const saved = localStorage.getItem('crm_dark_mode');
+  if (saved === '1') {
+    document.body.classList.add('dark-mode');
+    const btn = document.getElementById('theme-toggle');
+    if (btn) btn.textContent = '☀️';
+  }
+}
+
+// ===== PHASE 2: GLOBAL SEARCH =====
+let searchTimer = null;
+function debounceGlobalSearch() {
+  clearTimeout(searchTimer);
+  searchTimer = setTimeout(performGlobalSearch, 280);
+}
+
+function performGlobalSearch() {
+  const q = (document.getElementById('global-search')?.value || '').trim().toLowerCase();
+  const results = document.getElementById('global-search-results');
+  if (q.length < 2) { results.classList.remove('open'); return; }
+
+  const matches = [];
+  const limit = 8;
+
+  // Search clients
+  (allClients || []).forEach(c => {
+    if (matches.length >= limit) return;
+    const text = [c.company_name, c.contact_person, c.email, c.phone, c.service_type].join(' ').toLowerCase();
+    if (text.includes(q)) matches.push({ module: 'clients', icon: '🏢', color: '#CC0000', title: escapeHtml(c.company_name || ''), sub: escapeHtml(c.contact_person || c.email || ''), id: c.id, section: 'clients' });
+  });
+
+  // Search customers
+  (allCustomers || []).forEach(c => {
+    if (matches.length >= limit) return;
+    const text = [c.name, c.email, c.phone, c.nationality, c.passport].join(' ').toLowerCase();
+    if (text.includes(q)) matches.push({ module: 'customers', icon: '👤', color: '#003399', title: escapeHtml(c.name || ''), sub: escapeHtml(c.phone || c.email || ''), id: c.id, section: 'customers' });
+  });
+
+  // Search employees
+  (allEmployees || []).forEach(e => {
+    if (matches.length >= limit) return;
+    const text = [e.name, e.designation, e.phone, e.passport_no].join(' ').toLowerCase();
+    if (text.includes(q)) matches.push({ module: 'employees', icon: '👥', color: '#660066', title: escapeHtml(e.name || ''), sub: escapeHtml(e.designation || ''), id: e.id, section: 'employees' });
+  });
+
+  // Search invoices
+  (allInvoices || []).forEach(i => {
+    if (matches.length >= limit) return;
+    const text = [i.invoice_number, i.client, i.description, i.status].join(' ').toLowerCase();
+    if (text.includes(q)) matches.push({ module: 'invoices', icon: '📄', color: '#006400', title: escapeHtml(i.invoice_number || ''), sub: escapeHtml(i.client || '') + ' · ' + escapeHtml(i.status || ''), id: i.id, section: 'invoices' });
+  });
+
+  // Search quotations
+  (allQuotations || []).forEach(qo => {
+    if (matches.length >= limit) return;
+    const text = [qo.quotation_number, qo.client, qo.description].join(' ').toLowerCase();
+    if (text.includes(q)) matches.push({ module: 'quotations', icon: '📋', color: '#CC6600', title: escapeHtml(qo.quotation_number || ''), sub: escapeHtml(qo.client || ''), id: qo.id, section: 'quotations' });
+  });
+
+  // Search tasks
+  (allTasks || []).forEach(t => {
+    if (matches.length >= limit) return;
+    const text = [t.title, t.assigned_to, t.status, t.priority].join(' ').toLowerCase();
+    if (text.includes(q)) matches.push({ module: 'tasks', icon: '✓', color: '#333', title: escapeHtml(t.title || ''), sub: escapeHtml(t.assigned_to || '') + ' · ' + escapeHtml(t.status || ''), id: t.id, section: 'tasks' });
+  });
+
+  if (!matches.length) {
+    results.innerHTML = '<div class="gsr-empty">No results for "' + escapeHtml(q) + '"</div>';
+  } else {
+    results.innerHTML = matches.map(m =>
+      `<div class="gsr-item" onclick="goToSearchResult('${m.section}','${m.id}')">
+        <span style="font-size:18px">${m.icon}</span>
+        <div style="flex:1;min-width:0">
+          <div style="font-weight:700;font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${m.title}</div>
+          <div style="font-size:11px;color:var(--text-3)">${m.sub}</div>
+        </div>
+        <span class="gsr-module" style="background:${m.color}15;color:${m.color}">${m.module}</span>
+      </div>`
+    ).join('');
+  }
+  results.classList.add('open');
+}
+
+function goToSearchResult(section, id) {
+  document.getElementById('global-search-results').classList.remove('open');
+  document.getElementById('global-search').value = '';
+  showSection(section);
+  // Highlight the row briefly
+  setTimeout(() => {
+    const row = document.querySelector(`tr[data-id="${id}"], [data-id="${id}"]`);
+    if (row) {
+      row.style.transition = 'background .3s';
+      row.style.background = 'rgba(204,0,0,0.08)';
+      row.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      setTimeout(() => { row.style.background = ''; }, 2000);
+    }
+  }, 400);
+  closeSidebar();
+}
+
+// Close search results on outside click
+document.addEventListener('click', (e) => {
+  if (!e.target.closest('.global-search-wrap')) {
+    document.getElementById('global-search-results')?.classList.remove('open');
+  }
+});
+
+// Keyboard shortcut: Ctrl+K or Cmd+K to focus search
+document.addEventListener('keydown', (e) => {
+  if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
+    e.preventDefault();
+    const searchInput = document.getElementById('global-search');
+    if (searchInput) searchInput.focus();
+  }
+  // Escape to close search
+  if (e.key === 'Escape') {
+    document.getElementById('global-search-results')?.classList.remove('open');
+    document.getElementById('notif-panel')?.classList.remove('open');
+  }
+});
+
+// ===== PHASE 2: NOTIFICATIONS =====
+let notifications = [];
+
+function loadNotifications() {
+  notifications = loadGlobal('notifications') || [];
+  updateNotifDot();
+}
+
+function addNotification(icon, text, type) {
+  const notif = { id: genId(), icon, text, type: type || 'info', time: new Date().toISOString(), read: false };
+  notifications.unshift(notif);
+  if (notifications.length > 50) notifications = notifications.slice(0, 50);
+  saveGlobal('notifications', notifications);
+  updateNotifDot();
+  renderNotifications();
+}
+
+function updateNotifDot() {
+  const unread = notifications.filter(n => !n.read).length;
+  const dot = document.getElementById('notif-dot');
+  if (dot) dot.classList.toggle('show', unread > 0);
+}
+
+function toggleNotifPanel() {
+  const panel = document.getElementById('notif-panel');
+  panel.classList.toggle('open');
+  if (panel.classList.contains('open')) {
+    renderNotifications();
+    // Mark all as read
+    notifications = notifications.map(n => ({ ...n, read: true }));
+    saveGlobal('notifications', notifications);
+    setTimeout(updateNotifDot, 1000);
+  }
+}
+
+function renderNotifications() {
+  const list = document.getElementById('notif-list');
+  if (!notifications.length) {
+    list.innerHTML = '<div class="gsr-empty">No notifications yet</div>';
+    return;
+  }
+  list.innerHTML = notifications.slice(0, 20).map(n => {
+    const ago = getTimeAgo(n.time);
+    return `<div class="notif-item${n.read ? '' : ' unread'}">
+      <div class="notif-item-icon">${n.icon}</div>
+      <div style="flex:1;min-width:0">
+        <div class="notif-item-text">${escapeHtml(n.text)}</div>
+        <div class="notif-item-time">${ago}</div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function clearNotifications() {
+  notifications = [];
+  saveGlobal('notifications', []);
+  updateNotifDot();
+  renderNotifications();
+  showToast('Notifications cleared', 'info');
+}
+
+function getTimeAgo(dateStr) {
+  const now = new Date();
+  const d = new Date(dateStr);
+  const diff = Math.floor((now - d) / 1000);
+  if (diff < 60) return 'Just now';
+  if (diff < 3600) return Math.floor(diff / 60) + 'm ago';
+  if (diff < 86400) return Math.floor(diff / 3600) + 'h ago';
+  if (diff < 604800) return Math.floor(diff / 86400) + 'd ago';
+  return fmtDate(dateStr);
+}
+
+// Close notif panel on outside click
+document.addEventListener('click', (e) => {
+  if (!e.target.closest('.notif-wrap')) {
+    document.getElementById('notif-panel')?.classList.remove('open');
+  }
+});
+
+// Auto-generate notifications for upcoming reminders
+function generateReminderNotifications() {
+  const d7 = new Date(); d7.setDate(d7.getDate() + 7);
+  const today = new Date().toISOString().split('T')[0];
+  const notifiedKey = 'crm_notified_' + today;
+  if (localStorage.getItem(notifiedKey)) return; // Already notified today
+
+  let count = 0;
+  (allClients || []).forEach(c => {
+    if (c.license_expiry && new Date(c.license_expiry) <= d7) {
+      addNotification('🏢', (c.company_name || 'Client') + ' — Trade license expiring ' + fmtDate(c.license_expiry), 'warning');
+      count++;
+    }
+  });
+  (allEmployees || []).forEach(e => {
+    if (e.passport_expiry && new Date(e.passport_expiry) <= d7) {
+      addNotification('🛂', (e.name || 'Employee') + ' — Passport expiring ' + fmtDate(e.passport_expiry), 'warning');
+      count++;
+    }
+    if (e.visa_expiry && new Date(e.visa_expiry) <= d7) {
+      addNotification('📋', (e.name || 'Employee') + ' — Visa expiring ' + fmtDate(e.visa_expiry), 'danger');
+      count++;
+    }
+  });
+  if (count > 0) localStorage.setItem(notifiedKey, '1');
+}
 
 // ===== COMPANY PROFILE =====
 let profileCompanyId = 1;
@@ -4271,6 +4862,7 @@ function showToast(msg, type='success') {
 
 // ===== STARTUP =====
 document.addEventListener('DOMContentLoaded', () => {
+  restoreDarkMode(); // Restore theme before anything renders
   if (checkSession()) initApp();
 });
 
