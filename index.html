@@ -138,6 +138,57 @@ h1,h2,h3,h4,h5{font-family:'Syne',sans-serif}
 #section-accounts .card:hover{border-color:#CC0000}
 #section-invoices .card:hover{border-color:#CC0000}
 
+/* ===== RBAC USER MANAGEMENT ===== */
+.rbac-tabs{display:flex;gap:2px;background:var(--bg-2);border-radius:var(--radius-sm);padding:3px;margin-bottom:20px}
+.rbac-tab{flex:1;padding:10px 16px;text-align:center;font-size:13px;font-weight:700;color:var(--text-3);cursor:pointer;border-radius:6px;transition:all .2s;border:none;background:none;font-family:'DM Sans',sans-serif}
+.rbac-tab:hover{color:var(--text);background:rgba(255,255,255,0.5)}
+.rbac-tab.active{background:var(--card);color:#CC0000;box-shadow:0 2px 8px rgba(0,0,0,0.08)}
+.rbac-panel{display:none}
+.rbac-panel.active{display:block}
+.perm-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:14px}
+.perm-module-card{background:var(--card);border:1px solid var(--border-2);border-radius:var(--radius-sm);padding:16px;transition:all .2s}
+.perm-module-card:hover{border-color:var(--gold);box-shadow:0 4px 12px rgba(0,0,0,0.08)}
+.perm-module-title{font-family:'Syne',sans-serif;font-size:14px;font-weight:700;margin-bottom:10px;display:flex;align-items:center;gap:8px}
+.perm-module-icon{width:28px;height:28px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0}
+.perm-actions{display:flex;flex-wrap:wrap;gap:6px}
+.perm-chip{display:inline-flex;align-items:center;gap:4px;padding:4px 10px;border-radius:20px;font-size:11px;font-weight:600;cursor:pointer;transition:all .15s;border:1px solid var(--border-2);background:var(--bg);color:var(--text-3);user-select:none}
+.perm-chip:hover{border-color:var(--gold)}
+.perm-chip.granted{background:rgba(0,100,0,0.1);border-color:rgba(0,100,0,0.3);color:var(--success)}
+.perm-chip .chip-dot{width:6px;height:6px;border-radius:50%;background:var(--border);transition:background .15s}
+.perm-chip.granted .chip-dot{background:var(--success)}
+.role-card{background:var(--card);border:1px solid var(--border-2);border-radius:var(--radius);padding:20px;position:relative;transition:all .2s}
+.role-card:hover{border-color:var(--gold);box-shadow:0 4px 16px rgba(0,0,0,0.1)}
+.role-card-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
+.role-badge{display:inline-flex;align-items:center;gap:6px;padding:6px 14px;border-radius:20px;font-size:12px;font-weight:700}
+.role-level{font-size:11px;color:var(--text-3);font-weight:600;background:var(--bg);padding:3px 8px;border-radius:12px}
+.role-perm-summary{font-size:12px;color:var(--text-3);line-height:1.6}
+.role-users-count{font-size:11px;color:var(--text-3);margin-top:8px;display:flex;align-items:center;gap:4px}
+.audit-row{display:flex;align-items:flex-start;gap:12px;padding:14px 0;border-bottom:1px solid var(--border-2)}
+.audit-row:last-child{border-bottom:none}
+.audit-icon{width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0}
+.audit-icon.create{background:rgba(0,100,0,0.1);color:var(--success)}
+.audit-icon.update{background:rgba(0,51,153,0.1);color:var(--info)}
+.audit-icon.delete{background:rgba(204,0,0,0.1);color:var(--danger)}
+.audit-icon.login{background:rgba(204,102,0,0.1);color:var(--warning)}
+.audit-details{flex:1}
+.audit-action{font-weight:700;font-size:13px}
+.audit-meta{font-size:11px;color:var(--text-3);margin-top:2px}
+.audit-time{font-size:11px;color:var(--text-3);white-space:nowrap}
+.scope-badge{display:inline-flex;align-items:center;gap:4px;padding:3px 8px;border-radius:12px;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.5px}
+.scope-own{background:rgba(0,51,153,0.08);color:var(--info)}
+.scope-assigned{background:rgba(204,102,0,0.08);color:var(--warning)}
+.scope-company{background:rgba(0,100,0,0.08);color:var(--success)}
+.status-chip{display:inline-flex;align-items:center;gap:4px;padding:3px 10px;border-radius:12px;font-size:11px;font-weight:700}
+.status-chip.active{background:rgba(0,100,0,0.1);color:var(--success)}
+.status-chip.inactive{background:rgba(204,0,0,0.1);color:var(--danger)}
+.rbac-search{display:flex;gap:10px;margin-bottom:16px;flex-wrap:wrap}
+.rbac-search input,.rbac-search select{background:var(--bg);border:1px solid var(--border-2);border-radius:var(--radius-sm);padding:9px 14px;font-size:13px;font-family:'DM Sans',sans-serif;color:var(--text);outline:none;transition:border-color .2s}
+.rbac-search input:focus,.rbac-search select:focus{border-color:var(--gold)}
+.rbac-search input{flex:1;min-width:200px}
+.sql-ref-card{background:var(--bg);border:1px solid var(--border-2);border-radius:var(--radius-sm);padding:16px;margin-top:16px}
+.sql-ref-card pre{background:#1a1a1a;color:#e0e0e0;padding:14px;border-radius:6px;font-size:12px;overflow-x:auto;line-height:1.5;margin-top:8px}
+.sql-ref-card code{font-family:'Fira Code',monospace,Consolas}
+
 /* ===== BUTTONS ===== */
 .btn{display:inline-flex;align-items:center;gap:6px;padding:10px 20px;border-radius:var(--radius-sm);font-size:14px;font-weight:600;cursor:pointer;transition:all .15s;border:none;font-family:'DM Sans',sans-serif;letter-spacing:0.2px;white-space:nowrap}
 .btn-gold{background:linear-gradient(135deg,#6C63FF,#A29BFE);color:#FFFFFF}
@@ -751,18 +802,423 @@ select.form-control{cursor:pointer}
         <!-- ===== USERS ===== -->
         <div class="section" id="section-users">
           <div class="page-header">
-            <div><div class="page-title">User Management</div><div class="page-subtitle">Manage staff logins & permissions</div></div>
-            <div class="page-actions"><button class="btn btn-gold" onclick="openModal('user-modal')">+ Add User</button></div>
+            <div><div class="page-title">User Management</div><div class="page-subtitle">RBAC · Roles · Permissions · Audit Trail</div></div>
+            <div class="page-actions">
+              <button class="btn btn-outline" onclick="openModal('role-modal')">🛡 Manage Roles</button>
+              <button class="btn btn-gold" onclick="openAddUserModal()">+ Add User</button>
+            </div>
           </div>
-          <div class="alert alert-info" style="margin-bottom:20px">🔐 Staff use the same CRM link to login with their email & password. Only SuperAdmin can manage users.</div>
+          <div class="alert alert-info" style="margin-bottom:20px">🔐 Role-Based Access Control (RBAC) — Permissions are inherited from roles. Only Super Admin can manage users and roles.</div>
           <div class="stats-grid">
             <div class="stat-card"><div class="stat-icon">👥</div><div class="stat-value" id="u-stat-total">1</div><div class="stat-label">Total Users</div></div>
             <div class="stat-card"><div class="stat-icon">👑</div><div class="stat-value" id="u-stat-admin">1</div><div class="stat-label">Admins</div></div>
             <div class="stat-card"><div class="stat-icon">🧑‍💼</div><div class="stat-value" id="u-stat-staff">0</div><div class="stat-label">Staff</div></div>
+            <div class="stat-card"><div class="stat-icon">🛡</div><div class="stat-value" id="u-stat-roles">5</div><div class="stat-label">Roles</div></div>
+            <div class="stat-card"><div class="stat-icon">📋</div><div class="stat-value" id="u-stat-perms">0</div><div class="stat-label">Permissions</div></div>
           </div>
-          <div class="card"><div class="card-body">
-            <div class="table-wrap"><table><thead><tr><th>Name</th><th>Email</th><th>Role</th><th>Access</th><th>Created</th><th>Actions</th></tr></thead><tbody id="users-table-body"><tr><td colspan="6"><div class="loading"><div class="spinner"></div> Loading...</div></td></tr></tbody></table></div>
-          </div></div>
+
+          <!-- RBAC TABS -->
+          <div class="rbac-tabs">
+            <button class="rbac-tab active" onclick="switchRbacTab('users-panel')">👥 Users</button>
+            <button class="rbac-tab" onclick="switchRbacTab('roles-panel')">🛡 Roles & Permissions</button>
+            <button class="rbac-tab" onclick="switchRbacTab('audit-panel')">📋 Audit Log</button>
+            <button class="rbac-tab" onclick="switchRbacTab('sql-panel')">🗄 SQL Reference</button>
+          </div>
+
+          <!-- USERS PANEL -->
+          <div class="rbac-panel active" id="users-panel">
+            <div class="rbac-search">
+              <input type="text" placeholder="Search users by name or email..." id="rbac-user-search" oninput="filterUsersTable()">
+              <select id="rbac-role-filter" onchange="filterUsersTable()">
+                <option value="">All Roles</option>
+              </select>
+              <select id="rbac-status-filter" onchange="filterUsersTable()">
+                <option value="">All Status</option>
+                <option value="active">Active</option>
+                <option value="inactive">Inactive</option>
+              </select>
+            </div>
+            <div class="card"><div class="card-body">
+              <div class="table-wrap"><table><thead><tr><th>User</th><th>Email</th><th>Role</th><th>Data Scope</th><th>Companies</th><th>Status</th><th>Created</th><th>Actions</th></tr></thead><tbody id="users-table-body"><tr><td colspan="8"><div class="loading"><div class="spinner"></div> Loading...</div></td></tr></tbody></table></div>
+            </div></div>
+          </div>
+
+          <!-- ROLES & PERMISSIONS PANEL -->
+          <div class="rbac-panel" id="roles-panel">
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px">
+              <div>
+                <div class="card"><div class="card-header"><span class="card-title">🛡 Roles Hierarchy</span><button class="btn btn-outline btn-sm" onclick="openModal('role-modal')">+ Add Role</button></div><div class="card-body" id="roles-list-container">
+                  <div class="loading"><div class="spinner"></div> Loading roles...</div>
+                </div></div>
+              </div>
+              <div>
+                <div class="card"><div class="card-header"><span class="card-title">🔑 Permission Matrix</span><span style="font-size:11px;color:var(--text-3)" id="perm-role-label">Select a role to view</span></div><div class="card-body" id="perm-matrix-container">
+                  <div style="text-align:center;padding:30px;color:var(--text-3)">
+                    <div style="font-size:28px;margin-bottom:8px">🛡</div>
+                    <div style="font-size:13px">Click a role on the left to view & edit its permissions</div>
+                  </div>
+                </div></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- AUDIT LOG PANEL -->
+          <div class="rbac-panel" id="audit-panel">
+            <div class="rbac-search">
+              <input type="text" placeholder="Search audit logs..." id="audit-search" oninput="filterAuditLogs()">
+              <select id="audit-action-filter" onchange="filterAuditLogs()">
+                <option value="">All Actions</option>
+                <option value="create">Create</option>
+                <option value="update">Update</option>
+                <option value="delete">Delete</option>
+                <option value="login">Login</option>
+              </select>
+              <select id="audit-module-filter" onchange="filterAuditLogs()">
+                <option value="">All Modules</option>
+                <option value="clients">Clients</option>
+                <option value="customers">Customers</option>
+                <option value="invoices">Invoices</option>
+                <option value="quotations">Quotations</option>
+                <option value="employees">Employees</option>
+                <option value="tasks">Tasks</option>
+                <option value="users">Users</option>
+              </select>
+            </div>
+            <div class="card"><div class="card-body" id="audit-log-container">
+              <div style="text-align:center;padding:30px;color:var(--text-3)">
+                <div style="font-size:28px;margin-bottom:8px">📋</div>
+                <div style="font-size:13px">Audit logs track all create, update, delete, and login actions</div>
+              </div>
+            </div></div>
+          </div>
+
+          <!-- SQL REFERENCE PANEL -->
+          <div class="rbac-panel" id="sql-panel">
+            <div class="card"><div class="card-header"><span class="card-title">🗄 Supabase RBAC SQL Reference</span></div><div class="card-body">
+              <p style="font-size:13px;color:var(--text-3);margin-bottom:16px">Run these SQL scripts in Supabase SQL Editor to set up the full RBAC system with RLS policies, functions, and triggers.</p>
+
+              <div class="sql-ref-card">
+                <div style="display:flex;align-items:center;justify-content:space-between">
+                  <strong style="font-size:13px">1. Create Tables</strong>
+                  <button class="btn btn-outline btn-sm" onclick="copySqlBlock('sql-tables')">📋 Copy</button>
+                </div>
+                <pre id="sql-tables"><code>-- ROLES
+CREATE TABLE IF NOT EXISTS roles (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  name TEXT NOT NULL UNIQUE,
+  level INT NOT NULL DEFAULT 99,
+  created_at TIMESTAMPTZ DEFAULT now()
+);
+INSERT INTO roles (name, level) VALUES
+  ('Super Admin', 1),
+  ('Admin', 2),
+  ('Manager', 3),
+  ('Pro User', 4),
+  ('Staff', 5)
+ON CONFLICT (name) DO NOTHING;
+
+-- PERMISSIONS
+CREATE TABLE IF NOT EXISTS permissions (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  module TEXT NOT NULL,
+  action TEXT NOT NULL,
+  UNIQUE(module, action)
+);
+INSERT INTO permissions (module, action) VALUES
+  ('clients','view'),('clients','create'),('clients','edit'),('clients','delete'),('clients','export'),
+  ('customers','view'),('customers','create'),('customers','edit'),('customers','delete'),('customers','export'),
+  ('invoices','view'),('invoices','create'),('invoices','edit'),('invoices','delete'),('invoices','approve'),('invoices','export'),
+  ('quotations','view'),('quotations','create'),('quotations','edit'),('quotations','delete'),('quotations','approve'),('quotations','export'),
+  ('employees','view'),('employees','create'),('employees','edit'),('employees','delete'),('employees','export'),
+  ('tasks','view'),('tasks','create'),('tasks','edit'),('tasks','delete'),
+  ('transactions','view'),('transactions','create'),('transactions','edit'),('transactions','delete'),('transactions','export'),
+  ('documents','view'),('documents','create'),('documents','delete'),
+  ('users','view'),('users','create'),('users','edit'),('users','delete')
+ON CONFLICT (module, action) DO NOTHING;
+
+-- ROLE_PERMISSIONS
+CREATE TABLE IF NOT EXISTS role_permissions (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  role_id UUID REFERENCES roles(id) ON DELETE CASCADE,
+  permission_id UUID REFERENCES permissions(id) ON DELETE CASCADE,
+  UNIQUE(role_id, permission_id)
+);
+
+-- COMPANIES (if not exists)
+CREATE TABLE IF NOT EXISTS companies (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  name TEXT NOT NULL,
+  created_at TIMESTAMPTZ DEFAULT now()
+);
+
+-- USER_COMPANIES
+CREATE TABLE IF NOT EXISTS user_companies (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  user_id UUID REFERENCES auth.users(id) ON DELETE CASCADE,
+  company_id UUID REFERENCES companies(id) ON DELETE CASCADE,
+  UNIQUE(user_id, company_id)
+);
+
+-- USER_PROFILES
+CREATE TABLE IF NOT EXISTS user_profiles (
+  id UUID PRIMARY KEY REFERENCES auth.users(id),
+  name TEXT NOT NULL,
+  role_id UUID REFERENCES roles(id),
+  data_scope TEXT DEFAULT 'own' CHECK (data_scope IN ('own','assigned','company')),
+  status TEXT DEFAULT 'active' CHECK (status IN ('active','inactive')),
+  created_at TIMESTAMPTZ DEFAULT now()
+);
+
+-- AUDIT_LOGS
+CREATE TABLE IF NOT EXISTS audit_logs (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  user_id UUID,
+  action TEXT NOT NULL,
+  module TEXT NOT NULL,
+  record_id TEXT,
+  details JSONB,
+  created_at TIMESTAMPTZ DEFAULT now()
+);</code></pre>
+              </div>
+
+              <div class="sql-ref-card">
+                <div style="display:flex;align-items:center;justify-content:space-between">
+                  <strong style="font-size:13px">2. RBAC Functions</strong>
+                  <button class="btn btn-outline btn-sm" onclick="copySqlBlock('sql-functions')">📋 Copy</button>
+                </div>
+                <pre id="sql-functions"><code>-- GET USER ROLE
+CREATE OR REPLACE FUNCTION get_user_role(p_user_id UUID)
+RETURNS TABLE(role_name TEXT, role_level INT) AS $$
+  SELECT r.name, r.level
+  FROM user_profiles up
+  JOIN roles r ON r.id = up.role_id
+  WHERE up.id = p_user_id;
+$$ LANGUAGE sql SECURITY DEFINER STABLE;
+
+-- HAS PERMISSION CHECK
+CREATE OR REPLACE FUNCTION has_permission(
+  p_user_id UUID, p_module TEXT, p_action TEXT
+) RETURNS BOOLEAN AS $$
+  SELECT EXISTS (
+    SELECT 1
+    FROM user_profiles up
+    JOIN role_permissions rp ON rp.role_id = up.role_id
+    JOIN permissions p ON p.id = rp.permission_id
+    WHERE up.id = p_user_id
+      AND p.module = p_module
+      AND p.action = p_action
+      AND up.status = 'active'
+  );
+$$ LANGUAGE sql SECURITY DEFINER STABLE;
+
+-- USER BELONGS TO COMPANY
+CREATE OR REPLACE FUNCTION user_in_company(
+  p_user_id UUID, p_company_id UUID
+) RETURNS BOOLEAN AS $$
+  SELECT EXISTS (
+    SELECT 1 FROM user_companies
+    WHERE user_id = p_user_id AND company_id = p_company_id
+  );
+$$ LANGUAGE sql SECURITY DEFINER STABLE;
+
+-- PREVENT ROLE ESCALATION
+CREATE OR REPLACE FUNCTION prevent_role_escalation()
+RETURNS TRIGGER AS $$
+DECLARE
+  actor_level INT;
+  target_level INT;
+BEGIN
+  SELECT r.level INTO actor_level
+  FROM user_profiles up JOIN roles r ON r.id = up.role_id
+  WHERE up.id = auth.uid();
+
+  SELECT level INTO target_level FROM roles WHERE id = NEW.role_id;
+
+  IF target_level < actor_level THEN
+    RAISE EXCEPTION 'Cannot assign a role higher than your own';
+  END IF;
+  RETURN NEW;
+END;
+$$ LANGUAGE plpgsql SECURITY DEFINER;
+
+CREATE TRIGGER trg_prevent_role_escalation
+  BEFORE INSERT OR UPDATE ON user_profiles
+  FOR EACH ROW EXECUTE FUNCTION prevent_role_escalation();
+
+-- APPROVAL SYSTEM: only Manager+ can approve
+CREATE OR REPLACE FUNCTION check_approval_permission()
+RETURNS TRIGGER AS $$
+DECLARE
+  user_level INT;
+BEGIN
+  IF NEW.status = 'approved' AND (OLD.status IS DISTINCT FROM 'approved') THEN
+    SELECT r.level INTO user_level
+    FROM user_profiles up JOIN roles r ON r.id = up.role_id
+    WHERE up.id = auth.uid();
+
+    IF user_level IS NULL OR user_level > 3 THEN
+      RAISE EXCEPTION 'Only Manager or higher can approve';
+    END IF;
+  END IF;
+  RETURN NEW;
+END;
+$$ LANGUAGE plpgsql SECURITY DEFINER;
+
+-- Apply to invoices and quotations
+CREATE TRIGGER trg_invoice_approval
+  BEFORE UPDATE ON invoices FOR EACH ROW
+  EXECUTE FUNCTION check_approval_permission();
+
+CREATE TRIGGER trg_quotation_approval
+  BEFORE UPDATE ON quotations FOR EACH ROW
+  EXECUTE FUNCTION check_approval_permission();</code></pre>
+              </div>
+
+              <div class="sql-ref-card">
+                <div style="display:flex;align-items:center;justify-content:space-between">
+                  <strong style="font-size:13px">3. RLS Policies</strong>
+                  <button class="btn btn-outline btn-sm" onclick="copySqlBlock('sql-rls')">📋 Copy</button>
+                </div>
+                <pre id="sql-rls"><code>-- Enable RLS on all tables
+ALTER TABLE roles ENABLE ROW LEVEL SECURITY;
+ALTER TABLE permissions ENABLE ROW LEVEL SECURITY;
+ALTER TABLE role_permissions ENABLE ROW LEVEL SECURITY;
+ALTER TABLE user_profiles ENABLE ROW LEVEL SECURITY;
+ALTER TABLE user_companies ENABLE ROW LEVEL SECURITY;
+ALTER TABLE audit_logs ENABLE ROW LEVEL SECURITY;
+
+-- USER_PROFILES: users read own profile
+CREATE POLICY "Users read own profile"
+  ON user_profiles FOR SELECT
+  USING (auth.uid() = id);
+
+-- USER_PROFILES: Super Admin manages all
+CREATE POLICY "Super Admin manages profiles"
+  ON user_profiles FOR ALL
+  USING (
+    (SELECT r.level FROM user_profiles up
+     JOIN roles r ON r.id = up.role_id
+     WHERE up.id = auth.uid()) = 1
+  );
+
+-- EXAMPLE: INVOICES RLS
+CREATE POLICY "Invoice SELECT"
+  ON invoices FOR SELECT USING (
+    user_in_company(auth.uid(), company_id)
+    AND has_permission(auth.uid(), 'invoices', 'view')
+  );
+CREATE POLICY "Invoice INSERT"
+  ON invoices FOR INSERT WITH CHECK (
+    user_in_company(auth.uid(), company_id)
+    AND has_permission(auth.uid(), 'invoices', 'create')
+  );
+CREATE POLICY "Invoice UPDATE"
+  ON invoices FOR UPDATE USING (
+    user_in_company(auth.uid(), company_id)
+    AND has_permission(auth.uid(), 'invoices', 'edit')
+  );
+CREATE POLICY "Invoice DELETE"
+  ON invoices FOR DELETE USING (
+    user_in_company(auth.uid(), company_id)
+    AND has_permission(auth.uid(), 'invoices', 'delete')
+  );
+
+-- ROLES: readable by authenticated users
+CREATE POLICY "Roles readable"
+  ON roles FOR SELECT
+  USING (auth.role() = 'authenticated');
+
+-- PERMISSIONS: readable by authenticated users
+CREATE POLICY "Permissions readable"
+  ON permissions FOR SELECT
+  USING (auth.role() = 'authenticated');
+
+-- ROLE_PERMISSIONS: readable, Super Admin writable
+CREATE POLICY "Role perms readable"
+  ON role_permissions FOR SELECT
+  USING (auth.role() = 'authenticated');
+CREATE POLICY "Super Admin manages role perms"
+  ON role_permissions FOR ALL
+  USING (
+    (SELECT r.level FROM user_profiles up
+     JOIN roles r ON r.id = up.role_id
+     WHERE up.id = auth.uid()) = 1
+  );
+
+-- AUDIT_LOGS: users see own logs, Admin+ see all
+CREATE POLICY "Users see own audit logs"
+  ON audit_logs FOR SELECT
+  USING (
+    user_id = auth.uid()
+    OR (SELECT r.level FROM user_profiles up
+        JOIN roles r ON r.id = up.role_id
+        WHERE up.id = auth.uid()) <= 2
+  );
+
+-- Only Super Admin can delete users
+CREATE POLICY "Only Super Admin deletes users"
+  ON user_profiles FOR DELETE USING (
+    (SELECT r.level FROM user_profiles up
+     JOIN roles r ON r.id = up.role_id
+     WHERE up.id = auth.uid()) = 1
+  );
+
+-- Admin cannot modify Super Admin
+CREATE POLICY "Admin cannot modify Super Admin"
+  ON user_profiles FOR UPDATE USING (
+    -- Target is not Super Admin OR actor IS Super Admin
+    (SELECT r.level FROM roles r WHERE r.id = user_profiles.role_id) > 1
+    OR (SELECT r.level FROM user_profiles up
+        JOIN roles r ON r.id = up.role_id
+        WHERE up.id = auth.uid()) = 1
+  );</code></pre>
+              </div>
+
+              <div class="sql-ref-card">
+                <div style="display:flex;align-items:center;justify-content:space-between">
+                  <strong style="font-size:13px">4. Audit Log Trigger</strong>
+                  <button class="btn btn-outline btn-sm" onclick="copySqlBlock('sql-audit')">📋 Copy</button>
+                </div>
+                <pre id="sql-audit"><code>-- Generic audit trigger function
+CREATE OR REPLACE FUNCTION log_audit()
+RETURNS TRIGGER AS $$
+BEGIN
+  INSERT INTO audit_logs (user_id, action, module, record_id, details)
+  VALUES (
+    auth.uid(),
+    TG_OP,
+    TG_TABLE_NAME,
+    COALESCE(NEW.id::text, OLD.id::text),
+    jsonb_build_object(
+      'operation', TG_OP,
+      'table', TG_TABLE_NAME,
+      'old', CASE WHEN TG_OP = 'DELETE' THEN row_to_json(OLD) ELSE NULL END,
+      'new', CASE WHEN TG_OP != 'DELETE' THEN row_to_json(NEW) ELSE NULL END
+    )
+  );
+  RETURN COALESCE(NEW, OLD);
+END;
+$$ LANGUAGE plpgsql SECURITY DEFINER;
+
+-- Apply to all CRM tables
+CREATE TRIGGER audit_clients AFTER INSERT OR UPDATE OR DELETE ON clients
+  FOR EACH ROW EXECUTE FUNCTION log_audit();
+CREATE TRIGGER audit_customers AFTER INSERT OR UPDATE OR DELETE ON customers
+  FOR EACH ROW EXECUTE FUNCTION log_audit();
+CREATE TRIGGER audit_invoices AFTER INSERT OR UPDATE OR DELETE ON invoices
+  FOR EACH ROW EXECUTE FUNCTION log_audit();
+CREATE TRIGGER audit_quotations AFTER INSERT OR UPDATE OR DELETE ON quotations
+  FOR EACH ROW EXECUTE FUNCTION log_audit();
+CREATE TRIGGER audit_employees AFTER INSERT OR UPDATE OR DELETE ON employees
+  FOR EACH ROW EXECUTE FUNCTION log_audit();
+CREATE TRIGGER audit_tasks AFTER INSERT OR UPDATE OR DELETE ON tasks
+  FOR EACH ROW EXECUTE FUNCTION log_audit();
+CREATE TRIGGER audit_transactions AFTER INSERT OR UPDATE OR DELETE ON transactions
+  FOR EACH ROW EXECUTE FUNCTION log_audit();</code></pre>
+              </div>
+            </div></div>
+          </div>
+
           <div class="card" style="margin-top:20px"><div class="card-header"><span class="card-title">🌐 CRM Live Link</span></div><div class="card-body">
             <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap">
               <div style="flex:1;background:var(--bg);border:1px solid var(--border-2);border-radius:8px;padding:12px 16px;font-size:13px;color:var(--gold);font-family:monospace">https://khalithcvr-art.github.io/expedia-crm</div>
@@ -1079,18 +1535,32 @@ select.form-control{cursor:pointer}
   </div>
 </div>
 
-<!-- USER MODAL -->
+<!-- USER MODAL (RBAC ENHANCED) -->
 <div class="modal-overlay" id="user-modal">
-  <div class="modal modal-sm">
+  <div class="modal modal-lg">
     <div class="modal-header"><span class="modal-title" id="user-modal-title">Add New User</span><button class="modal-close" onclick="closeModal('user-modal')">✕</button></div>
     <div class="modal-body">
-      <div class="form-group" style="margin-bottom:14px"><label class="form-label">Full Name <span>*</span></label><input class="form-control" id="u-name" placeholder="Staff Name"></div>
-      <div class="form-group" style="margin-bottom:14px"><label class="form-label">Email <span>*</span></label><input class="form-control" type="email" id="u-email" placeholder="staff@expediaservices.ae"></div>
+      <input type="hidden" id="u-edit-id" value="">
       <div class="form-grid">
-        <div class="form-group"><label class="form-label">Role</label><select class="form-control" id="u-role"><option value="Admin">Admin</option><option value="Staff">Staff</option><option value="SuperAdmin">SuperAdmin</option></select></div>
-        <div class="form-group"><label class="form-label">Access</label><select class="form-control" id="u-company"><option value="both">Both Companies</option><option value="1">Expedia Business</option><option value="2">Expedia Maintenance</option></select></div>
+        <div class="form-group form-full"><label class="form-label">Full Name <span>*</span></label><input class="form-control" id="u-name" placeholder="Staff Name"></div>
+        <div class="form-group"><label class="form-label">Email <span>*</span></label><input class="form-control" type="email" id="u-email" placeholder="staff@expediaservices.ae"></div>
+        <div class="form-group"><label class="form-label">Role <span>*</span></label><select class="form-control" id="u-role"><option value="Admin">Admin</option><option value="Staff">Staff</option><option value="SuperAdmin">SuperAdmin</option><option value="Manager">Manager</option><option value="Pro User">Pro User</option></select></div>
+        <div class="form-group"><label class="form-label">Data Scope</label>
+          <select class="form-control" id="u-data-scope">
+            <option value="own">Own — See only own records</option>
+            <option value="assigned">Assigned — See assigned records</option>
+            <option value="company" selected>Company — See all company data</option>
+          </select>
+        </div>
+        <div class="form-group"><label class="form-label">Company Access</label><select class="form-control" id="u-company"><option value="both">Both Companies</option><option value="1">Expedia Business</option><option value="2">Expedia Maintenance</option></select></div>
+        <div class="form-group"><label class="form-label">Status</label>
+          <select class="form-control" id="u-status">
+            <option value="active">Active</option>
+            <option value="inactive">Inactive</option>
+          </select>
+        </div>
       </div>
-      <div class="form-group" style="margin-top:14px">
+      <div class="form-group" style="margin-top:14px" id="u-password-group">
         <label class="form-label">Password <span>*</span></label>
         <div style="position:relative">
           <input class="form-control" type="password" id="u-password" placeholder="Min 6 characters" style="padding-right:44px">
@@ -1098,10 +1568,32 @@ select.form-control{cursor:pointer}
         </div>
       </div>
       <div class="alert alert-info" style="margin-top:14px;font-size:12px">
-        <strong>Admin:</strong> Full access · <strong>Staff:</strong> View & add · <strong>SuperAdmin:</strong> All + user management
+        <strong>Roles:</strong> Super Admin (Level 1) → Admin (2) → Manager (3) → Pro User (4) → Staff (5)<br>
+        <strong>Data Scope:</strong> own = personal records · assigned = delegated · company = full access<br>
+        <strong>Security:</strong> Permissions are enforced via database RLS. No role escalation allowed.
       </div>
     </div>
-    <div class="modal-footer"><button class="btn btn-outline" onclick="closeModal('user-modal')">Cancel</button><button class="btn btn-gold" onclick="saveUser()">Create User</button></div>
+    <div class="modal-footer"><button class="btn btn-outline" onclick="closeModal('user-modal')">Cancel</button><button class="btn btn-gold" id="u-save-btn" onclick="saveUser()">Create User</button></div>
+  </div>
+</div>
+
+<!-- ROLE MANAGEMENT MODAL -->
+<div class="modal-overlay" id="role-modal">
+  <div class="modal modal-lg">
+    <div class="modal-header"><span class="modal-title">🛡 Role Management</span><button class="modal-close" onclick="closeModal('role-modal')">✕</button></div>
+    <div class="modal-body">
+      <div class="alert alert-info" style="margin-bottom:16px">Roles define permission sets. Lower level = higher authority. Only Super Admin can modify roles.</div>
+      <div id="role-modal-list" style="display:flex;flex-direction:column;gap:10px"></div>
+      <div style="margin-top:16px;padding-top:16px;border-top:1px solid var(--border-2)">
+        <div style="font-weight:700;font-size:13px;margin-bottom:10px">Add Custom Role</div>
+        <div style="display:flex;gap:10px;align-items:end">
+          <div style="flex:1"><label class="form-label" style="font-size:11px">Role Name</label><input class="form-control" id="new-role-name" placeholder="e.g. Accountant"></div>
+          <div style="width:100px"><label class="form-label" style="font-size:11px">Level (1-99)</label><input class="form-control" type="number" id="new-role-level" value="6" min="1" max="99"></div>
+          <button class="btn btn-gold" onclick="addCustomRole()">+ Add</button>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer"><button class="btn btn-outline" onclick="closeModal('role-modal')">Close</button></div>
   </div>
 </div>
 
@@ -1302,9 +1794,19 @@ async function saveRecord(key, record) {
   return withCompany;
 }
 
-// DELETE from Supabase + cache
+// DELETE from Supabase + cache + live arrays
 async function deleteRecord(type, id) {
   const tbl = SB_TABLES[type];
+  // Remove from live arrays
+  switch(type) {
+    case 'client': allClients=allClients.filter(x=>x.id!==id); break;
+    case 'customer': allCustomers=allCustomers.filter(x=>x.id!==id); break;
+    case 'employee': allEmployees=allEmployees.filter(x=>x.id!==id); break;
+    case 'task': allTasks=allTasks.filter(x=>x.id!==id); break;
+    case 'invoice': allInvoices=allInvoices.filter(x=>x.id!==id); break;
+    case 'quotation': allQuotations=allQuotations.filter(x=>x.id!==id); break;
+    case 'transaction': allTransactions=allTransactions.filter(x=>x.id!==id); break;
+  }
   // Remove from cache
   const cached = cacheGet(type) || [];
   cacheSet(type, cached.filter(x => x.id !== id));
@@ -1317,15 +1819,17 @@ async function deleteRecord(type, id) {
       });
     } catch(e) { console.log('Delete from cloud failed:', e); }
   }
+  // Log audit
+  if (typeof logAudit === 'function') logAudit('delete', type, id);
   // Update UI
   switch(type) {
-    case 'client': allClients = cacheGet('clients')||[]; renderClientsTable(allClients); showClientAlerts(allClients); break;
-    case 'customer': allCustomers = cacheGet('customers')||[]; renderCustomersTable(allCustomers); break;
-    case 'employee': allEmployees = cacheGet('employees')||[]; renderEmployeesTable(allEmployees); showEmployeeAlerts(allEmployees); break;
-    case 'task': allTasks = cacheGet('tasks')||[]; renderTasksTable(allTasks); break;
-    case 'invoice': allInvoices = cacheGet('invoices')||[]; renderInvoicesTable(allInvoices); break;
-    case 'quotation': allQuotations = cacheGet('quotations')||[]; renderQuotationsTable(allQuotations); break;
-    case 'transaction': allTransactions = cacheGet('transactions')||[]; renderAccountsTable(allTransactions); updateAccountTotals(allTransactions); break;
+    case 'client': renderClientsTable(allClients); showClientAlerts(allClients); break;
+    case 'customer': renderCustomersTable(allCustomers); break;
+    case 'employee': renderEmployeesTable(allEmployees); showEmployeeAlerts(allEmployees); break;
+    case 'task': renderTasksTable(allTasks); break;
+    case 'invoice': renderInvoicesTable(allInvoices); break;
+    case 'quotation': renderQuotationsTable(allQuotations); break;
+    case 'transaction': renderAccountsTable(allTransactions); updateAccountTotals(allTransactions); break;
   }
   closeModal('confirm-modal');
   showToast(type.charAt(0).toUpperCase()+type.slice(1)+' deleted', 'success');
@@ -1442,6 +1946,13 @@ function showAuthError(msg) {
 function setSession(user) {
   currentUser = user;
   localStorage.setItem('crm_session', JSON.stringify(user));
+  // Log login audit
+  try {
+    const logs = JSON.parse(localStorage.getItem('crm_global_audit_logs') || '[]');
+    logs.unshift({ id: Date.now().toString(36)+Math.random().toString(36).substr(2), user_id: user.id, user_name: user.name||user.email, action: 'login', module: 'auth', record_id: null, details: JSON.stringify({email:user.email, role:user.role}), created_at: new Date().toISOString() });
+    if (logs.length > 500) logs.length = 500;
+    localStorage.setItem('crm_global_audit_logs', JSON.stringify(logs));
+  } catch(e) {}
   initApp();
 }
 
@@ -1497,7 +2008,8 @@ function updateUserDisplay() {
   document.getElementById('user-avatar-initials').textContent = initials;
   document.getElementById('user-display-name').textContent = currentUser.name || currentUser.email;
   document.getElementById('user-display-role').textContent = currentUser.role;
-  if (currentUser.role !== 'SuperAdmin') document.getElementById('nav-users').style.display = 'none';
+  if (currentUser.role !== 'SuperAdmin' && currentUser.role !== 'Super Admin') document.getElementById('nav-users').style.display = 'none';
+  else document.getElementById('nav-users').style.display = '';
 }
 
 function updateCompanyDisplay() {
@@ -2479,10 +2991,150 @@ function deleteInlineDoc(id, section, recordId) {
   showToast('Document deleted', 'success');
 }
 
-// ===== USERS =====
+// ===== RBAC USER MANAGEMENT SYSTEM =====
+
+// RBAC Data Stores
+let rbacRoles = [
+  { id:'role-superadmin', name:'Super Admin', level:1, created_at:new Date().toISOString() },
+  { id:'role-admin', name:'Admin', level:2, created_at:new Date().toISOString() },
+  { id:'role-manager', name:'Manager', level:3, created_at:new Date().toISOString() },
+  { id:'role-prouser', name:'Pro User', level:4, created_at:new Date().toISOString() },
+  { id:'role-staff', name:'Staff', level:5, created_at:new Date().toISOString() }
+];
+
+const RBAC_MODULES = [
+  { key:'clients', icon:'🏢', color:'#CC0000' },
+  { key:'customers', icon:'👤', color:'#003399' },
+  { key:'invoices', icon:'📄', color:'#006400' },
+  { key:'quotations', icon:'📋', color:'#CC6600' },
+  { key:'employees', icon:'👥', color:'#660066' },
+  { key:'tasks', icon:'✓', color:'#333333' },
+  { key:'transactions', icon:'💰', color:'#006400' },
+  { key:'documents', icon:'📁', color:'#003399' },
+  { key:'users', icon:'⚙', color:'#CC0000' }
+];
+
+const RBAC_ACTIONS = ['view','create','edit','delete','approve','export'];
+
+let rbacPermissions = []; // [{id, module, action}]
+let rbacRolePermissions = {}; // { roleId: [permId, ...] }
+let auditLogs = [];
+let selectedPermRole = null;
+
+// Initialize permission entries
+function initPermissions() {
+  rbacPermissions = [];
+  RBAC_MODULES.forEach(mod => {
+    const actions = mod.key === 'users' ? ['view','create','edit','delete'] :
+                    (mod.key === 'documents' ? ['view','create','delete'] :
+                    (mod.key === 'tasks' ? ['view','create','edit','delete'] : RBAC_ACTIONS));
+    actions.forEach(act => {
+      rbacPermissions.push({ id: `perm-${mod.key}-${act}`, module: mod.key, action: act });
+    });
+  });
+
+  // Default role permissions
+  const allPermIds = rbacPermissions.map(p => p.id);
+  const viewOnly = rbacPermissions.filter(p => p.action === 'view').map(p => p.id);
+  const viewCreate = rbacPermissions.filter(p => ['view','create'].includes(p.action)).map(p => p.id);
+  const noUserDelete = rbacPermissions.filter(p => !(p.module === 'users' && p.action === 'delete')).map(p => p.id);
+  const managerPerms = rbacPermissions.filter(p => !(['users'].includes(p.module) && ['delete','create'].includes(p.action))).map(p => p.id);
+  const proUserPerms = rbacPermissions.filter(p => !['delete','approve'].includes(p.action) && p.module !== 'users').map(p => p.id);
+
+  rbacRolePermissions = {
+    'role-superadmin': allPermIds,
+    'role-admin': noUserDelete,
+    'role-manager': managerPerms,
+    'role-prouser': proUserPerms,
+    'role-staff': viewOnly
+  };
+
+  // Load any saved custom data
+  const saved = loadGlobal('rbac_roles');
+  if (saved && saved.length) rbacRoles = saved;
+  const savedPerms = loadGlobal('rbac_role_permissions');
+  if (savedPerms && Object.keys(savedPerms).length) rbacRolePermissions = { ...rbacRolePermissions, ...savedPerms };
+}
+
+function saveRbacData() {
+  saveGlobal('rbac_roles', rbacRoles);
+  saveGlobal('rbac_role_permissions', rbacRolePermissions);
+}
+
+// PERMISSION CHECK FUNCTIONS (mirrors DB functions)
+function getUserRole(userId) {
+  if (!userId) return null;
+  const u = allUsers.find(x => x.id === userId);
+  if (!u) return currentUser?.role === 'SuperAdmin' ? { name:'Super Admin', level:1 } : null;
+  const roleName = u.role || 'Staff';
+  const role = rbacRoles.find(r => r.name === roleName || r.name.replace(/\s/g,'') === roleName);
+  return role ? { name: role.name, level: role.level } : { name: roleName, level: 99 };
+}
+
+function hasPermission(userId, module, action) {
+  const userRole = getUserRole(userId);
+  if (!userRole) return false;
+  if (userRole.level === 1) return true; // Super Admin has all
+  const role = rbacRoles.find(r => r.name === userRole.name);
+  if (!role) return false;
+  const rolePerms = rbacRolePermissions[role.id] || [];
+  const permId = `perm-${module}-${action}`;
+  return rolePerms.includes(permId);
+}
+
+function canCurrentUser(module, action) {
+  if (currentUser?.role === 'SuperAdmin' || currentUser?.role === 'Super Admin') return true;
+  return hasPermission(currentUser?.id, module, action);
+}
+
+// AUDIT LOGGING
+function logAudit(action, module, recordId, details) {
+  const entry = {
+    id: genId(),
+    user_id: currentUser?.id || 'unknown',
+    user_name: currentUser?.name || 'Unknown',
+    action,
+    module,
+    record_id: recordId || null,
+    details: details || null,
+    created_at: new Date().toISOString()
+  };
+  auditLogs.unshift(entry);
+  if (auditLogs.length > 500) auditLogs = auditLogs.slice(0, 500);
+  saveGlobal('audit_logs', auditLogs);
+
+  // Also try to save to Supabase
+  try {
+    fetch(SUPABASE_URL + '/rest/v1/audit_logs', {
+      method: 'POST',
+      headers: { 'apikey': SUPABASE_KEY, 'Authorization': 'Bearer ' + SUPABASE_KEY, 'Content-Type': 'application/json' },
+      body: JSON.stringify(entry)
+    }).catch(() => {});
+  } catch(e) {}
+}
+
+// TAB SWITCHING
+function switchRbacTab(panelId) {
+  document.querySelectorAll('.rbac-tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.rbac-panel').forEach(p => p.classList.remove('active'));
+  document.getElementById(panelId)?.classList.add('active');
+  const idx = ['users-panel','roles-panel','audit-panel','sql-panel'].indexOf(panelId);
+  document.querySelectorAll('.rbac-tab')[idx]?.classList.add('active');
+
+  if (panelId === 'roles-panel') renderRolesPanel();
+  if (panelId === 'audit-panel') renderAuditLogs();
+}
+
+// ===== USERS TAB =====
 async function loadUsers() {
-  if(currentUser?.role!=='SuperAdmin'){ document.getElementById('users-table-body').innerHTML=`<tr><td colspan="6"><div class="empty-state"><div class="empty-icon">🔒</div><div class="empty-title">Access Restricted</div><div class="empty-text">Only SuperAdmin can manage users.</div></div></td></tr>`; return; }
-  
+  initPermissions();
+  auditLogs = loadGlobal('audit_logs') || [];
+
+  if(currentUser?.role!=='SuperAdmin' && currentUser?.role!=='Super Admin'){
+    document.getElementById('users-table-body').innerHTML=`<tr><td colspan="8"><div class="empty-state"><div class="empty-icon">🔒</div><div class="empty-title">Access Restricted</div><div class="empty-text">Only Super Admin can manage users.</div></div></td></tr>`;
+    return;
+  }
+
   // Load from Supabase first, merge with localStorage
   let sbUsers = [];
   try {
@@ -2490,83 +3142,264 @@ async function loadUsers() {
       {headers:{'apikey':SUPABASE_KEY,'Authorization':'Bearer '+SUPABASE_KEY}});
     if(res.ok) sbUsers = await res.json();
   } catch(e) {}
-  
-  // Merge Supabase users with localStorage users (avoid duplicates by email)
+
   const localUsers = loadGlobal('users');
   const allSbEmails = sbUsers.map(u=>u.email.toLowerCase());
   const extraLocal = localUsers.filter(u=>!allSbEmails.includes(u.email.toLowerCase()));
   allUsers = [...sbUsers, ...extraLocal];
-  
-  const admins=allUsers.filter(u=>u.role==='Admin'||u.role==='SuperAdmin').length;
-  const staff=allUsers.filter(u=>u.role==='Staff').length;
-  document.getElementById('u-stat-total').textContent=allUsers.length+1;
-  document.getElementById('u-stat-admin').textContent=admins+1;
-  document.getElementById('u-stat-staff').textContent=staff;
-  
-  const roleColors={SuperAdmin:'badge-gold',Admin:'badge-info',Staff:'badge-muted'};
-  const compNames={'both':'Both Companies','1':'Expedia Business','2':'Expedia Maintenance'};
-  const tbody=document.getElementById('users-table-body');
-  const superRow=`<tr style="background:rgba(46,125,50,0.04)"><td><div style="display:flex;align-items:center;gap:8px"><div class="user-row-avatar" style="background:linear-gradient(135deg,var(--gold-dark),var(--gold));color:#fff">SA</div><div><div style="font-weight:700">Super Admin</div><div style="font-size:10px;color:var(--text-3)">Owner</div></div></div></td><td>khalithcvr@gmail.com</td><td><span class="badge badge-gold">SuperAdmin</span></td><td><span class="badge badge-info">Both Companies</span></td><td>${fmtDate(new Date())}</td><td><span style="font-size:11px;color:var(--text-3)">— Owner —</span></td></tr>`;
-  
-  if(!allUsers.length){ tbody.innerHTML=superRow+'<tr><td colspan="6"><div style="padding:16px;text-align:center;color:var(--text-3);font-size:13px">No staff users yet. Click "+ Add User" to create staff logins.</div></td></tr>'; return; }
-  
-  tbody.innerHTML=superRow+allUsers.map(u=>{
-    const init=(u.name||'?').split(' ').map(w=>w[0]).join('').toUpperCase().slice(0,2);
-    return `<tr>
+
+  // Update stats
+  const admins = allUsers.filter(u => ['Admin','SuperAdmin','Super Admin'].includes(u.role)).length;
+  const staff = allUsers.filter(u => !['Admin','SuperAdmin','Super Admin'].includes(u.role)).length;
+  document.getElementById('u-stat-total').textContent = allUsers.length + 1;
+  document.getElementById('u-stat-admin').textContent = admins + 1;
+  document.getElementById('u-stat-staff').textContent = staff;
+  document.getElementById('u-stat-roles').textContent = rbacRoles.length;
+  document.getElementById('u-stat-perms').textContent = rbacPermissions.length;
+
+  // Populate role filter
+  const roleFilter = document.getElementById('rbac-role-filter');
+  if (roleFilter) {
+    roleFilter.innerHTML = '<option value="">All Roles</option>' +
+      rbacRoles.map(r => `<option value="${r.name}">${r.name}</option>`).join('');
+  }
+
+  renderUsersTable();
+}
+
+function renderUsersTable() {
+  const roleColors = {
+    'SuperAdmin':'badge-gold','Super Admin':'badge-gold',
+    'Admin':'badge-info','Manager':'badge-success',
+    'Pro User':'badge-muted','Staff':'badge-muted'
+  };
+  const compNames = {'both':'Both Companies','1':'Expedia Business','2':'Expedia Maintenance'};
+  const tbody = document.getElementById('users-table-body');
+
+  const superRow = `<tr style="background:rgba(204,0,0,0.03)">
+    <td><div style="display:flex;align-items:center;gap:8px">
+      <div class="user-row-avatar" style="background:linear-gradient(135deg,var(--gold-dark),var(--gold));color:#fff">SA</div>
+      <div><div style="font-weight:700">Super Admin</div><div style="font-size:10px;color:var(--text-3)">Owner · Level 1</div></div>
+    </div></td>
+    <td>khalithcvr@gmail.com</td>
+    <td><span class="badge badge-gold">Super Admin</span></td>
+    <td><span class="scope-badge scope-company">Company</span></td>
+    <td><span class="badge badge-info">Both</span></td>
+    <td><span class="status-chip active"><span class="chip-dot" style="width:6px;height:6px;border-radius:50%;background:var(--success)"></span> Active</span></td>
+    <td>${fmtDate(new Date())}</td>
+    <td><span style="font-size:11px;color:var(--text-3)">— Owner —</span></td>
+  </tr>`;
+
+  if(!allUsers.length){
+    tbody.innerHTML = superRow + '<tr><td colspan="8"><div style="padding:16px;text-align:center;color:var(--text-3);font-size:13px">No staff users yet. Click "+ Add User" to create staff logins.</div></td></tr>';
+    return;
+  }
+
+  tbody.innerHTML = superRow + allUsers.map(u => {
+    const init = (u.name||'?').split(' ').map(w=>w[0]).join('').toUpperCase().slice(0,2);
+    const roleName = u.role || 'Staff';
+    const roleObj = rbacRoles.find(r => r.name === roleName || r.name.replace(/\s/g,'') === roleName);
+    const level = roleObj ? roleObj.level : '?';
+    const scope = u.data_scope || 'company';
+    const status = u.status || 'active';
+    return `<tr class="user-row" data-name="${(u.name||'').toLowerCase()}" data-email="${(u.email||'').toLowerCase()}" data-role="${roleName}" data-status="${status}">
       <td><div style="display:flex;align-items:center;gap:8px">
         <div class="user-row-avatar" style="background:var(--card-3);color:var(--gold)">${init}</div>
-        <div><div style="font-weight:700">${u.name}</div><div style="font-size:10px;color:var(--text-3)">${u.role}</div></div>
+        <div><div style="font-weight:700">${u.name}</div><div style="font-size:10px;color:var(--text-3)">${roleName} · Level ${level}</div></div>
       </div></td>
       <td>${u.email}</td>
-      <td><span class="badge ${roleColors[u.role]||'badge-muted'}">${u.role}</span></td>
+      <td><span class="badge ${roleColors[roleName]||'badge-muted'}">${roleName}</span></td>
+      <td><span class="scope-badge scope-${scope}">${scope}</span></td>
       <td><span class="badge badge-muted">${compNames[u.company_access]||'Both'}</span></td>
+      <td><span class="status-chip ${status}"><span class="chip-dot" style="width:6px;height:6px;border-radius:50%;background:${status==='active'?'var(--success)':'var(--danger)'}"></span> ${status}</span></td>
       <td>${fmtDate(u.created_at)}</td>
-      <td><div style="display:flex;gap:4px">
-        <button class="btn btn-outline btn-sm" onclick="resetUserPwd('${u.id}')">🔑 Reset</button>
-        <button class="btn btn-danger btn-sm" onclick="confirmDeleteUser('${u.id}')">🗑</button>
+      <td><div style="display:flex;gap:4px;flex-wrap:wrap">
+        <button class="btn btn-outline btn-sm" onclick="editUser('${u.id}')" title="Edit">✏️</button>
+        <button class="btn btn-outline btn-sm" onclick="toggleUserStatus('${u.id}')" title="Toggle Status">${status==='active'?'🔒':'🔓'}</button>
+        <button class="btn btn-outline btn-sm" onclick="resetUserPwd('${u.id}')" title="Reset Password">🔑</button>
+        <button class="btn btn-danger btn-sm" onclick="confirmDeleteUser('${u.id}')" title="Delete">🗑</button>
       </div></td>
     </tr>`;
   }).join('');
 }
+
+function filterUsersTable() {
+  const search = (document.getElementById('rbac-user-search')?.value || '').toLowerCase();
+  const roleFilter = document.getElementById('rbac-role-filter')?.value || '';
+  const statusFilter = document.getElementById('rbac-status-filter')?.value || '';
+  document.querySelectorAll('#users-table-body .user-row').forEach(row => {
+    const name = row.dataset.name || '';
+    const email = row.dataset.email || '';
+    const role = row.dataset.role || '';
+    const status = row.dataset.status || '';
+    const matchSearch = !search || name.includes(search) || email.includes(search);
+    const matchRole = !roleFilter || role === roleFilter;
+    const matchStatus = !statusFilter || status === statusFilter;
+    row.style.display = (matchSearch && matchRole && matchStatus) ? '' : 'none';
+  });
+}
+
+// ADD / EDIT USER
+function openAddUserModal() {
+  document.getElementById('u-edit-id').value = '';
+  document.getElementById('u-name').value = '';
+  document.getElementById('u-email').value = '';
+  document.getElementById('u-email').disabled = false;
+  document.getElementById('u-role').value = 'Staff';
+  document.getElementById('u-data-scope').value = 'company';
+  document.getElementById('u-company').value = 'both';
+  document.getElementById('u-status').value = 'active';
+  document.getElementById('u-password').value = '';
+  document.getElementById('u-password-group').style.display = '';
+  document.getElementById('u-modal-title')?.textContent || (document.getElementById('user-modal-title').textContent = 'Add New User');
+  document.getElementById('u-save-btn').textContent = 'Create User';
+  document.getElementById('u-save-btn').setAttribute('onclick', 'saveUser()');
+  openModal('user-modal');
+}
+
+function editUser(id) {
+  const u = allUsers.find(x => x.id === id);
+  if (!u) return;
+  document.getElementById('u-edit-id').value = id;
+  document.getElementById('u-name').value = u.name || '';
+  document.getElementById('u-email').value = u.email || '';
+  document.getElementById('u-email').disabled = true;
+  document.getElementById('u-role').value = u.role || 'Staff';
+  document.getElementById('u-data-scope').value = u.data_scope || 'company';
+  document.getElementById('u-company').value = u.company_access || 'both';
+  document.getElementById('u-status').value = u.status || 'active';
+  document.getElementById('u-password').value = '';
+  document.getElementById('u-password-group').style.display = 'none';
+  document.getElementById('user-modal-title').textContent = 'Edit User — ' + u.name;
+  document.getElementById('u-save-btn').textContent = 'Update User';
+  document.getElementById('u-save-btn').setAttribute('onclick', 'saveUser()');
+  openModal('user-modal');
+}
+
 function toggleUserPwd() { const i=document.getElementById('u-password'); const e=document.getElementById('u-eye'); i.type=i.type==='password'?'text':'password'; e.textContent=i.type==='password'?'👁':'🙈'; }
+
 async function saveUser() {
-  const name=document.getElementById('u-name').value.trim();
-  const email=document.getElementById('u-email').value.trim().toLowerCase();
-  const pass=document.getElementById('u-password').value;
+  const editId = document.getElementById('u-edit-id').value;
+  const name = document.getElementById('u-name').value.trim();
+  const email = document.getElementById('u-email').value.trim().toLowerCase();
+  const pass = document.getElementById('u-password').value;
+  const role = document.getElementById('u-role').value;
+  const dataScope = document.getElementById('u-data-scope').value;
+  const companyAccess = document.getElementById('u-company').value;
+  const status = document.getElementById('u-status').value;
+
   if(!name){ showToast('Please enter a name','error'); return; }
   if(!email||!email.includes('@')){ showToast('Please enter a valid email','error'); return; }
-  if(!pass||pass.length<6){ showToast('Password must be at least 6 characters','error'); return; }
-  allUsers=loadGlobal('users');
-  if(email==='khalithcvr@gmail.com'){ showToast('That email is reserved for SuperAdmin','error'); return; }
-  if(allUsers.find(u=>u.email.toLowerCase()===email)){ showToast('A user with this email already exists','error'); return; }
-  const user={ id:genId(), name, email, password:pass, role:document.getElementById('u-role').value, company_access:document.getElementById('u-company').value, created_at:new Date().toISOString() };
-  allUsers.push(user); saveGlobal('users',allUsers);
-  // Also save to Supabase so user can login from any device
-  try {
-    await fetch(SUPABASE_URL + '/rest/v1/crm_users', {
-      method:'POST',
-      headers:{'apikey':SUPABASE_KEY,'Authorization':'Bearer '+SUPABASE_KEY,'Content-Type':'application/json','Prefer':'resolution=merge-duplicates'},
-      body:JSON.stringify({id:user.id,name,email,password:pass,role:user.role,company_access:user.company_access})
-    });
-  } catch(e) { console.log('Supabase user save failed'); }
-  closeModal('user-modal'); loadUsers();
-  showToast('User "'+name+'" created!','success');
+
+  // Role escalation prevention
+  const currentRole = getUserRole(currentUser?.id);
+  const targetRole = rbacRoles.find(r => r.name === role || r.name.replace(/\s/g,'') === role);
+  if (currentRole && targetRole && targetRole.level < currentRole.level) {
+    showToast('Cannot assign a role higher than your own','error');
+    return;
+  }
+
+  // Prevent modifying Super Admin (unless you ARE Super Admin)
+  if (editId) {
+    const existingUser = allUsers.find(u => u.id === editId);
+    if (existingUser && (existingUser.role === 'SuperAdmin' || existingUser.role === 'Super Admin') &&
+        currentUser?.role !== 'SuperAdmin' && currentUser?.role !== 'Super Admin') {
+      showToast('Admin cannot modify Super Admin','error');
+      return;
+    }
+  }
+
+  if (editId) {
+    // UPDATE existing user
+    const updates = { name, role, data_scope: dataScope, company_access: companyAccess, status };
+
+    // Update in Supabase
+    try {
+      await fetch(SUPABASE_URL+'/rest/v1/crm_users?id=eq.'+editId,
+        {method:'PATCH',headers:{'apikey':SUPABASE_KEY,'Authorization':'Bearer '+SUPABASE_KEY,'Content-Type':'application/json'},
+         body:JSON.stringify(updates)});
+    } catch(e) {}
+
+    // Update localStorage
+    let localUsers = loadGlobal('users').map(u => u.id === editId ? {...u, ...updates} : u);
+    saveGlobal('users', localUsers);
+    allUsers = allUsers.map(u => u.id === editId ? {...u, ...updates} : u);
+
+    logAudit('update', 'users', editId, { name, role, data_scope: dataScope, status });
+    closeModal('user-modal');
+    renderUsersTable();
+    showToast('User "'+name+'" updated!','success');
+  } else {
+    // CREATE new user
+    if(!pass||pass.length<6){ showToast('Password must be at least 6 characters','error'); return; }
+    allUsers = loadGlobal('users');
+    if(email==='khalithcvr@gmail.com'){ showToast('That email is reserved for Super Admin','error'); return; }
+    if(allUsers.find(u=>u.email.toLowerCase()===email)){ showToast('A user with this email already exists','error'); return; }
+
+    const user = { id:genId(), name, email, password:pass, role, data_scope:dataScope, company_access:companyAccess, status, created_at:new Date().toISOString() };
+    allUsers.push(user);
+    saveGlobal('users', allUsers);
+
+    try {
+      await fetch(SUPABASE_URL + '/rest/v1/crm_users', {
+        method:'POST',
+        headers:{'apikey':SUPABASE_KEY,'Authorization':'Bearer '+SUPABASE_KEY,'Content-Type':'application/json','Prefer':'resolution=merge-duplicates'},
+        body:JSON.stringify({id:user.id,name,email,password:pass,role,data_scope:dataScope,company_access:companyAccess,status})
+      });
+    } catch(e) { console.log('Supabase user save failed'); }
+
+    logAudit('create', 'users', user.id, { name, email, role });
+    closeModal('user-modal');
+    await loadUsers();
+    showToast('User "'+name+'" created!','success');
+  }
 }
+
+async function toggleUserStatus(id) {
+  const u = allUsers.find(x => x.id === id);
+  if (!u) return;
+  const newStatus = (u.status || 'active') === 'active' ? 'inactive' : 'active';
+
+  try {
+    await fetch(SUPABASE_URL+'/rest/v1/crm_users?id=eq.'+id,
+      {method:'PATCH',headers:{'apikey':SUPABASE_KEY,'Authorization':'Bearer '+SUPABASE_KEY,'Content-Type':'application/json'},
+       body:JSON.stringify({status:newStatus})});
+  } catch(e) {}
+
+  let localUsers = loadGlobal('users').map(x => x.id === id ? {...x, status:newStatus} : x);
+  saveGlobal('users', localUsers);
+  allUsers = allUsers.map(x => x.id === id ? {...x, status:newStatus} : x);
+
+  logAudit('update', 'users', id, { name: u.name, status: newStatus });
+  renderUsersTable();
+  showToast(`User "${u.name}" is now ${newStatus}`, newStatus==='active'?'success':'warning');
+}
+
 async function confirmDeleteUser(id) {
   const u = allUsers.find(x=>x.id===id);
-  if(confirm('Delete user "'+(u?.name||'this user')+'"?')) {
-    // Delete from Supabase
+  if (!u) return;
+
+  // Only Super Admin can delete
+  if (currentUser?.role !== 'SuperAdmin' && currentUser?.role !== 'Super Admin') {
+    showToast('Only Super Admin can delete users','error');
+    return;
+  }
+
+  if(confirm('Delete user "'+(u?.name||'this user')+'"?\n\nThis action cannot be undone.')) {
     try {
       await fetch(SUPABASE_URL+'/rest/v1/crm_users?id=eq.'+id,
         {method:'DELETE',headers:{'apikey':SUPABASE_KEY,'Authorization':'Bearer '+SUPABASE_KEY}});
     } catch(e) {}
-    // Delete from localStorage too
+
     const localUsers = loadGlobal('users').filter(x=>x.id!==id);
     saveGlobal('users', localUsers);
+
+    logAudit('delete', 'users', id, { name: u.name, email: u.email });
     await loadUsers();
     showToast('User deleted','success');
   }
 }
+
 async function resetUserPwd(id) {
   const u = allUsers.find(x => x.id === id);
   if (!u) return;
@@ -2577,6 +3410,7 @@ async function resetUserPwd(id) {
   document.getElementById('reset-pwd-id').value = id;
   document.getElementById('reset-pwd-modal').classList.add('open');
 }
+
 async function doResetPassword() {
   const id = document.getElementById('reset-pwd-id').value;
   const p = document.getElementById('reset-pwd-input').value;
@@ -2584,20 +3418,373 @@ async function doResetPassword() {
   const err = document.getElementById('reset-pwd-error');
   if (!p || p.length < 6) { err.textContent = 'Password must be at least 6 characters'; err.style.display='block'; return; }
   if (p !== p2) { err.textContent = 'Passwords do not match'; err.style.display='block'; return; }
-  // Update in Supabase
+
   try {
     await fetch(SUPABASE_URL+'/rest/v1/crm_users?id=eq.'+id,
       {method:'PATCH',headers:{'apikey':SUPABASE_KEY,'Authorization':'Bearer '+SUPABASE_KEY,'Content-Type':'application/json'},
        body:JSON.stringify({password:p})});
   } catch(e) {}
-  // Update localStorage too
+
   const localUsers = loadGlobal('users').map(u => u.id === id ? {...u, password: p} : u);
   saveGlobal('users', localUsers);
   allUsers = allUsers.map(u => u.id === id ? {...u, password: p} : u);
+
+  const user = allUsers.find(u => u.id === id);
+  logAudit('update', 'users', id, { action: 'password_reset', name: user?.name });
   closeModal('reset-pwd-modal');
   showToast('Password updated successfully!', 'success');
 }
+
+// ===== ROLES & PERMISSIONS PANEL =====
+function renderRolesPanel() {
+  const container = document.getElementById('roles-list-container');
+  const sorted = [...rbacRoles].sort((a,b) => a.level - b.level);
+
+  const roleColorMap = {
+    'Super Admin':'linear-gradient(135deg,#CC0000,#FF3333)',
+    'Admin':'linear-gradient(135deg,#003399,#0055CC)',
+    'Manager':'linear-gradient(135deg,#006400,#009900)',
+    'Pro User':'linear-gradient(135deg,#CC6600,#FF9900)',
+    'Staff':'linear-gradient(135deg,#666,#999)'
+  };
+
+  container.innerHTML = sorted.map(role => {
+    const perms = rbacRolePermissions[role.id] || [];
+    const modules = [...new Set(perms.map(p => p.replace('perm-','').split('-')[0]))];
+    const userCount = allUsers.filter(u => {
+      const rName = u.role || 'Staff';
+      return rName === role.name || rName === role.name.replace(/\s/g,'');
+    }).length + (role.level === 1 ? 1 : 0);
+    const isSelected = selectedPermRole === role.id;
+
+    return `<div class="role-card" onclick="selectRoleForPerms('${role.id}')" style="cursor:pointer${isSelected?';border-color:var(--gold);box-shadow:0 4px 16px rgba(204,0,0,0.15)':''}">
+      <div class="role-card-header">
+        <span class="role-badge" style="background:${roleColorMap[role.name]||'linear-gradient(135deg,#666,#999)'};color:#fff">
+          ${role.level === 1 ? '👑' : role.level === 2 ? '🛡' : role.level === 3 ? '📊' : role.level === 4 ? '⭐' : '👤'} ${role.name}
+        </span>
+        <span class="role-level">Level ${role.level}</span>
+      </div>
+      <div class="role-perm-summary">${perms.length} permissions across ${modules.length} modules</div>
+      <div class="role-users-count">👥 ${userCount} user${userCount!==1?'s':''} assigned</div>
+    </div>`;
+  }).join('');
+
+  // Also populate the role modal list
+  renderRoleModalList();
+}
+
+function selectRoleForPerms(roleId) {
+  selectedPermRole = roleId;
+  renderRolesPanel();
+  renderPermissionMatrix(roleId);
+}
+
+function renderPermissionMatrix(roleId) {
+  const container = document.getElementById('perm-matrix-container');
+  const role = rbacRoles.find(r => r.id === roleId);
+  if (!role) return;
+
+  document.getElementById('perm-role-label').textContent = 'Editing: ' + role.name;
+  const rolePerms = rbacRolePermissions[roleId] || [];
+
+  container.innerHTML = '<div class="perm-grid">' + RBAC_MODULES.map(mod => {
+    const modPerms = rbacPermissions.filter(p => p.module === mod.key);
+    return `<div class="perm-module-card">
+      <div class="perm-module-title">
+        <span class="perm-module-icon" style="background:${mod.color}15;color:${mod.color}">${mod.icon}</span>
+        ${mod.key.charAt(0).toUpperCase()+mod.key.slice(1)}
+      </div>
+      <div class="perm-actions">
+        ${modPerms.map(p => {
+          const granted = rolePerms.includes(p.id);
+          return `<div class="perm-chip${granted?' granted':''}" onclick="togglePermission('${roleId}','${p.id}',this)" title="${p.action}">
+            <span class="chip-dot"></span> ${p.action}
+          </div>`;
+        }).join('')}
+      </div>
+    </div>`;
+  }).join('') + '</div>' +
+  `<div style="margin-top:16px;display:flex;gap:8px;justify-content:flex-end">
+    <button class="btn btn-outline btn-sm" onclick="grantAllPerms('${roleId}')">✅ Grant All</button>
+    <button class="btn btn-outline btn-sm" onclick="revokeAllPerms('${roleId}')">❌ Revoke All</button>
+  </div>`;
+}
+
+function togglePermission(roleId, permId, el) {
+  if (!rbacRolePermissions[roleId]) rbacRolePermissions[roleId] = [];
+  const idx = rbacRolePermissions[roleId].indexOf(permId);
+  if (idx >= 0) {
+    rbacRolePermissions[roleId].splice(idx, 1);
+    el.classList.remove('granted');
+  } else {
+    rbacRolePermissions[roleId].push(permId);
+    el.classList.add('granted');
+  }
+  saveRbacData();
+  renderRolesPanel();
+}
+
+function grantAllPerms(roleId) {
+  rbacRolePermissions[roleId] = rbacPermissions.map(p => p.id);
+  saveRbacData();
+  renderPermissionMatrix(roleId);
+  renderRolesPanel();
+  showToast('All permissions granted','success');
+}
+
+function revokeAllPerms(roleId) {
+  rbacRolePermissions[roleId] = [];
+  saveRbacData();
+  renderPermissionMatrix(roleId);
+  renderRolesPanel();
+  showToast('All permissions revoked','warning');
+}
+
+// ROLE MODAL
+function renderRoleModalList() {
+  const container = document.getElementById('role-modal-list');
+  const sorted = [...rbacRoles].sort((a,b) => a.level - b.level);
+  container.innerHTML = sorted.map(r => {
+    const isDefault = ['role-superadmin','role-admin','role-manager','role-prouser','role-staff'].includes(r.id);
+    return `<div style="display:flex;align-items:center;gap:12px;padding:12px;background:var(--bg);border-radius:8px">
+      <div style="font-size:18px">${r.level===1?'👑':r.level===2?'🛡':r.level===3?'📊':r.level===4?'⭐':'👤'}</div>
+      <div style="flex:1">
+        <div style="font-weight:700;font-size:13px">${r.name}</div>
+        <div style="font-size:11px;color:var(--text-3)">Level ${r.level} · ${(rbacRolePermissions[r.id]||[]).length} permissions</div>
+      </div>
+      ${isDefault ? '<span style="font-size:10px;color:var(--text-3);background:var(--card);padding:2px 8px;border-radius:10px">Default</span>' :
+        `<button class="btn btn-danger btn-sm" onclick="deleteCustomRole('${r.id}')">🗑</button>`}
+    </div>`;
+  }).join('');
+}
+
+function addCustomRole() {
+  const name = document.getElementById('new-role-name').value.trim();
+  const level = parseInt(document.getElementById('new-role-level').value);
+  if (!name) { showToast('Enter a role name','error'); return; }
+  if (isNaN(level) || level < 1 || level > 99) { showToast('Level must be 1-99','error'); return; }
+  if (rbacRoles.find(r => r.name.toLowerCase() === name.toLowerCase())) { showToast('Role already exists','error'); return; }
+
+  const role = { id: 'role-' + genId(), name, level, created_at: new Date().toISOString() };
+  rbacRoles.push(role);
+  rbacRolePermissions[role.id] = [];
+  saveRbacData();
+
+  document.getElementById('new-role-name').value = '';
+  document.getElementById('new-role-level').value = rbacRoles.length + 1;
+  renderRoleModalList();
+  logAudit('create', 'users', role.id, { action: 'role_created', role_name: name, level });
+  showToast('Role "'+name+'" created!','success');
+}
+
+function deleteCustomRole(roleId) {
+  const role = rbacRoles.find(r => r.id === roleId);
+  if (!role) return;
+  if (confirm('Delete role "'+role.name+'"?')) {
+    rbacRoles = rbacRoles.filter(r => r.id !== roleId);
+    delete rbacRolePermissions[roleId];
+    saveRbacData();
+    renderRoleModalList();
+    logAudit('delete', 'users', roleId, { action: 'role_deleted', role_name: role.name });
+    showToast('Role deleted','success');
+  }
+}
+
+// ===== AUDIT LOG PANEL =====
+function renderAuditLogs() {
+  const container = document.getElementById('audit-log-container');
+  const logs = auditLogs.length ? auditLogs : loadGlobal('audit_logs') || [];
+
+  if (!logs.length) {
+    container.innerHTML = `<div style="text-align:center;padding:30px;color:var(--text-3)">
+      <div style="font-size:28px;margin-bottom:8px">📋</div>
+      <div style="font-size:13px">No audit entries yet. Actions will be logged automatically.</div>
+    </div>`;
+    return;
+  }
+
+  container.innerHTML = logs.slice(0, 100).map(log => {
+    const actionIcon = { create:'create', update:'update', delete:'delete', login:'login', INSERT:'create', UPDATE:'update', DELETE:'delete' };
+    const actionClass = actionIcon[log.action] || 'update';
+    const icons = { create:'➕', update:'✏️', delete:'🗑', login:'🔐' };
+    const icon = icons[actionClass] || '📋';
+    const details = log.details ? (typeof log.details === 'string' ? log.details : JSON.stringify(log.details).slice(0,80)) : '';
+
+    return `<div class="audit-row" data-action="${actionClass}" data-module="${log.module||''}" data-search="${(log.user_name||'').toLowerCase()} ${(log.module||'').toLowerCase()} ${details.toLowerCase()}">
+      <div class="audit-icon ${actionClass}">${icon}</div>
+      <div class="audit-details">
+        <div class="audit-action">${(log.user_name||'System')} — ${log.action} on ${log.module||'system'}</div>
+        <div class="audit-meta">${details ? details : (log.record_id ? 'Record: '+log.record_id : '')}</div>
+      </div>
+      <div class="audit-time">${fmtDate(log.created_at)} ${new Date(log.created_at).toLocaleTimeString('en-AE',{hour:'2-digit',minute:'2-digit'})}</div>
+    </div>`;
+  }).join('');
+}
+
+function filterAuditLogs() {
+  const search = (document.getElementById('audit-search')?.value || '').toLowerCase();
+  const actionFilter = document.getElementById('audit-action-filter')?.value || '';
+  const moduleFilter = document.getElementById('audit-module-filter')?.value || '';
+
+  document.querySelectorAll('#audit-log-container .audit-row').forEach(row => {
+    const action = row.dataset.action || '';
+    const module = row.dataset.module || '';
+    const searchText = row.dataset.search || '';
+    const matchSearch = !search || searchText.includes(search);
+    const matchAction = !actionFilter || action === actionFilter;
+    const matchModule = !moduleFilter || module === moduleFilter;
+    row.style.display = (matchSearch && matchAction && matchModule) ? '' : 'none';
+  });
+}
+
+// SQL Copy helper
+function copySqlBlock(id) {
+  const el = document.getElementById(id);
+  if (!el) return;
+  navigator.clipboard.writeText(el.textContent).then(() => showToast('SQL copied to clipboard!','success')).catch(() => showToast('Copy failed','error'));
+}
+
 function copyCRMLink() { navigator.clipboard.writeText('https://khalithcvr-art.github.io/expedia-crm').then(()=>showToast('Link copied!','success')).catch(()=>showToast('Link: https://khalithcvr-art.github.io/expedia-crm','info')); }
+
+// ===== COMPANY PROFILE =====
+let profileCompanyId = 1;
+
+async function loadSection_companyProfile() {
+  switchProfileCompany(profileCompanyId || currentCompany || 1);
+}
+
+function switchProfileCompany(id) {
+  profileCompanyId = id;
+  document.getElementById('profile-btn-1').classList.toggle('btn-gold', id===1);
+  document.getElementById('profile-btn-1').classList.toggle('btn-outline', id!==1);
+  document.getElementById('profile-btn-2').classList.toggle('btn-gold', id===2);
+  document.getElementById('profile-btn-2').classList.toggle('btn-outline', id!==2);
+  const co = COMPANIES[id] || {};
+  const cp = companyProfiles[id] || {};
+  document.getElementById('profile-editing-name').textContent = cp.name || co.name || 'Company '+id;
+
+  // Populate fields from companyProfiles (Supabase) or COMPANIES fallback
+  document.getElementById('cp-name').value = cp.name || co.name || '';
+  document.getElementById('cp-short').value = cp.short || co.short || '';
+  const tlEl = document.getElementById('cp-trade-license'); if(tlEl) tlEl.value = cp.trade_license || '';
+  const teEl = document.getElementById('cp-trade-expiry'); if(teEl) teEl.value = cp.trade_expiry || '';
+  const ecEl = document.getElementById('cp-estab-card'); if(ecEl) ecEl.value = cp.estab_card || '';
+  const eeEl = document.getElementById('cp-estab-expiry'); if(eeEl) eeEl.value = cp.estab_expiry || '';
+  document.getElementById('cp-trn').value = cp.trn || co.trn || '';
+  document.getElementById('cp-phone').value = cp.phone || co.phone || '';
+  document.getElementById('cp-email').value = cp.email || co.email || '';
+  const webEl = document.getElementById('cp-website'); if(webEl) webEl.value = cp.website || '';
+  document.getElementById('cp-address').value = cp.address || co.address || '';
+  document.getElementById('cp-bank-name').value = cp.bank_name || co.bank_name || 'ADCB Bank';
+  document.getElementById('cp-bank-acct-name').value = cp.bank_account_name || co.bank_account_name || '';
+  document.getElementById('cp-bank-acct-no').value = cp.bank_account_no || co.bank_account_no || '';
+  document.getElementById('cp-iban').value = cp.iban || co.bank_iban || '';
+  document.getElementById('cp-swift').value = cp.bank_swift || co.bank_swift || 'ADCBAEAAXXX';
+  document.getElementById('cp-bank-branch').value = cp.bank_branch || co.bank_branch || '';
+
+  // Logo
+  const logoPreview = document.getElementById('cp-logo-preview');
+  const logo = (cp.logo) || getLogoForCompany(id);
+  if (logo) {
+    logoPreview.innerHTML = `<img src="${logo}" style="max-width:100%;max-height:100%;object-fit:contain">`;
+  } else {
+    logoPreview.innerHTML = '<div style="text-align:center;color:var(--text-3)"><div style="font-size:32px;margin-bottom:6px">🖼</div><div style="font-size:12px">No logo uploaded</div></div>';
+  }
+
+  // Alerts
+  checkProfileAlerts(cp);
+}
+
+function checkProfileAlerts(cp) {
+  const alerts = [];
+  const now = new Date();
+  const d30 = new Date(); d30.setDate(d30.getDate()+30);
+  const d7 = new Date(); d7.setDate(d7.getDate()+7);
+  if (cp.trade_expiry) {
+    const d = new Date(cp.trade_expiry);
+    if (d <= d30) alerts.push({type: d<=d7?'danger':'warning', msg: 'Trade License expires '+fmtDate(cp.trade_expiry)});
+  }
+  if (cp.estab_expiry) {
+    const d = new Date(cp.estab_expiry);
+    if (d <= d30) alerts.push({type: d<=d7?'danger':'warning', msg: 'Establishment Card expires '+fmtDate(cp.estab_expiry)});
+  }
+  const body = document.getElementById('cp-alerts-body');
+  if (!alerts.length) {
+    body.innerHTML = '<div style="font-size:13px;color:var(--success);text-align:center;padding:16px">✅ No upcoming expiry alerts</div>';
+  } else {
+    body.innerHTML = alerts.map(a => `<div class="alert alert-${a.type}" style="margin-bottom:8px;font-size:13px">${a.type==='danger'?'🔴':'🟡'} ${a.msg}</div>`).join('');
+  }
+}
+
+async function saveCompanyProfile() {
+  const id = profileCompanyId;
+  const profile = {
+    company_id: id,
+    name: document.getElementById('cp-name').value.trim(),
+    short: document.getElementById('cp-short')?.value?.trim() || '',
+    trade_license: document.getElementById('cp-trade-license')?.value?.trim() || '',
+    trade_expiry: document.getElementById('cp-trade-expiry')?.value || '',
+    estab_card: document.getElementById('cp-estab-card')?.value?.trim() || '',
+    estab_expiry: document.getElementById('cp-estab-expiry')?.value || '',
+    trn: document.getElementById('cp-trn').value.trim(),
+    phone: document.getElementById('cp-phone').value.trim(),
+    email: document.getElementById('cp-email').value.trim(),
+    website: document.getElementById('cp-website')?.value?.trim() || '',
+    address: document.getElementById('cp-address').value.trim(),
+    bank_name: document.getElementById('cp-bank-name').value.trim(),
+    bank_account_name: document.getElementById('cp-bank-acct-name').value.trim(),
+    bank_account_no: document.getElementById('cp-bank-acct-no').value.trim(),
+    iban: document.getElementById('cp-iban').value.trim(),
+    bank_swift: document.getElementById('cp-swift').value.trim(),
+    bank_branch: document.getElementById('cp-bank-branch').value.trim(),
+    logo: companyProfiles[id]?.logo || getLogoForCompany(id) || null
+  };
+
+  if (!profile.name) { showToast('Company name is required','error'); return; }
+
+  // Save to Supabase
+  try {
+    await fetch(SUPABASE_URL + '/rest/v1/company_profiles', {
+      method: 'POST',
+      headers: { 'apikey': SUPABASE_KEY, 'Authorization': 'Bearer '+SUPABASE_KEY, 'Content-Type': 'application/json', 'Prefer': 'resolution=merge-duplicates' },
+      body: JSON.stringify(profile)
+    });
+  } catch(e) { console.log('Company profile save failed:', e); }
+
+  // Update local cache
+  companyProfiles[id] = profile;
+
+  // Update COMPANIES config
+  if (COMPANIES[id]) {
+    COMPANIES[id] = { ...COMPANIES[id], name: profile.name, short: profile.short || COMPANIES[id].short, address: profile.address, email: profile.email, phone: profile.phone, trn: profile.trn, bank_name: profile.bank_name, bank_account_name: profile.bank_account_name, bank_account_no: profile.bank_account_no, bank_iban: profile.iban, bank_swift: profile.bank_swift, bank_branch: profile.bank_branch, logo: profile.logo };
+  }
+
+  document.getElementById('profile-editing-name').textContent = profile.name;
+  updateCompanyDisplay();
+  checkProfileAlerts(profile);
+  if (typeof logAudit === 'function') logAudit('update', 'company_profile', String(id), {name: profile.name});
+  showToast('Company profile saved!','success');
+}
+
+function uploadCompanyLogo(input) {
+  const file = input.files[0];
+  if (!file) return;
+  if (file.size > 2 * 1024 * 1024) { showToast('Logo must be under 2MB','error'); return; }
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    const base64 = e.target.result;
+    const id = profileCompanyId;
+    // Update preview
+    document.getElementById('cp-logo-preview').innerHTML = `<img src="${base64}" style="max-width:100%;max-height:100%;object-fit:contain">`;
+    // Store in companyProfiles
+    if (!companyProfiles[id]) companyProfiles[id] = {};
+    companyProfiles[id].logo = base64;
+    // Also store in localStorage as backup
+    try { localStorage.setItem('crm_logo_'+id, base64); } catch(e) {}
+    showToast('Logo uploaded! Click Save Profile to persist.','success');
+  };
+  reader.readAsDataURL(file);
+}
 
 // ===== REMINDERS =====
 async function loadReminders() {
@@ -2626,19 +3813,6 @@ function confirmDelete(type, id) {
   document.getElementById('confirm-delete-btn').onclick=()=>deleteRecord(type,id);
   document.getElementById('confirm-modal').classList.add('open');
 }
-function deleteRecord(type, id) {
-  switch(type) {
-    case 'client': allClients=allClients.filter(x=>x.id!==id); saveData('clients',allClients);  renderClientsTable(allClients); showClientAlerts(allClients); break;
-    case 'customer': allCustomers=allCustomers.filter(x=>x.id!==id); saveData('customers',allCustomers);  renderCustomersTable(allCustomers); break;
-    case 'employee': allEmployees=allEmployees.filter(x=>x.id!==id); saveData('employees',allEmployees);  renderEmployeesTable(allEmployees); showEmployeeAlerts(allEmployees); break;
-    case 'task': allTasks=allTasks.filter(x=>x.id!==id); saveData('tasks',allTasks);  renderTasksTable(allTasks); break;
-    case 'invoice': allInvoices=allInvoices.filter(x=>x.id!==id); saveData('invoices',allInvoices);  renderInvoicesTable(allInvoices); break;
-    case 'quotation': allQuotations=allQuotations.filter(x=>x.id!==id); saveData('quotations',allQuotations);  renderQuotationsTable(allQuotations); break;
-    case 'transaction': allTransactions=allTransactions.filter(x=>x.id!==id); saveData('transactions',allTransactions);  renderAccountsTable(allTransactions); updateAccountTotals(allTransactions); break;
-  }
-  closeModal('confirm-modal');
-  showToast(type.charAt(0).toUpperCase()+type.slice(1)+' deleted','success');
-}
 
 // ===== MODALS =====
 function openModal(id) {
@@ -2657,7 +3831,8 @@ function openModal(id) {
   if(id==='employee-modal'){ document.getElementById('employee-modal-title').textContent='Add Employee'; calcNetSalary(); document.getElementById('emp-docs-list').innerHTML=''; }
   if(id==='client-modal'){ document.getElementById('client-modal-title').textContent='Add Client'; document.getElementById('client-docs-list').innerHTML=''; }
   if(id==='customer-modal'){ document.getElementById('customer-modal-title').textContent='Add Customer'; document.getElementById('cu-docs-list').innerHTML=''; }
-  if(id==='user-modal'){ document.getElementById('user-modal-title').textContent='Add New User'; document.getElementById('u-password').type='password'; document.getElementById('u-eye').textContent='👁'; }
+  if(id==='user-modal'){ document.getElementById('user-modal-title').textContent='Add New User'; document.getElementById('u-password').type='password'; document.getElementById('u-eye').textContent='👁'; document.getElementById('u-edit-id').value=''; document.getElementById('u-email').disabled=false; document.getElementById('u-password-group').style.display=''; document.getElementById('u-save-btn').textContent='Create User'; document.getElementById('u-save-btn').setAttribute('onclick','saveUser()'); document.getElementById('u-data-scope').value='company'; document.getElementById('u-status').value='active'; }
+  if(id==='role-modal'){ if(typeof renderRoleModalList==='function') renderRoleModalList(); }
   modal.classList.add('open');
 }
 function closeModal(id) { document.getElementById(id).classList.remove('open'); editingId=null; }
@@ -3042,29 +4217,6 @@ function generateQuotationPDF(id) {
 
 
 // ===== CONVERT QUOTATION TO INVOICE =====
-function convertToInvoice(id) {
-  const q = allQuotations.find(x => x.id === id);
-  if (!q) return;
-  if (!confirm('Convert this quotation to an invoice?')) return;
-  const inv = {
-    id: genId(),
-    invoice_number: 'INV-' + new Date().getFullYear() + '-' + String((cacheGet('invoices')||[]).length+1).padStart(3,'0'),
-    client: q.client,
-    description: q.description,
-    amount: q.amount,
-    vat: q.vat,
-    total: q.total,
-    status: 'Draft',
-    items: q.items || [],
-    created_at: new Date().toISOString(),
-    company_id: currentCompany
-  };
-  allInvoices.push(inv);
-  saveRecord('invoices', inv);
-  showSection('invoices');
-  showToast('✅ Quotation converted to Invoice!', 'success');
-}
-
 // ===== PRELOAD COMPANY PROFILES =====
 async function preloadCompanyProfiles() {
   try {
