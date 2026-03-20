@@ -3237,13 +3237,17 @@ function updateAccountTotals(txns) {
 function renderAccountsTable(txns) {
   const tbody=document.getElementById('accounts-table-body');
   if(!txns.length){ tbody.innerHTML=`<tr><td colspan="7"><div class="empty-state"><div class="empty-icon">💰</div><div class="empty-title">No transactions yet</div><div class="empty-text">Click "+ Add Entry" to record income or expense.</div></div></td></tr>`; return; }
-  tbody.innerHTML=[...txns].reverse().map(t=>`<tr>
+  tbody.innerHTML=[...txns].reverse().map(t=>{
+    const type = t.type || 'Expense';
+    const amt = parseFloat(t.amount || 0);
+    const hasReceipt = t.receipt || (t.attachments && t.attachments.length > 0);
+    return `<tr>
     <td>${fmtDate(t.date)}</td>
-    <td><span class="badge ${t.type==='Income'?'badge-success':'badge-danger'}">${t.type}</span></td>
-    <td><div style="font-weight:500;color:var(--text)">${t.description||'—'}</div>${t.client?`<div style="font-size:11px;color:var(--text-3)">Client: ${t.client}</div>`:''} ${t.receiptName?`<div style="font-size:10px;color:var(--gold)">📎 ${t.receiptName}</div>`:''}</td>
+    <td><span class="badge ${type==='Income'?'badge-success':'badge-danger'}">${type}</span></td>
+    <td><div style="font-weight:500;color:var(--text)">${t.description||'—'}</div>${t.client?`<div style="font-size:11px;color:var(--text-3)">Client: ${t.client}</div>`:''}</td>
     <td><span class="badge badge-muted" style="font-size:10px">${t.category||'—'}</span></td>
-    <td><strong style="color:${t.type==='Income'?'var(--success)':'var(--danger)'}">${t.type==='Income'?'+':'-'} ${fmtAED(t.amount)}</strong></td>
-    <td>${t.receipt 
+    <td><strong style="color:${type==='Income'?'var(--success)':'var(--danger)'}">${type==='Income'?'+':'-'} ${fmtAED(amt)}</strong></td>
+    <td>${hasReceipt
       ? '<button class="btn btn-sm btn-icon" style="background:var(--gold);color:var(--bg);border:none;border-radius:6px;cursor:pointer;font-size:15px;padding:5px 8px" onclick="viewReceipt(\''+t.id+'\')">📎</button>'
       : '<button class="btn btn-sm btn-icon" style="background:rgba(255,255,255,0.05);color:var(--text-3);border:none;border-radius:6px;cursor:default;font-size:15px;padding:5px 8px" disabled title="No Receipt">📎</button>'
     }</td>
@@ -3251,7 +3255,7 @@ function renderAccountsTable(txns) {
       <button class="btn btn-outline btn-sm btn-icon" onclick="editTransaction('${t.id}')">✎</button>
       <button class="btn btn-outline btn-sm btn-icon" style="color:var(--danger)" onclick="confirmDelete('transaction','${t.id}')">🗑</button>
     </div></td>
-  </tr>`).join('');
+  </tr>`}).join('');
 }
 // ===== MULTI-ATTACHMENT FUNCTIONS =====
 function attachMultipleReceipts(input) {
