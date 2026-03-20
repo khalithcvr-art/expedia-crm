@@ -2262,7 +2262,11 @@ async function saveRecord(key, record) {
 
 // DELETE from Supabase + cache + live arrays
 async function deleteRecord(type, id) {
-  const tbl = SB_TABLES[type];
+  // Map singular type to plural table name (confirmDelete passes 'client', SB_TABLES needs 'clients')
+  const typeToTable = { client:'clients', customer:'customers', employee:'employees', task:'tasks', invoice:'invoices', quotation:'quotations', transaction:'transactions', document:'documents' };
+  const tableKey = typeToTable[type] || type; // fallback to type if already plural
+  const tbl = SB_TABLES[tableKey];
+
   // Remove from live arrays
   switch(type) {
     case 'client': allClients=allClients.filter(x=>x.id!==id); break;
@@ -2273,18 +2277,31 @@ async function deleteRecord(type, id) {
     case 'quotation': allQuotations=allQuotations.filter(x=>x.id!==id); break;
     case 'transaction': allTransactions=allTransactions.filter(x=>x.id!==id); break;
   }
-  // Remove from cache
-  const cached = cacheGet(type) || [];
-  cacheSet(type, cached.filter(x => x.id !== id));
+  // Remove from cache (use plural key to match loadData cache key)
+  const cached = cacheGet(tableKey) || [];
+  cacheSet(tableKey, cached.filter(x => x.id !== id));
+
   // Delete from Supabase cloud permanently
   if (tbl) {
     try {
-      await fetch(SUPABASE_URL + '/rest/v1/' + tbl + '?id=eq.' + id, {
+      const res = await fetch(SUPABASE_URL + '/rest/v1/' + tbl + '?id=eq.' + id, {
         method: 'DELETE',
         headers: { 'apikey': SUPABASE_KEY, 'Authorization': 'Bearer ' + SUPABASE_KEY }
       });
-    } catch(e) { console.log('Delete from cloud failed:', e); }
+      if (res.ok || res.status === 204) {
+        console.log('✅ Deleted from Supabase:', tbl, id);
+      } else {
+        console.warn('Supabase delete failed:', res.status, await res.text());
+        showToast('⚠️ Deleted locally — cloud delete pending', 'warning');
+      }
+    } catch(e) {
+      console.log('Delete from cloud failed:', e);
+      showToast('⚠️ Deleted locally — check internet', 'warning');
+    }
+  } else {
+    console.warn('No Supabase table found for type:', type, '→ tableKey:', tableKey);
   }
+
   // Log audit
   if (typeof logAudit === 'function') logAudit('delete', type, id);
   // Update UI
@@ -2292,13 +2309,13 @@ async function deleteRecord(type, id) {
     case 'client': renderClientsTable(allClients); showClientAlerts(allClients); break;
     case 'customer': renderCustomersTable(allCustomers); break;
     case 'employee': renderEmployeesTable(allEmployees); showEmployeeAlerts(allEmployees); break;
-    case 'task': renderTasksTable(allTasks); break;
+    case 'task': renderTasksTable(allTasks); if(currentTaskView==='kanban') renderKanbanBoard(); break;
     case 'invoice': renderInvoicesTable(allInvoices); break;
     case 'quotation': renderQuotationsTable(allQuotations); break;
     case 'transaction': renderAccountsTable(allTransactions); updateAccountTotals(allTransactions); break;
   }
   closeModal('confirm-modal');
-  showToast(type.charAt(0).toUpperCase()+type.slice(1)+' deleted', 'success');
+  showToast(type.charAt(0).toUpperCase()+type.slice(1)+' deleted permanently', 'success');
 }
 
 // SYNC ALL: pull latest from Supabase into cache
