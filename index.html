@@ -2210,9 +2210,22 @@ async function saveRecord(key, record) {
     if (payload.items && typeof payload.items !== 'string') {
       payload.items = JSON.stringify(payload.items);
     }
+    // Strip large base64 data from attachments to avoid payload size limits
+    // Keep the metadata (name, mime) but remove the actual file data for cloud storage
+    if (payload.attachments && Array.isArray(payload.attachments)) {
+      payload.attachments = JSON.stringify(payload.attachments.map(a => ({ name: a.name, mime: a.mime, size: a.size })));
+    }
+    // Strip base64 receipt data for cloud (keep locally in cache)
+    if (payload.receipt && typeof payload.receipt === 'string' && payload.receipt.length > 50000) {
+      payload.receipt = null; // Too large for REST API
+    }
+    // Strip base64 document data for cloud (documents > 500KB)
+    if (payload.data && typeof payload.data === 'string' && payload.data.length > 500000) {
+      payload.data = null; // Too large — stored in cache only
+    }
 
-    // Progressive retry: full → whitelist → minimal
-    const nameFields = { clients:'company_name', customers:'name', employees:'name', tasks:'title', invoices:'invoice_number', quotations:'quotation_number', transactions:'description' };
+    // Progressive retry with 10s timeout: full → whitelist → minimal
+    const nameFields = { clients:'company_name', customers:'name', employees:'name', tasks:'title', invoices:'invoice_number', quotations:'quotation_number', transactions:'description', documents:'name' };
     const minimal = { id: payload.id, company_id: payload.company_id, created_at: payload.created_at };
     const nf = nameFields[tbl]; if (nf && payload[nf]) minimal[nf] = payload[nf];
 
@@ -2222,22 +2235,27 @@ async function saveRecord(key, record) {
       try {
         const body = attempts[i];
         if (!body || !body.id) continue;
+        const controller = new AbortController();
+        const timer = setTimeout(() => controller.abort(), 10000);
         const res = await fetch(SUPABASE_URL + '/rest/v1/' + tbl, {
           method: 'POST',
           headers: { 'apikey': SUPABASE_KEY, 'Authorization': 'Bearer ' + SUPABASE_KEY, 'Content-Type': 'application/json', 'Prefer': 'resolution=merge-duplicates,return=minimal' },
-          body: JSON.stringify(body)
+          body: JSON.stringify(body),
+          signal: controller.signal
         });
+        clearTimeout(timer);
         if (res.ok || res.status === 201) {
-          if (i > 0) console.log('✅ Saved to Supabase on attempt', i+1, '(some fields stripped for table:', tbl, ')');
+          if (i > 0) console.log('✅ Saved to Supabase on attempt', i+1, 'for', tbl);
           return withCompany;
         }
         const errText = await res.text();
         console.warn('Supabase save attempt', i+1, 'for', tbl, ':', res.status, errText);
       } catch(e) {
-        console.error('Save network error attempt', i+1, ':', e);
+        if (e.name === 'AbortError') console.warn('Save timeout for', tbl, 'attempt', i+1);
+        else console.error('Save error attempt', i+1, ':', e);
       }
     }
-    showToast('⚠️ Saved locally — cloud sync issue. Check browser console (F12) for details.', 'warning');
+    showToast('⚠️ Saved locally — cloud sync pending', 'warning');
   }
   return withCompany;
 }
@@ -2754,6 +2772,7 @@ function editClient(id) {
   document.getElementById('client-modal').classList.add('open');
 }
 async function saveClient() {
+  try {
   const name=document.getElementById('c-company-name').value.trim();
   if(!name){ showToast('Company name is required','error'); return; }
   const record={
@@ -2769,11 +2788,13 @@ async function saveClient() {
     notes: document.getElementById('c-notes').value.trim(),
     company_id: currentCompany, created_at: editingId?(allClients.find(x=>x.id===editingId)?.created_at||new Date().toISOString()):new Date().toISOString()
   };
+  const wasEditing = !!editingId;
   if(editingId) allClients=allClients.map(x=>x.id===editingId?record:x);
   else allClients.push(record);
   await saveRecord('clients', record);
   closeModal('client-modal'); renderClientsTable(allClients); showClientAlerts(allClients);
-  showToast(editingId?'Client updated!':'Client added!','success');
+  showToast(wasEditing?'Client updated!':'Client added!','success');
+  } catch(err) { showToast('Error saving client: '+err.message,'error'); console.error(err); }
 }
 function exportClients() {
   if(!allClients.length){ showToast('No clients to export','error'); return; }
@@ -2822,13 +2843,16 @@ function editCustomer(id) {
   document.getElementById('customer-modal').classList.add('open');
 }
 async function saveCustomer() {
+  try {
   const name=document.getElementById('cu-name').value.trim();
   if(!name){ showToast('Name is required','error'); return; }
   const record={ id:editingId||genId(), name, phone:document.getElementById('cu-phone').value.trim(), email:document.getElementById('cu-email').value.trim(), nationality:document.getElementById('cu-nationality').value.trim(), passport:document.getElementById('cu-passport').value.trim(), passport_expiry:document.getElementById('cu-passport-expiry').value, eid:document.getElementById('cu-eid').value.trim(), eid_expiry:document.getElementById('cu-eid-expiry').value, service_type:document.getElementById('cu-service-type').value, followup:document.getElementById('cu-followup').value, notes:document.getElementById('cu-notes').value.trim(), company_id:currentCompany, created_at:editingId?(allCustomers.find(x=>x.id===editingId)?.created_at||new Date().toISOString()):new Date().toISOString() };
+  const wasEditing = !!editingId;
   if(editingId) allCustomers=allCustomers.map(x=>x.id===editingId?record:x); else allCustomers.push(record);
   await saveRecord('customers', record);
   closeModal('customer-modal'); renderCustomersTable(allCustomers);
-  showToast(editingId?'Customer updated!':'Customer added!','success');
+  showToast(wasEditing?'Customer updated!':'Customer added!','success');
+  } catch(err) { showToast('Error saving customer: '+err.message,'error'); console.error(err); }
 }
 
 // ===== EMPLOYEES =====
@@ -2884,13 +2908,16 @@ function editEmployee(id) {
   document.getElementById('employee-modal').classList.add('open');
 }
 async function saveEmployee() {
+  try {
   const name=document.getElementById('e-name').value.trim();
   if(!name){ showToast('Employee name is required','error'); return; }
   const record={ id:editingId||genId(), name, passport:document.getElementById('e-passport').value.trim(), passport_expiry:document.getElementById('e-passport-expiry').value, visa:document.getElementById('e-visa').value.trim(), visa_expiry:document.getElementById('e-visa-expiry').value, eid:document.getElementById('e-eid').value.trim(), eid_expiry:document.getElementById('e-eid-expiry').value, join_date:document.getElementById('e-join-date').value, nationality:document.getElementById('e-nationality').value.trim(), position:document.getElementById('e-position').value.trim(), basic:parseFloat(document.getElementById('e-basic').value||0), allowance:parseFloat(document.getElementById('e-allowance').value||0), food:parseFloat(document.getElementById('e-food').value||0), ticket:parseFloat(document.getElementById('e-ticket').value||0), insurance:parseFloat(document.getElementById('e-insurance').value||0), advance:parseFloat(document.getElementById('e-advance').value||0), company_id:currentCompany, created_at:editingId?(allEmployees.find(x=>x.id===editingId)?.created_at||new Date().toISOString()):new Date().toISOString() };
+  const wasEditing = !!editingId;
   if(editingId) allEmployees=allEmployees.map(x=>x.id===editingId?record:x); else allEmployees.push(record);
   await saveRecord('employees', record);
   closeModal('employee-modal'); renderEmployeesTable(allEmployees); showEmployeeAlerts(allEmployees);
-  showToast(editingId?'Employee updated!':'Employee added!','success');
+  showToast(wasEditing?'Employee updated!':'Employee added!','success');
+  } catch(err) { showToast('Error saving employee: '+err.message,'error'); console.error(err); }
 }
 function generatePayrollReport() {
   if(!allEmployees.length){ showToast('No employees found','error'); return; }
@@ -2933,13 +2960,16 @@ function editTask(id) {
   document.getElementById('task-modal').classList.add('open');
 }
 async function saveTask() {
+  try {
   const title=document.getElementById('t-title').value.trim();
   if(!title){ showToast('Task title is required','error'); return; }
   const record={ id:editingId||genId(), title, assigned:document.getElementById('t-assigned').value.trim(), due:document.getElementById('t-due').value, priority:document.getElementById('t-priority').value, status:document.getElementById('t-status').value, notes:document.getElementById('t-notes').value.trim(), company_id:currentCompany, created_at:editingId?(allTasks.find(x=>x.id===editingId)?.created_at||new Date().toISOString()):new Date().toISOString() };
+  const wasEditing = !!editingId;
   if(editingId) allTasks=allTasks.map(x=>x.id===editingId?record:x); else allTasks.push(record);
   await saveRecord('tasks', record);
-  closeModal('task-modal'); renderTasksTable(allTasks);
-  showToast(editingId?'Task updated!':'Task added!','success');
+  closeModal('task-modal'); renderTasksTable(allTasks); if(currentTaskView==='kanban') renderKanbanBoard();
+  showToast(wasEditing?'Task updated!':'Task added!','success');
+  } catch(err) { showToast('Error saving task: '+err.message,'error'); console.error(err); }
 }
 
 // ===== INVOICES =====
@@ -3029,13 +3059,13 @@ function editInvoice(id) {
   document.getElementById('invoice-modal').classList.add('open');
 }
 async function saveInvoice(forceStatus) {
+  try {
   const client = document.getElementById('inv-client').value.trim();
   if (!client) { showToast('Client name is required', 'error'); return; }
   const sub = invoiceItems.reduce((s, i) => s + (i.qty||1) * (i.price||0), 0);
   const vatOn = document.getElementById('inv-vat-toggle')?.checked;
   const vat = vatOn ? parseFloat((sub * 0.05).toFixed(2)) : 0;
   const orig = editingId ? allInvoices.find(x => x.id === editingId) : null;
-  // Build record matching exact Supabase column names
   const record = {
     id:             editingId || genId(),
     invoice_number: document.getElementById('inv-number').value.trim() || 'INV-' + Date.now(),
@@ -3053,13 +3083,15 @@ async function saveInvoice(forceStatus) {
     company_id:     currentCompany,
     created_at:     orig?.created_at || new Date().toISOString()
   };
+  const wasEditing = !!editingId;
   if (editingId) allInvoices = allInvoices.map(x => x.id === editingId ? record : x);
   else allInvoices.push(record);
   await saveRecord('invoices', record);
   closeModal('invoice-modal');
   renderInvoicesTable(allInvoices);
   editingId = null;
-  showToast(editingId ? 'Invoice updated! ✅' : 'Invoice created! ✅', 'success');
+  showToast(wasEditing ? 'Invoice updated! ✅' : 'Invoice created! ✅', 'success');
+  } catch(err) { showToast('Error saving invoice: '+err.message,'error'); console.error(err); }
 }
 
 // ===== QUOTATIONS =====
@@ -3119,6 +3151,7 @@ function editQuotation(id) {
   document.getElementById('quotation-modal').classList.add('open');
 }
 async function saveQuotation() {
+  try {
   const client = document.getElementById('q-client').value.trim();
   if (!client) { showToast('Client name is required', 'error'); return; }
   const sub = quotationItems.reduce((s, i) => s + (i.qty||1) * (i.price||0), 0);
@@ -3142,13 +3175,15 @@ async function saveQuotation() {
     company_id:       currentCompany,
     created_at:       orig?.created_at || new Date().toISOString()
   };
+  const wasEditing = !!editingId;
   if (editingId) allQuotations = allQuotations.map(x => x.id === editingId ? record : x);
   else allQuotations.push(record);
   await saveRecord('quotations', record);
   closeModal('quotation-modal');
   renderQuotationsTable(allQuotations);
   editingId = null;
-  showToast(editingId ? 'Quotation updated! ✅' : 'Quotation created! ✅', 'success');
+  showToast(wasEditing ? 'Quotation updated! ✅' : 'Quotation created! ✅', 'success');
+  } catch(err) { showToast('Error saving quotation: '+err.message,'error'); console.error(err); }
 }
 function convertToInvoice(id) {
   const q=allQuotations.find(x=>x.id===id); if(!q) return;
