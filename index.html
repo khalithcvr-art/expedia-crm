@@ -2169,14 +2169,16 @@ async function saveData(key, data) {
 }
 
 // UPSERT single record to Supabase - ALWAYS saves to cloud
-// Known Supabase columns per table (add new columns here when you ALTER TABLE)
+// Known Supabase columns per table — MUST match what saveXxx() functions actually send
+// When Supabase rejects unknown columns, we retry with only these fields
+// TIP: After adding a new column via ALTER TABLE, add it here too
 const SB_COLUMNS = {
   clients: ['id','company_name','trade_license','license_expiry','contact_person','phone','email','service_type','followup','address','notes','company_id','created_at'],
   customers: ['id','name','phone','email','nationality','passport','passport_expiry','eid','eid_expiry','service_type','followup','notes','company_id','created_at'],
-  employees: ['id','name','designation','position','phone','email','passport_no','passport_expiry','visa_expiry','eid','eid_expiry','nationality','basic','allowance','food','advance','notes','company_id','created_at'],
+  employees: ['id','name','passport','passport_no','passport_expiry','visa','visa_expiry','eid','eid_expiry','join_date','nationality','designation','position','phone','email','basic','allowance','food','ticket','insurance','advance','notes','company_id','created_at'],
   tasks: ['id','title','assigned','due','priority','status','notes','company_id','created_at'],
-  invoices: ['id','invoice_number','client','description','items','amount','vat','total','due_date','status','notes','vat_enabled','company_id','created_at'],
-  quotations: ['id','quotation_number','client','description','items','amount','vat','total','valid_until','status','notes','vat_enabled','company_id','created_at'],
+  invoices: ['id','invoice_number','client','description','items','amount','vat','total','currency','due_date','status','notes','vat_enabled','company_id','created_at'],
+  quotations: ['id','quotation_number','client','description','items','amount','vat','total','currency','valid_until','status','notes','vat_enabled','company_id','created_at'],
   transactions: ['id','date','type','category','description','amount','payment_method','reference','notes','receipt','receipt_mime','receipt_name','receipts','company_id','created_at']
 };
 
@@ -2192,65 +2194,49 @@ function stripToKnownColumns(tableName, payload) {
 
 async function saveRecord(key, record) {
   const tbl = SB_TABLES[key];
-  // Sanitize all string fields to prevent XSS
   const sanitized = sanitizeRecord(record);
   const withCompany = { ...sanitized, company_id: currentCompany };
 
-  // Update cache immediately so UI feels fast (cache keeps ALL fields including extras like currency)
+  // Update cache immediately so UI feels fast
   const cached = cacheGet(key) || [];
   const idx = cached.findIndex(x => x.id === record.id);
   if (idx >= 0) cached[idx] = withCompany; else cached.push(withCompany);
   cacheSet(key, cached);
 
-  // Save to Supabase cloud (permanent storage)
+  // Save to Supabase cloud
   if (tbl) {
-    try {
-      // Serialize jsonb fields properly (items array)
-      const payload = { ...withCompany };
-      if (payload.items && typeof payload.items !== 'string') {
-        payload.items = JSON.stringify(payload.items);
-      }
-
-      // First attempt: send ALL fields (in case user has added the columns)
-      let res = await fetch(SUPABASE_URL + '/rest/v1/' + tbl, {
-        method: 'POST',
-        headers: {
-          'apikey': SUPABASE_KEY,
-          'Authorization': 'Bearer ' + SUPABASE_KEY,
-          'Content-Type': 'application/json',
-          'Prefer': 'resolution=merge-duplicates,return=minimal'
-        },
-        body: JSON.stringify(payload)
-      });
-
-      if (res.ok || res.status === 201) {
-        return withCompany;
-      }
-
-      // If failed (likely unknown columns), retry with only known columns
-      const cleanPayload = stripToKnownColumns(tbl, payload);
-      res = await fetch(SUPABASE_URL + '/rest/v1/' + tbl, {
-        method: 'POST',
-        headers: {
-          'apikey': SUPABASE_KEY,
-          'Authorization': 'Bearer ' + SUPABASE_KEY,
-          'Content-Type': 'application/json',
-          'Prefer': 'resolution=merge-duplicates,return=minimal'
-        },
-        body: JSON.stringify(cleanPayload)
-      });
-
-      if (res.ok || res.status === 201) {
-        return withCompany;
-      } else {
-        const errText = await res.text();
-        console.error('Supabase save error:', res.status, errText);
-        showToast('⚠️ Saved locally — cloud sync issue', 'warning');
-      }
-    } catch(e) {
-      console.error('Save network error:', e);
-      showToast('⚠️ Offline — data saved locally', 'warning');
+    const payload = { ...withCompany };
+    if (payload.items && typeof payload.items !== 'string') {
+      payload.items = JSON.stringify(payload.items);
     }
+
+    // Progressive retry: full → whitelist → minimal
+    const nameFields = { clients:'company_name', customers:'name', employees:'name', tasks:'title', invoices:'invoice_number', quotations:'quotation_number', transactions:'description' };
+    const minimal = { id: payload.id, company_id: payload.company_id, created_at: payload.created_at };
+    const nf = nameFields[tbl]; if (nf && payload[nf]) minimal[nf] = payload[nf];
+
+    const attempts = [ payload, stripToKnownColumns(tbl, payload), minimal ];
+
+    for (let i = 0; i < attempts.length; i++) {
+      try {
+        const body = attempts[i];
+        if (!body || !body.id) continue;
+        const res = await fetch(SUPABASE_URL + '/rest/v1/' + tbl, {
+          method: 'POST',
+          headers: { 'apikey': SUPABASE_KEY, 'Authorization': 'Bearer ' + SUPABASE_KEY, 'Content-Type': 'application/json', 'Prefer': 'resolution=merge-duplicates,return=minimal' },
+          body: JSON.stringify(body)
+        });
+        if (res.ok || res.status === 201) {
+          if (i > 0) console.log('✅ Saved to Supabase on attempt', i+1, '(some fields stripped for table:', tbl, ')');
+          return withCompany;
+        }
+        const errText = await res.text();
+        console.warn('Supabase save attempt', i+1, 'for', tbl, ':', res.status, errText);
+      } catch(e) {
+        console.error('Save network error attempt', i+1, ':', e);
+      }
+    }
+    showToast('⚠️ Saved locally — cloud sync issue. Check browser console (F12) for details.', 'warning');
   }
   return withCompany;
 }
