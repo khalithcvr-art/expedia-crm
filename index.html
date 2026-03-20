@@ -1975,7 +1975,7 @@ try {
     const { createClient } = supabase;
     db = createClient(SUPABASE_URL, SUPABASE_KEY, {
       auth: { persistSession: false },
-      global: { headers: { 'apikey': SUPABASE_KEY, 'Authorization': 'Bearer ' + SUPABASE_KEY } }
+      global: { headers: { 'Authorization': 'Bearer ' + SUPABASE_KEY } }
     });
     console.log('✅ Supabase initialized');
   } else {
@@ -2010,17 +2010,17 @@ async function migratePasswordToHash(userId, plainPassword) {
   // Only set password to ***HASHED*** if Supabase confirms the hash columns exist
   let supabaseHashed = false;
   try {
-    const res = await fetch(SUPABASE_URL + '/rest/v1/crm_users?id=eq.' + userId, {
+    const res = await fetch(SUPABASE_URL + '/rest/v1/crm_users?id=eq.' + userId + '&apikey=' + SUPABASE_KEY, {
       method: 'PATCH',
-      headers: { 'apikey': SUPABASE_KEY, 'Authorization': 'Bearer ' + SUPABASE_KEY, 'Content-Type': 'application/json', 'Prefer': 'return=minimal' },
+      headers: { 'Authorization': 'Bearer ' + SUPABASE_KEY, 'Content-Type': 'application/json', 'Prefer': 'return=minimal' },
       body: JSON.stringify({ password_hash: hash, password_salt: salt })
     });
     if (res.ok || res.status === 204) {
       supabaseHashed = true;
       // Now safe to clear plaintext in Supabase
-      await fetch(SUPABASE_URL + '/rest/v1/crm_users?id=eq.' + userId, {
+      await fetch(SUPABASE_URL + '/rest/v1/crm_users?id=eq.' + userId + '&apikey=' + SUPABASE_KEY, {
         method: 'PATCH',
-        headers: { 'apikey': SUPABASE_KEY, 'Authorization': 'Bearer ' + SUPABASE_KEY, 'Content-Type': 'application/json' },
+        headers: { 'Authorization': 'Bearer ' + SUPABASE_KEY, 'Content-Type': 'application/json' },
         body: JSON.stringify({ password: '***HASHED***' })
       });
     }
@@ -2155,10 +2155,10 @@ async function loadData(key) {
   const tbl = SB_TABLES[key];
   if (tbl) {
     try {
-      const res = await fetch(
-        SUPABASE_URL + '/rest/v1/' + tbl + '?company_id=eq.' + currentCompany + '&order=created_at.asc',
-        { headers: { 'apikey': SUPABASE_KEY, 'Authorization': 'Bearer ' + SUPABASE_KEY } }
-      );
+      const url = SUPABASE_URL + '/rest/v1/' + tbl + '?company_id=eq.' + currentCompany + '&order=created_at.asc&apikey=' + SUPABASE_KEY;
+      const res = await fetch(url, {
+        headers: { 'Authorization': 'Bearer ' + SUPABASE_KEY }
+      });
       if (res.ok) {
         const data = await res.json();
         if (data && Array.isArray(data)) {
@@ -2246,9 +2246,9 @@ async function saveRecord(key, record) {
       try {
         const body = attempts[i];
         if (!body || !body.id) continue;
-        const res = await fetch(SUPABASE_URL + '/rest/v1/' + tbl, {
+        const res = await fetch(SUPABASE_URL + '/rest/v1/' + tbl + '?apikey=' + SUPABASE_KEY, {
           method: 'POST',
-          headers: { 'apikey': SUPABASE_KEY, 'Authorization': 'Bearer ' + SUPABASE_KEY, 'Content-Type': 'application/json', 'Prefer': 'resolution=merge-duplicates,return=minimal' },
+          headers: { 'Authorization': 'Bearer ' + SUPABASE_KEY, 'Content-Type': 'application/json', 'Prefer': 'resolution=merge-duplicates,return=minimal' },
           body: JSON.stringify(body)
         });
         if (res.ok || res.status === 201) {
@@ -2290,9 +2290,9 @@ async function deleteRecord(type, id) {
   // Delete from Supabase cloud permanently
   if (tbl) {
     try {
-      const res = await fetch(SUPABASE_URL + '/rest/v1/' + tbl + '?id=eq.' + id, {
+      const res = await fetch(SUPABASE_URL + '/rest/v1/' + tbl + '?id=eq.' + id + '&apikey=' + SUPABASE_KEY, {
         method: 'DELETE',
-        headers: { 'apikey': SUPABASE_KEY, 'Authorization': 'Bearer ' + SUPABASE_KEY }
+        headers: { 'Authorization': 'Bearer ' + SUPABASE_KEY }
       });
       if (res.ok || res.status === 204) {
         console.log('✅ Deleted from Supabase:', tbl, id);
@@ -2396,8 +2396,8 @@ async function signIn() {
   // Check Supabase crm_users for staff (works on all devices)
   try {
     const res = await fetch(
-      SUPABASE_URL + '/rest/v1/crm_users?email=eq.' + encodeURIComponent(email),
-      { headers: { 'apikey': SUPABASE_KEY, 'Authorization': 'Bearer ' + SUPABASE_KEY } }
+      SUPABASE_URL + '/rest/v1/crm_users?email=eq.' + encodeURIComponent(email) + '&apikey=' + SUPABASE_KEY,
+      { headers: { 'Authorization': 'Bearer ' + SUPABASE_KEY } }
     );
     if (res.ok) {
       const sbUsers = await res.json();
@@ -3522,7 +3522,7 @@ function uploadDocuments(input) {
 function handleDocDrop(event) { event.preventDefault(); document.getElementById('doc-drop-zone').classList.remove('drag-over'); const files=Array.from(event.dataTransfer.files); if(!files.length) return; const fakeInput={files}; uploadDocuments(fakeInput); }
 function viewDocument(id) { const doc=allDocuments.find(d=>d.id===id); if(!doc||!doc.data) return; const w=window.open(''); if(doc.mime&&doc.mime.includes('image')) w.document.write(`<html><body style="margin:0;background:#000"><img src="${doc.data}" style="max-width:100%;max-height:100vh;display:block;margin:auto"></body></html>`); else w.document.write(`<html><body style="margin:0"><embed src="${doc.data}" width="100%" height="100%" style="position:fixed;inset:0"></body></html>`); }
 function downloadDocument(id) { const doc=allDocuments.find(d=>d.id===id); if(!doc||!doc.data) return; const a=document.createElement('a'); a.href=doc.data; a.download=doc.name; a.click(); showToast(doc.name+' downloaded','success'); }
-async function deleteDocument(id) { if(!confirm('Delete this document?')) return; allDocuments=allDocuments.filter(d=>d.id!==id); cacheSet('documents',allDocuments); try{ await fetch(SUPABASE_URL+'/rest/v1/documents?id=eq.'+id,{method:'DELETE',headers:{'apikey':SUPABASE_KEY,'Authorization':'Bearer '+SUPABASE_KEY}}); }catch(e){} renderDocs(allDocuments); updateDocStats(); showToast('Document deleted','success'); }
+async function deleteDocument(id) { if(!confirm('Delete this document?')) return; allDocuments=allDocuments.filter(d=>d.id!==id); cacheSet('documents',allDocuments); try{ await fetch(SUPABASE_URL+'/rest/v1/documents?id=eq.'+id+'&apikey='+SUPABASE_KEY,{method:'DELETE',headers:{'Authorization':'Bearer '+SUPABASE_KEY}}); }catch(e){} renderDocs(allDocuments); updateDocStats(); showToast('Document deleted','success'); }
 
 // INLINE DOC UPLOAD (in modals)
 function setDocLabel(label) { pendingDocLabel=label; showToast('Next upload: '+label,'info'); }
@@ -3601,7 +3601,7 @@ function renderInlineDocs(section, recordId) {
 async function deleteInlineDoc(id, section, recordId) {
   allDocuments = allDocuments.filter(d => d.id !== id);
   cacheSet('documents', allDocuments);
-  try{ await fetch(SUPABASE_URL+'/rest/v1/documents?id=eq.'+id,{method:'DELETE',headers:{'apikey':SUPABASE_KEY,'Authorization':'Bearer '+SUPABASE_KEY}}); }catch(e){}
+  try{ await fetch(SUPABASE_URL+'/rest/v1/documents?id=eq.'+id+'&apikey='+SUPABASE_KEY,{method:'DELETE',headers:{'Authorization':'Bearer '+SUPABASE_KEY}}); }catch(e){}
   renderInlineDocs(section, recordId || null);
   showToast('Document deleted', 'success');
 }
@@ -3720,9 +3720,9 @@ function logAudit(action, module, recordId, details) {
 
   // Also try to save to Supabase
   try {
-    fetch(SUPABASE_URL + '/rest/v1/audit_logs', {
+    fetch(SUPABASE_URL + '/rest/v1/audit_logs?apikey='+SUPABASE_KEY, {
       method: 'POST',
-      headers: { 'apikey': SUPABASE_KEY, 'Authorization': 'Bearer ' + SUPABASE_KEY, 'Content-Type': 'application/json' },
+      headers: { 'Authorization': 'Bearer ' + SUPABASE_KEY, 'Content-Type': 'application/json' },
       body: JSON.stringify(entry)
     }).catch(() => {});
   } catch(e) {}
@@ -3753,8 +3753,8 @@ async function loadUsers() {
   // Load from Supabase first, merge with localStorage
   let sbUsers = [];
   try {
-    const res = await fetch(SUPABASE_URL+'/rest/v1/crm_users?order=created_at.asc',
-      {headers:{'apikey':SUPABASE_KEY,'Authorization':'Bearer '+SUPABASE_KEY}});
+    const res = await fetch(SUPABASE_URL+'/rest/v1/crm_users?order=created_at.asc&apikey='+SUPABASE_KEY,
+      {headers:{'Authorization':'Bearer '+SUPABASE_KEY}});
     if(res.ok) sbUsers = await res.json();
   } catch(e) {}
 
@@ -3930,8 +3930,8 @@ async function saveUser() {
 
     // Update in Supabase
     try {
-      await fetch(SUPABASE_URL+'/rest/v1/crm_users?id=eq.'+editId,
-        {method:'PATCH',headers:{'apikey':SUPABASE_KEY,'Authorization':'Bearer '+SUPABASE_KEY,'Content-Type':'application/json'},
+      await fetch(SUPABASE_URL+'/rest/v1/crm_users?id=eq.'+editId+'&apikey='+SUPABASE_KEY,
+        {method:'PATCH',headers:{'Authorization':'Bearer '+SUPABASE_KEY,'Content-Type':'application/json'},
          body:JSON.stringify(updates)});
     } catch(e) {}
 
@@ -3965,16 +3965,16 @@ async function saveUser() {
 
     // Save to Supabase — try with hash fields first, fallback to plaintext if columns don't exist
     try {
-      const res = await fetch(SUPABASE_URL + '/rest/v1/crm_users', {
+      const res = await fetch(SUPABASE_URL + '/rest/v1/crm_users?apikey='+SUPABASE_KEY, {
         method:'POST',
-        headers:{'apikey':SUPABASE_KEY,'Authorization':'Bearer '+SUPABASE_KEY,'Content-Type':'application/json','Prefer':'resolution=merge-duplicates'},
+        headers:{'Authorization':'Bearer '+SUPABASE_KEY,'Content-Type':'application/json','Prefer':'resolution=merge-duplicates'},
         body:JSON.stringify({id:user.id,name,email,password:'***HASHED***',password_hash:hash,password_salt:salt,role,data_scope:dataScope,company_access:companyAccess,status})
       });
       if (!res.ok && res.status !== 201) {
         // Hash columns likely don't exist — retry with plaintext password as fallback
-        await fetch(SUPABASE_URL + '/rest/v1/crm_users', {
+        await fetch(SUPABASE_URL + '/rest/v1/crm_users?apikey='+SUPABASE_KEY, {
           method:'POST',
-          headers:{'apikey':SUPABASE_KEY,'Authorization':'Bearer '+SUPABASE_KEY,'Content-Type':'application/json','Prefer':'resolution=merge-duplicates'},
+          headers:{'Authorization':'Bearer '+SUPABASE_KEY,'Content-Type':'application/json','Prefer':'resolution=merge-duplicates'},
           body:JSON.stringify({id:user.id,name,email,password:pass,role,data_scope:dataScope,company_access:companyAccess,status})
         });
       }
@@ -3993,8 +3993,8 @@ async function toggleUserStatus(id) {
   const newStatus = (u.status || 'active') === 'active' ? 'inactive' : 'active';
 
   try {
-    await fetch(SUPABASE_URL+'/rest/v1/crm_users?id=eq.'+id,
-      {method:'PATCH',headers:{'apikey':SUPABASE_KEY,'Authorization':'Bearer '+SUPABASE_KEY,'Content-Type':'application/json'},
+    await fetch(SUPABASE_URL+'/rest/v1/crm_users?id=eq.'+id+'&apikey='+SUPABASE_KEY,
+      {method:'PATCH',headers:{'Authorization':'Bearer '+SUPABASE_KEY,'Content-Type':'application/json'},
        body:JSON.stringify({status:newStatus})});
   } catch(e) {}
 
@@ -4019,8 +4019,8 @@ async function confirmDeleteUser(id) {
 
   if(confirm('Delete user "'+(u?.name||'this user')+'"?\n\nThis action cannot be undone.')) {
     try {
-      await fetch(SUPABASE_URL+'/rest/v1/crm_users?id=eq.'+id,
-        {method:'DELETE',headers:{'apikey':SUPABASE_KEY,'Authorization':'Bearer '+SUPABASE_KEY}});
+      await fetch(SUPABASE_URL+'/rest/v1/crm_users?id=eq.'+id+'&apikey='+SUPABASE_KEY,
+        {method:'DELETE',headers:{'Authorization':'Bearer '+SUPABASE_KEY}});
     } catch(e) {}
 
     const localUsers = loadGlobal('users').filter(x=>x.id!==id);
@@ -4059,19 +4059,19 @@ async function doResetPassword() {
   // Try to save hash to Supabase first
   let supabaseHashed = false;
   try {
-    const res = await fetch(SUPABASE_URL+'/rest/v1/crm_users?id=eq.'+id,
-      {method:'PATCH',headers:{'apikey':SUPABASE_KEY,'Authorization':'Bearer '+SUPABASE_KEY,'Content-Type':'application/json','Prefer':'return=minimal'},
+    const res = await fetch(SUPABASE_URL+'/rest/v1/crm_users?id=eq.'+id+'&apikey='+SUPABASE_KEY,
+      {method:'PATCH',headers:{'Authorization':'Bearer '+SUPABASE_KEY,'Content-Type':'application/json','Prefer':'return=minimal'},
        body:JSON.stringify({password_hash:hash, password_salt:salt})});
     if (res.ok || res.status === 204) {
       supabaseHashed = true;
       // Safe to clear plaintext
-      await fetch(SUPABASE_URL+'/rest/v1/crm_users?id=eq.'+id,
-        {method:'PATCH',headers:{'apikey':SUPABASE_KEY,'Authorization':'Bearer '+SUPABASE_KEY,'Content-Type':'application/json'},
+      await fetch(SUPABASE_URL+'/rest/v1/crm_users?id=eq.'+id+'&apikey='+SUPABASE_KEY,
+        {method:'PATCH',headers:{'Authorization':'Bearer '+SUPABASE_KEY,'Content-Type':'application/json'},
          body:JSON.stringify({password:'***HASHED***'})});
     } else {
       // Hash columns don't exist yet — save plaintext as fallback so user can still login
-      await fetch(SUPABASE_URL+'/rest/v1/crm_users?id=eq.'+id,
-        {method:'PATCH',headers:{'apikey':SUPABASE_KEY,'Authorization':'Bearer '+SUPABASE_KEY,'Content-Type':'application/json'},
+      await fetch(SUPABASE_URL+'/rest/v1/crm_users?id=eq.'+id+'&apikey='+SUPABASE_KEY,
+        {method:'PATCH',headers:{'Authorization':'Bearer '+SUPABASE_KEY,'Content-Type':'application/json'},
          body:JSON.stringify({password:p})});
     }
   } catch(e) {}
@@ -4792,9 +4792,9 @@ async function saveCompanyProfile() {
 
   // Save to Supabase
   try {
-    await fetch(SUPABASE_URL + '/rest/v1/company_profiles', {
+    await fetch(SUPABASE_URL + '/rest/v1/company_profiles?apikey='+SUPABASE_KEY, {
       method: 'POST',
-      headers: { 'apikey': SUPABASE_KEY, 'Authorization': 'Bearer '+SUPABASE_KEY, 'Content-Type': 'application/json', 'Prefer': 'resolution=merge-duplicates' },
+      headers: { 'Authorization': 'Bearer '+SUPABASE_KEY, 'Content-Type': 'application/json', 'Prefer': 'resolution=merge-duplicates' },
       body: JSON.stringify(profile)
     });
   } catch(e) { console.log('Company profile save failed:', e); }
@@ -5269,8 +5269,8 @@ function generateQuotationPDF(id) {
 async function preloadCompanyProfiles() {
   try {
     const res = await fetch(
-      SUPABASE_URL + '/rest/v1/company_profiles?order=company_id.asc',
-      { headers: { 'apikey': SUPABASE_KEY, 'Authorization': 'Bearer ' + SUPABASE_KEY } }
+      SUPABASE_URL + '/rest/v1/company_profiles?order=company_id.asc&apikey=' + SUPABASE_KEY,
+      { headers: { 'Authorization': 'Bearer ' + SUPABASE_KEY } }
     );
     if (res.ok) {
       const profiles = await res.json();
