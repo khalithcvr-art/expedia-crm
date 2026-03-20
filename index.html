@@ -2032,12 +2032,12 @@ function escapeHtml(str) {
     .replace(/'/g, '&#39;');
 }
 
-// Sanitize object — escapes all string values in an object (shallow)
 function sanitizeRecord(obj) {
   if (!obj || typeof obj !== 'object') return obj;
   const clean = {};
+  const skipKeys = ['id','created_at','password','password_hash','password_salt','receipt','logo','data','attachments','receiptMime','receiptName','receipt_mime','receipt_name','mime','items'];
   for (const [k, v] of Object.entries(obj)) {
-    if (typeof v === 'string' && k !== 'id' && k !== 'created_at' && k !== 'password' && k !== 'password_hash' && k !== 'password_salt' && !k.startsWith('receipt') && k !== 'logo') {
+    if (typeof v === 'string' && !skipKeys.includes(k) && !k.startsWith('receipt') && !k.startsWith('logo')) {
       clean[k] = escapeHtml(v);
     } else {
       clean[k] = v;
@@ -2100,7 +2100,7 @@ function clearLoginAttempts(email) {
 }
 
 // ===== DATA LAYER (Supabase ONLY — localStorage is display cache) =====
-const SB_TABLES = { clients:'clients',customers:'customers',employees:'employees',tasks:'tasks',invoices:'invoices',quotations:'quotations',transactions:'transactions' };
+const SB_TABLES = { clients:'clients',customers:'customers',employees:'employees',tasks:'tasks',invoices:'invoices',quotations:'quotations',transactions:'transactions',documents:'documents' };
 
 function genId() { return Date.now().toString(36) + Math.random().toString(36).substr(2); }
 function fmtAED(n) { return 'AED ' + parseFloat(n||0).toLocaleString('en-AE',{minimumFractionDigits:2,maximumFractionDigits:2}); }
@@ -2179,7 +2179,8 @@ const SB_COLUMNS = {
   tasks: ['id','title','assigned','due','priority','status','notes','company_id','created_at'],
   invoices: ['id','invoice_number','client','description','items','amount','vat','total','currency','due_date','status','notes','vat_enabled','company_id','created_at'],
   quotations: ['id','quotation_number','client','description','items','amount','vat','total','currency','valid_until','status','notes','vat_enabled','company_id','created_at'],
-  transactions: ['id','date','type','category','description','amount','payment_method','reference','notes','receipt','receipt_mime','receipt_name','receipts','company_id','created_at']
+  transactions: ['id','date','type','category','description','amount','client','payment_method','reference','notes','receipt','receipt_mime','receipt_name','receiptMime','receiptName','receipts','attachments','company_id','created_at'],
+  documents: ['id','name','type','size','data','mime','notes','uploaded','label','company_id','created_at']
 };
 
 function stripToKnownColumns(tableName, payload) {
@@ -2615,7 +2616,7 @@ async function loadSection(name) {
     case 'invoices': await loadInvoices(); break;
     case 'quotations': await loadQuotations(); break;
     case 'accounts': await loadAccounts(); break;
-    case 'documents': loadDocuments(); break;
+    case 'documents': await loadDocuments(); break;
     case 'users': loadUsers(); break;
     case 'reminders': await loadReminders(); break;
     case 'company-profile': await loadSection_companyProfile(); break;
@@ -3133,6 +3134,7 @@ async function saveQuotation() {
     amount:           parseFloat(sub.toFixed(2)),
     vat:              vat,
     total:            parseFloat((sub + vat).toFixed(2)),
+    currency:         getQuotationCurrency(),
     valid_until:      document.getElementById('q-valid-until').value || null,
     status:           document.getElementById('q-status').value || 'Draft',
     notes:            document.getElementById('q-notes').value.trim(),
@@ -3406,7 +3408,7 @@ function generateMonthlyReport() {
 
 // ===== DOCUMENTS =====
 let currentDocFilter='all';
-function loadDocuments() { allDocuments=loadData('documents'); renderDocs(allDocuments); updateDocStats(); }
+async function loadDocuments() { allDocuments=await loadData('documents'); if(!Array.isArray(allDocuments)) allDocuments=[]; renderDocs(allDocuments); updateDocStats(); }
 function updateDocStats() {
   document.getElementById('doc-total').textContent=allDocuments.length;
   const totalSize=allDocuments.reduce((s,d)=>s+(d.size||0),0);
@@ -3454,13 +3456,13 @@ function getDocCategory(filename) {
 }
 function uploadDocuments(input) {
   const files=Array.from(input.files); if(!files.length) return;
-  files.forEach(file=>{ const reader=new FileReader(); reader.onload=e=>{ const doc={ id:genId(), name:file.name, type:pendingDocLabel||getDocCategory(file.name), size:file.size, data:e.target.result, mime:file.type, uploaded:new Date().toISOString(), company_id:currentCompany }; allDocuments.push(doc); saveData('documents',allDocuments); renderDocs(allDocuments); updateDocStats(); showToast(file.name+' uploaded!','success'); pendingDocLabel=''; }; reader.readAsDataURL(file); });
+  files.forEach(file=>{ const reader=new FileReader(); reader.onload=async e=>{ const doc={ id:genId(), name:file.name, type:pendingDocLabel||getDocCategory(file.name), size:file.size, data:e.target.result, mime:file.type, uploaded:new Date().toISOString(), company_id:currentCompany, created_at:new Date().toISOString() }; allDocuments.push(doc); await saveRecord('documents',doc); renderDocs(allDocuments); updateDocStats(); showToast(file.name+' uploaded!','success'); pendingDocLabel=''; }; reader.readAsDataURL(file); });
   input.value='';
 }
 function handleDocDrop(event) { event.preventDefault(); document.getElementById('doc-drop-zone').classList.remove('drag-over'); const files=Array.from(event.dataTransfer.files); if(!files.length) return; const fakeInput={files}; uploadDocuments(fakeInput); }
 function viewDocument(id) { const doc=allDocuments.find(d=>d.id===id); if(!doc||!doc.data) return; const w=window.open(''); if(doc.mime&&doc.mime.includes('image')) w.document.write(`<html><body style="margin:0;background:#000"><img src="${doc.data}" style="max-width:100%;max-height:100vh;display:block;margin:auto"></body></html>`); else w.document.write(`<html><body style="margin:0"><embed src="${doc.data}" width="100%" height="100%" style="position:fixed;inset:0"></body></html>`); }
 function downloadDocument(id) { const doc=allDocuments.find(d=>d.id===id); if(!doc||!doc.data) return; const a=document.createElement('a'); a.href=doc.data; a.download=doc.name; a.click(); showToast(doc.name+' downloaded','success'); }
-function deleteDocument(id) { if(!confirm('Delete this document?')) return; allDocuments=allDocuments.filter(d=>d.id!==id); saveData('documents',allDocuments); renderDocs(allDocuments); updateDocStats(); showToast('Document deleted','success'); }
+async function deleteDocument(id) { if(!confirm('Delete this document?')) return; allDocuments=allDocuments.filter(d=>d.id!==id); cacheSet('documents',allDocuments); try{ await fetch(SUPABASE_URL+'/rest/v1/documents?id=eq.'+id,{method:'DELETE',headers:{'apikey':SUPABASE_KEY,'Authorization':'Bearer '+SUPABASE_KEY}}); }catch(e){} renderDocs(allDocuments); updateDocStats(); showToast('Document deleted','success'); }
 
 // INLINE DOC UPLOAD (in modals)
 function setDocLabel(label) { pendingDocLabel=label; showToast('Next upload: '+label,'info'); }
@@ -3468,7 +3470,7 @@ function handleInlineUpload(input, section, recordId, recordName) {
   const files = Array.from(input.files); if (!files.length) return;
   files.forEach(file => {
     const reader = new FileReader();
-    reader.onload = e => {
+    reader.onload = async e => {
       const docType = section === 'employee' ? 'Employee' : section === 'client' ? 'Client' : 'Customer';
       const label = pendingDocLabel || '';
       const docName = label ? label + ' — ' + file.name : file.name;
@@ -3484,10 +3486,11 @@ function handleInlineUpload(input, section, recordId, recordName) {
         company_id: currentCompany,
         section: section,
         record_id: recordId || null,
-        record_name: recordName || null
+        record_name: recordName || null,
+        created_at: new Date().toISOString()
       };
       allDocuments.push(doc);
-      saveData('documents', allDocuments);
+      await saveRecord('documents', doc);
       renderInlineDocs(section, recordId);
       showToast(file.name + ' uploaded!', 'success');
       pendingDocLabel = '';
@@ -3535,9 +3538,10 @@ function renderInlineDocs(section, recordId) {
     </div>`).join('');
 }
 
-function deleteInlineDoc(id, section, recordId) {
+async function deleteInlineDoc(id, section, recordId) {
   allDocuments = allDocuments.filter(d => d.id !== id);
-  saveData('documents', allDocuments);
+  cacheSet('documents', allDocuments);
+  try{ await fetch(SUPABASE_URL+'/rest/v1/documents?id=eq.'+id,{method:'DELETE',headers:{'apikey':SUPABASE_KEY,'Authorization':'Bearer '+SUPABASE_KEY}}); }catch(e){}
   renderInlineDocs(section, recordId || null);
   showToast('Document deleted', 'success');
 }
